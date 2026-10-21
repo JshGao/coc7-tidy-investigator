@@ -1,0 +1,33 @@
+<div class="c7t-toolbar">
+  <span class="c7t-toolbar-title">{{localize 'C7TIDY.Tabs.effects'}}</span>
+  <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Effects.Hint'}}</span>
+  {{#if isEditing}}
+    <button type="button" class="c7t-btn" data-action="createEffect">
+      <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Effects.New'}}
+    </button>
+  {{/if}}
+</div>
+
+<div class="c7t-table effects">
+  {{#each effects as |effect|}}
+    <div class="c7t-row{{#if effect.disabled}} is-disabled{{/if}}" data-effect-id="{{effect.id}}">
+      <span class="col-name">
+        <i class="c7t-row-ico"><i class="fa-solid fa-bolt"></i></i>
+        <span class="c7t-row-name" data-action="openEffect" data-tooltip="{{localize 'C7TIDY.Effects.Open'}}">{{effect.name}}</span>
+      </span>
+      <span class="col-act">
+        <button type="button" class="c7t-icon-btn" data-action="toggleEffect" data-tooltip="C7TIDY.Effects.Toggle">
+          <i class="fa-solid {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
+        </button>
+        {{#if @root.isEditing}}
+          <button type="button" class="c7t-icon-btn" data-action="deleteEffect" data-tooltip="C7TIDY.Action.DeleteItem">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        {{/if}}
+      </span>
+    </div>
+  {{else}}
+    <div class="c7t-empty"><b>{{localize 'C7TIDY.Effects.Empty'}}</b></div>
+  {{/each}}
+</div>

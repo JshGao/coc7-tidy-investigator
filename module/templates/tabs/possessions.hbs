@@ -1,0 +1,56 @@
+<div class="c7t-money">
+  <div class="c7t-money-item"><span>{{localize 'C7TIDY.Money.Credit'}}</span><b>{{possessions.money.credit}}</b></div>
+  <div class="c7t-money-item"><span>{{localize 'C7TIDY.Money.Cash'}}</span><b>{{possessions.money.cash}}</b></div>
+  <div class="c7t-money-item"><span>{{localize 'C7TIDY.Money.Assets'}}</span><b>{{possessions.money.assets}}</b></div>
+  <div class="c7t-money-item"><span>{{localize 'C7TIDY.Money.Spending'}}</span><b>{{possessions.money.spending}}</b></div>
+</div>
+
+{{#each possessions.groups as |group|}}
+  <div class="c7t-group{{#if group.collapsed}} is-collapsed{{else}} is-open{{/if}}">
+    <div class="c7t-group-head">
+      <button type="button" class="c7t-group-toggle" data-action="toggleGroup" data-type="{{group.type}}"
+        data-tooltip="C7TIDY.Action.Collapse">
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <span class="c7t-group-title">{{localize group.label}}</span>
+      <span class="c7t-group-meta">{{group.count}}</span>
+      {{#if @root.isEditing}}
+        <button type="button" class="c7t-icon-btn" data-action="createItem" data-type="{{group.type}}"
+          data-tooltip="C7TIDY.Action.CreateItem"><i class="fa-solid fa-plus"></i></button>
+      {{/if}}
+    </div>
+    <div class="c7t-group-body c7t-items-list">
+      {{#each group.items as |item|}}
+        <div class="c7t-row" data-item-id="{{item.id}}" data-action="openItem"
+          draggable="{{#if @root.isEditing}}true{{else}}false{{/if}}">
+          <span class="col-name">
+            {{#if item.img}}<img class="c7t-row-ico" src="{{item.img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-cube"></i></i>{{/if}}
+            <span class="c7t-row-name">{{item.name}}</span>
+          </span>
+          {{#if item.isStackable}}
+            {{#if @root.isEditing}}
+              <input class="c7t-qty-input" type="number" min="0" step="1" value="{{item.quantity}}"
+                data-tooltip="{{localize 'C7TIDY.Items.Quantity'}}">
+            {{else}}
+              {{#if item.note}}<span class="c7t-row-note">{{item.note}}</span>{{/if}}
+            {{/if}}
+          {{else}}
+            {{#if item.note}}<span class="c7t-row-note">{{item.note}}</span>{{/if}}
+          {{/if}}
+          <span class="col-act">
+            <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            {{#if @root.isEditing}}
+              <button type="button" class="c7t-icon-btn" data-action="deleteItem" data-tooltip="C7TIDY.Action.DeleteItem">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            {{/if}}
+          </span>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+{{else}}
+  <div class="c7t-empty"><b>{{localize 'C7TIDY.Items.Empty'}}</b></div>
+{{/each}}

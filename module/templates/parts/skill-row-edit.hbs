@@ -1,0 +1,36 @@
+<div class="c7t-row is-edit-row{{#if special}} is-special{{/if}}{{#if isFavorite}} is-favorite{{/if}}" draggable="{{#if @root.isCustomSort}}true{{else}}false{{/if}}" data-item-id="{{id}}">
+  <span class="col-name" data-action="rollSkill" data-tooltip="C7TIDY.Skills.RollHint">
+    {{#if img}}<img class="c7t-row-ico" src="{{img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-dice-d20"></i></i>{{/if}}
+    <span class="c7t-row-name">{{name}}</span>
+  </span>
+  <span class="col-base">{{base}}</span>
+  <span class="col-occ">
+    <input class="c7t-adj-input" type="number" step="1" value="{{occupation}}" data-field="occupation"
+      data-tooltip="{{localize 'C7TIDY.Skills.OccupationPoints'}}">
+  </span>
+  <span class="col-per">
+    <input class="c7t-adj-input" type="number" step="1" value="{{personal}}" data-field="personal"
+      data-tooltip="{{localize 'C7TIDY.Skills.PersonalPoints'}}">
+  </span>
+  <span class="col-exp">
+    <input class="c7t-adj-input" type="number" step="1" value="{{experience}}" data-field="experience"
+      data-tooltip="{{localize 'C7TIDY.Skills.DevPoints'}}">
+  </span>
+  <span class="col-val is-strong">{{value}}</span>
+  <span class="col-dev">
+    <button type="button" class="c7t-dev-hit" data-tooltip="C7TIDY.Skills.Development">
+      <span class="c7t-dev{{#if development}} is-on{{/if}}"></span>
+    </button>
+  </span>
+  <span class="col-act">
+    <button type="button" class="c7t-icon-btn" data-action="toggleFavorite" data-tooltip="C7TIDY.Action.Favorite">
+      <i class="{{#if isFavorite}}fa-solid fa-star{{else}}fa-regular fa-star{{/if}}"></i>
+    </button>
+    <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
+      <i class="fa-solid fa-pen"></i>
+    </button>
+    <button type="button" class="c7t-icon-btn" data-action="deleteItem" data-tooltip="C7TIDY.Action.DeleteItem">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </span>
+</div>

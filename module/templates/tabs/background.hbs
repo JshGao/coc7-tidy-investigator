@@ -1,0 +1,85 @@
+<div class="c7t-cols">
+  <div class="c7t-field"><span>{{localize 'CoC7.Occupation'}}</span>
+    {{#if isEditing}}<input class="c7t-inline-input" type="text" name="system.infos.occupation" value="{{identity.occupation}}">
+    {{else}}<b>{{identity.occupation}}</b>{{/if}}</div>
+  <div class="c7t-field"><span>{{localize 'CoC7.Age'}}</span>
+    {{#if isEditing}}<input class="c7t-inline-input" type="text" name="system.infos.age" value="{{identity.age}}">
+    {{else}}<b>{{identity.age}}</b>{{/if}}</div>
+  <div class="c7t-field"><span>{{localize 'CoC7.Sex'}}</span>
+    {{#if isEditing}}<input class="c7t-inline-input" type="text" name="system.infos.sex" value="{{identity.sex}}">
+    {{else}}<b>{{identity.sex}}</b>{{/if}}</div>
+  <div class="c7t-field"><span>{{localize 'CoC7.Birthplace'}}</span>
+    {{#if isEditing}}<input class="c7t-inline-input" type="text" name="system.infos.birthplace" value="{{identity.birthplace}}">
+    {{else}}<b>{{identity.birthplace}}</b>{{/if}}</div>
+  <div class="c7t-field"><span>{{localize 'CoC7.Residence'}}</span>
+    {{#if isEditing}}<input class="c7t-inline-input" type="text" name="system.infos.residence" value="{{identity.residence}}">
+    {{else}}<b>{{identity.residence}}</b>{{/if}}</div>
+  <div class="c7t-field"><span>{{localize 'CoC7.Organization'}}</span>
+    {{#if isEditing}}<input class="c7t-inline-input" type="text" name="system.infos.organization" value="{{identity.organization}}">
+    {{else}}<b>{{identity.organization}}</b>{{/if}}</div>
+</div>
+
+<div class="c7t-toolbar">
+  <span class="c7t-toolbar-title">{{localize 'C7TIDY.Background.Title'}}</span>
+  <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Background.Hint'}}</span>
+  <span class="c7t-toolbar-spacer"></span>
+  {{#if background.keyConnections.length}}
+    <span class="c7t-key-summary">
+      <i class="fa-solid fa-star"></i>{{localize 'C7TIDY.Background.KeyPrefix'}}{{background.keyLabels}}
+    </span>
+  {{/if}}
+</div>
+
+<div class="c7t-bio-grid">
+  {{#each background.slots as |slot|}}
+    <section class="c7t-bio-card{{#if slot.wide}} is-wide{{/if}}{{#if slot.isKey}} is-key{{/if}}">
+      <header class="c7t-bio-head">
+        <h3>{{localize slot.label}}</h3>
+        <button type="button" class="c7t-key-toggle{{#if slot.isKey}} is-on{{/if}}"
+          data-action="toggleKeyConnection" data-slot="{{slot.id}}">
+          <span class="c7t-key-box"></span>{{localize 'C7TIDY.Background.Key'}}
+        </button>
+      </header>
+      {{#if slot.exists}}
+        {{#if @root.isEditing}}
+          <textarea class="c7t-bio-input" data-bio-index="{{slot.index}}"
+            placeholder="{{localize slot.label}}">{{slot.value}}</textarea>
+        {{else}}
+          <div class="c7t-prose">{{{slot.valueHtml}}}</div>
+        {{/if}}
+      {{else}}
+        <div class="c7t-bio-missing">
+          {{#if @root.isEditing}}
+            <button type="button" class="c7t-btn" data-action="createBackgroundSlot" data-slot="{{slot.id}}">
+              <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Background.Create'}}
+            </button>
+          {{else}}
+            <span>{{localize 'C7TIDY.Background.Empty'}}</span>
+          {{/if}}
+        </div>
+      {{/if}}
+    </section>
+  {{/each}}
+</div>
+
+<div class="c7t-section" style="margin-top:10px">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Background.Backstory'}}</div>
+  {{#if isEditing}}
+    <textarea class="c7t-bio-input is-block" name="system.backstory" placeholder="{{localize 'C7TIDY.Background.Backstory'}}">{{background.backstory}}</textarea>
+  {{else}}
+    <div class="c7t-prose">{{{background.backstoryHtml}}}</div>
+  {{/if}}
+</div>
+
+<div class="c7t-section" style="margin-top:8px">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Background.Encounters'}}</div>
+  {{#if background.encounters.length}}
+    <div class="c7t-encounters">
+      {{#each background.encounters as |event|}}
+        <div class="c7t-encounter"><span>{{event.type}}</span><b>-{{event.totalLoss}}</b></div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="c7t-prose">{{localize 'C7TIDY.Background.NoEncounters'}}</div>
+  {{/if}}
+</div>

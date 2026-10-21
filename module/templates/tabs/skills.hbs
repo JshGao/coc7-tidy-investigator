@@ -1,0 +1,77 @@
+<div class="c7t-toolbar">
+  <div class="c7t-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" class="c7t-skills-search" placeholder="{{localize 'C7TIDY.Skills.Search'}}">
+  </div>
+  <button type="button" class="c7t-seg-btn{{#if isCustomSort}} is-warn{{/if}}" data-action="toggleSkillSort" data-tooltip="C7TIDY.Skills.SortHint">
+    {{#if sortByValue}}
+      <i class="fa-solid fa-sort-amount-down"></i>{{localize 'C7TIDY.Skills.SortValue'}}
+    {{else if sortByName}}
+      <i class="fa-solid fa-sort-alpha-down"></i>{{localize 'C7TIDY.Skills.SortName'}}
+    {{else}}
+      <i class="fa-solid fa-arrows-up-down"></i>{{localize 'C7TIDY.Skills.SortCustom'}}
+    {{/if}}
+  </button>
+  <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Skills.Count'}} {{skillView.total}} {{localize 'C7TIDY.Skills.Unit'}}</span>
+  {{#if isEditing}}
+    <button type="button" class="c7t-btn" data-action="createItem" data-type="skill">
+      <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Skills.Add'}}
+    </button>
+  {{/if}}
+</div>
+
+<div class="c7t-table skills{{#if isEditing}} is-editing{{/if}}">
+  <div class="c7t-thead">
+    <span class="col-name">{{localize 'C7TIDY.Skills.Name'}}</span>
+    <span class="col-base">{{localize 'C7TIDY.Skills.Base'}}</span>
+    {{#if isEditing}}
+      <span class="col-occ">{{localize 'C7TIDY.Skills.OccupationPoints'}}</span>
+      <span class="col-per">{{localize 'C7TIDY.Skills.PersonalPoints'}}</span>
+      <span class="col-exp">{{localize 'C7TIDY.Skills.DevPoints'}}</span>
+      <span class="col-val">{{localize 'C7TIDY.Skills.Value'}}</span>
+    {{else}}
+      <span class="col-val">{{localize 'C7TIDY.Skills.Value'}}</span>
+      <span class="col-half">{{localize 'C7TIDY.Skills.Half'}}</span>
+      <span class="col-fifth">{{localize 'C7TIDY.Skills.Fifth'}}</span>
+    {{/if}}
+    <span class="col-dev">{{#if isEditing}}{{localize 'C7TIDY.Skills.Mark'}}{{else}}{{localize 'C7TIDY.Skills.Development'}}{{/if}}</span>
+    <span class="col-act"></span>
+  </div>
+
+  <div class="c7t-tbody">
+    {{#each skillView.rows as |skill|}}
+      {{#if @root.isEditing}}
+        {{> "modules/coc7-tidy-investigator/templates/parts/skill-row-edit.hbs"}}
+      {{else}}
+        {{> "modules/coc7-tidy-investigator/templates/parts/skill-row.hbs"}}
+      {{/if}}
+    {{/each}}
+
+    {{#each skillView.groups as |group|}}
+      <div class="c7t-skill-group">
+        <div class="c7t-skill-group-head">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>{{group.name}}</span>
+          <span class="c7t-skill-group-count">{{group.skills.length}}</span>
+        </div>
+        <div class="c7t-skill-group-body">
+          {{#each group.skills as |skill|}}
+            {{#if @root.isEditing}}
+              {{> "modules/coc7-tidy-investigator/templates/parts/skill-row-edit.hbs"}}
+            {{else}}
+              {{> "modules/coc7-tidy-investigator/templates/parts/skill-row.hbs"}}
+            {{/if}}
+          {{/each}}
+        </div>
+      </div>
+    {{/each}}
+
+    {{#unless skillView.total}}
+      <div class="c7t-empty">
+        <b>{{localize 'C7TIDY.Skills.Empty'}}</b>
+        <p>{{localize 'C7TIDY.Skills.EmptyHint'}}</p>
+      </div>
+    {{/unless}}
+  </div>
+</div>

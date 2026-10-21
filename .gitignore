@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+._*
+
+# 构建产物
+dist/
+*.zip
+
+# 本地环境
+node_modules/
+.mnemon/

@@ -1,0 +1,193 @@
+<div class="c7t-sheet{{#if isGM}} is-gm{{/if}}{{#if isCompact}} is-compact{{/if}}">
+  {{> "modules/coc7-tidy-investigator/templates/parts/icons.hbs"}}
+
+  <header class="c7t-banner">
+    <div class="c7t-banner-bg"></div>
+
+    <div class="c7t-banner-inner">
+      <div class="c7t-portrait">
+        <img class="c7t-portrait-img" src="{{actor.img}}" {{#if canEdit}}data-edit="img" data-action="editImage"{{/if}} alt="{{actor.name}}">
+      </div>
+
+      <div class="c7t-identity">
+        <div class="c7t-identity-main">
+          <h1 class="c7t-name">
+            {{#if isEditing}}
+              <input class="c7t-name-input" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'C7TIDY.Placeholder.Name'}}">
+            {{else}}
+              <span class="c7t-name-text">{{actor.name}}</span>
+            {{/if}}
+          </h1>
+          <div class="c7t-controls">
+            {{#if canEdit}}
+              <button type="button" class="c7t-ctrl" data-action="toggleLock"
+                data-tooltip="{{#if isLocked}}C7TIDY.Action.Unlock{{else}}C7TIDY.Action.Lock{{/if}}">
+                <i class="fa-solid {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+              </button>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="c7t-subtitle">
+          {{#if identity.occupation}}<span>{{identity.occupation}}</span><i>·</i>{{/if}}
+          {{#if identity.age}}<span>{{identity.age}}</span><i>·</i>{{/if}}
+          {{#if identity.sex}}<span>{{identity.sex}}</span><i>·</i>{{/if}}
+          {{#if identity.residence}}<span>{{localize 'C7TIDY.Identity.Residence'}}：{{identity.residence}}</span><i>·</i>{{/if}}
+          {{#if identity.playername}}<span>{{localize 'C7TIDY.Identity.Player'}}：{{identity.playername}}</span>{{/if}}
+        </div>
+
+        <div class="c7t-vitals">
+          {{#each resources as |res|}}
+            <div class="c7t-vital {{res.cls}}{{#if res.low}} is-low{{/if}}{{#unless @root.isEditing}}{{#if res.rollable}} is-rollable{{/if}}{{/unless}}"
+              {{#unless @root.isEditing}}{{#if res.rollable}}data-action="rollAttribute" data-key="{{res.key}}" data-tooltip="C7TIDY.Resource.Roll"{{/if}}{{/unless}}>
+              <span class="c7t-vital-label">{{localize res.label}}</span>
+              {{#if @root.isEditing}}
+                <span class="c7t-vital-val is-editing">
+                  <input class="c7t-vital-input" type="number" step="1"
+                    name="system.attribs.{{res.key}}.value" value="{{res.value}}">
+                  {{#if res.hasMax}}
+                    <em>/</em>
+                    <input class="c7t-vital-input is-max" type="number" step="1"
+                      name="system.attribs.{{res.key}}.max" value="{{res.max}}"
+                      {{#if res.auto}}readonly data-tooltip="C7TIDY.Hint.AutoMax"{{/if}}>
+                  {{/if}}
+                </span>
+              {{else}}
+                <span class="c7t-vital-val"><b>{{res.value}}</b><em>/{{res.max}}</em></span>
+              {{/if}}
+              <span class="c7t-vital-bar" style="--pct:{{res.pct}}%"><i></i></span>
+            </div>
+          {{/each}}
+
+          <div class="c7t-deriveds">
+            {{#each derived as |item|}}
+              {{#if item.rollable}}
+                <button type="button" class="c7t-derived is-rollable" data-action="rollDerived" data-key="{{item.key}}">
+                  {{localize item.label}} <b>{{item.value}}</b>
+                </button>
+              {{else}}
+                {{#if @root.isEditing}}
+                  <span class="c7t-derived is-editing">
+                    {{localize item.label}}
+                    <input class="c7t-derived-input" type="text" name="system.attribs.{{item.key}}.value" value="{{item.value}}"
+                      {{#if item.auto}}readonly data-tooltip="C7TIDY.Hint.AutoValue"{{/if}}>
+                  </span>
+                {{else}}
+                  <span class="c7t-derived">{{localize item.label}} <b>{{item.value}}</b></span>
+                {{/if}}
+              {{/if}}
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="c7t-abilities">
+      {{#each characteristics as |char|}}
+        {{#if @root.isEditing}}
+          <div class="c7t-ability is-editing{{#if char.modified}} is-modified{{/if}}" data-key="{{char.key}}">
+            <svg class="c7t-ability-shield"><use href="#c7t-shield"></use></svg>
+            <button type="button" class="c7t-ability-abbr c7t-as-button" data-action="rollCharacteristic"
+              data-key="{{char.key}}" data-tooltip="{{localize char.label}}">{{char.abbr}}</button>
+            <span class="c7t-ability-value-row">
+              <input class="c7t-ability-input" type="number" step="1"
+                name="system.characteristics.{{char.key}}.value" value="{{char.value}}">
+            </span>
+            <span class="c7t-ability-sub">{{char.half}}<i>/</i>{{char.fifth}}</span>
+          </div>
+        {{else}}
+          <button type="button" class="c7t-ability{{#if char.modified}} is-modified{{/if}}"
+            data-action="rollCharacteristic" data-key="{{char.key}}" data-tooltip="{{localize char.label}}">
+            <svg class="c7t-ability-shield"><use href="#c7t-shield"></use></svg>
+            <span class="c7t-ability-abbr">{{char.abbr}}</span>
+            <span class="c7t-ability-value">{{char.value}}</span>
+            <span class="c7t-ability-sub">{{char.half}}<i>/</i>{{char.fifth}}</span>
+          </button>
+        {{/if}}
+      {{/each}}
+    </div>
+
+    <div class="c7t-banner-foot">
+      <div class="c7t-conditions">
+        {{#each conditions as |cond|}}
+          <button type="button" class="c7t-chip {{#if cond.active}}is-active {{cond.cls}}{{/if}}"
+            data-action="toggleCondition" data-key="{{cond.key}}">{{localize cond.label}}</button>
+        {{/each}}
+      </div>
+      <div class="c7t-daily">
+        <span>{{localize 'C7TIDY.DailySan'}}</span>
+        {{#if isEditing}}
+          <input class="c7t-daily-input" type="number" step="1" name="system.attribs.san.dailyLoss" value="{{dailySan.loss}}">
+          <i>/</i>
+          <input class="c7t-daily-input" type="number" step="1" name="system.attribs.san.dailyLimit" value="{{dailySan.limit}}">
+        {{else}}
+          <b>{{dailySan.loss}}</b><i>/</i><b>{{dailySan.limit}}</b>
+        {{/if}}
+        <button type="button" class="c7t-icon-btn" data-action="resetDailySan" data-tooltip="C7TIDY.Action.ResetDailySan">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+      </div>
+    </div>
+
+    <nav class="c7t-tabs tabs" data-group="primary" aria-roledescription="{{localize 'SHEETS.FormNavLabel'}}">
+      {{#each tabs as |tab|}}
+        <a class="c7t-tab {{tab.cssClass}}" data-action="tab" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+          {{#if tab.icon}}<i class="{{tab.icon}} inert"></i>{{/if}}
+          <span>{{localize tab.label}}</span>
+        </a>
+      {{/each}}
+    </nav>
+  </header>
+
+  <div class="c7t-body">
+    <aside class="c7t-sidebar">
+      <div class="c7t-sidebar-head"><span>{{localize 'C7TIDY.Sidebar.Favorites'}}</span></div>
+      {{#if favorites.length}}
+        <div class="c7t-sidebar-list">
+          {{#each favorites as |fav|}}
+            <button type="button" class="c7t-pin" data-action="{{fav.action}}" data-item-id="{{fav.id}}">
+              <span class="c7t-pin-ico">{{#if fav.img}}<img src="{{fav.img}}" alt="">{{else}}<i class="fa-solid fa-star"></i>{{/if}}</span>
+              <span class="c7t-pin-name">{{fav.name}}</span>
+              {{#if fav.value}}<b class="c7t-pin-val">{{fav.value}}</b>{{/if}}
+            </button>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="c7t-sidebar-empty">{{localize 'C7TIDY.Sidebar.Empty'}}</div>
+      {{/if}}
+      <div class="c7t-sidebar-foot">{{localize 'C7TIDY.Sidebar.Hint'}}</div>
+    </aside>
+
+    <div class="c7t-content c7t-scroll">
+      <section class="tab {{tabs.skills.cssClass}}" data-group="primary" data-tab="skills">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/skills.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.summary.cssClass}}" data-group="primary" data-tab="summary">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/summary.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.possessions.cssClass}}" data-group="primary" data-tab="possessions">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/possessions.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.background.cssClass}}" data-group="primary" data-tab="background">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/background.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.growth.cssClass}}" data-group="primary" data-tab="growth">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/growth.hbs"}}
+      </section>
+
+      {{#if isGM}}
+        <section class="tab {{tabs.notes.cssClass}}" data-group="primary" data-tab="notes">
+          {{> "modules/coc7-tidy-investigator/templates/tabs/notes.hbs"}}
+        </section>
+      {{/if}}
+
+      <section class="tab {{tabs.effects.cssClass}}" data-group="primary" data-tab="effects">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/effects.hbs"}}
+      </section>
+    </div>
+  </div>
+</div>

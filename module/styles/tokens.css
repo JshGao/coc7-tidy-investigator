@@ -1,0 +1,73 @@
+@font-face {
+  font-family: "Roboto Condensed";
+  src: url("../assets/fonts/RobotoCondensed-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Signika Negative";
+  src: url("../assets/fonts/SignikaNegative-VariableFont_wght.ttf") format("truetype");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   设计 token（亮色，默认）
+   ============================================================ */
+.coc7-tidy {
+  --c7t-bg: #f0f0e1;
+  --c7t-panel: #f8f4f1;
+  --c7t-panel-2: #f1ebe8;
+  --c7t-line: #e2d0a8;
+  --c7t-line-soft: #e9dfc4;
+  --c7t-line-strong: #c0ad81;
+  --c7t-gold: #9f9275;
+  --c7t-gold-strong: #73633f;
+  --c7t-accent: #741b2b;
+  --c7t-accent-soft: #8f2436;
+  --c7t-text: #16181d;
+  --c7t-text-dim: #4b4a44;
+  --c7t-text-mute: #7a6f5c;
+  --c7t-hp: #922d2e;
+  --c7t-mp: #101345;
+  --c7t-san: #2e4b1f;
+  --c7t-luck: #79501c;
+  --c7t-warn: #b36319;
+
+  --c7t-radius: 3px;
+  --c7t-trans: .15s ease-in-out;
+  --c7t-shadow-card: 0 0 .375rem #00000029;
+  --c7t-shadow-field: 0 0 .1875rem #0000001a;
+
+  --c7t-font-title: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Songti SC", "Noto Serif SC", serif;
+  --c7t-font-body: "Roboto Condensed", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --c7t-font-long: "Signika Negative", "PingFang SC", sans-serif;
+}
+
+/* ============================================================
+   暗色 token 覆盖（跟随 Foundry 颜色方案）
+   ============================================================ */
+.coc7-tidy.theme-dark {
+  --c7t-bg: #16181d;
+  --c7t-panel: #252830;
+  --c7t-panel-2: #303236;
+  --c7t-line: #3c3f47;
+  --c7t-line-soft: #33363d;
+  --c7t-line-strong: #7f6e45;
+  --c7t-gold: #c0ad81;
+  --c7t-gold-strong: #c0ad81;
+  --c7t-accent: #c0ad81;
+  --c7t-accent-soft: #d8c49a;
+  --c7t-text: #dfe2eb;
+  --c7t-text-dim: #b2b2b2;
+  --c7t-text-mute: #8f8a7c;
+  --c7t-hp: #c0392b;
+  --c7t-mp: #4f66c4;
+  --c7t-san: #5b8c3e;
+  --c7t-luck: #c08a2e;
+  --c7t-warn: #e0873a;
+  --c7t-shadow-card: 0 0 .375rem #00000080;
+}

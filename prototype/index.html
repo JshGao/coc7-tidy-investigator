@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>CoC7 Tidy 调查员卡 — 视觉样稿 v0.1</title>
+<link rel="stylesheet" href="prototype.css">
+</head>
+<body class="theme-light">
+
+<!-- ===== 原型工具条（不属于角色卡） ===== -->
+<div class="proto-bar">
+  <span class="proto-title">CoC7 Tidy 调查员卡 · 视觉样稿 v0.1</span>
+  <span class="proto-hint">目标：仿 Tidy 5e Sheets 的信息密度与质感</span>
+  <div class="proto-actions">
+    <button id="toggle-theme" class="proto-btn">切换暗色</button>
+    <button id="toggle-sidebar" class="proto-btn">收起收藏栏</button>
+  </div>
+</div>
+
+<!-- ===== SVG 符号 ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-shield" viewBox="0 0 100 112">
+    <path d="M50 5 L91 19 V56 C91 84 71 100 50 106 C29 100 9 84 9 56 V19 Z"/>
+  </symbol>
+  <symbol id="i-die" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="18" height="18" rx="3.5"/>
+    <circle cx="8.5" cy="8.5" r="1.4"/><circle cx="15.5" cy="15.5" r="1.4"/>
+    <circle cx="12" cy="12" r="1.4"/><circle cx="15.5" cy="8.5" r="1.4"/><circle cx="8.5" cy="15.5" r="1.4"/>
+  </symbol>
+  <symbol id="i-sword" viewBox="0 0 24 24">
+    <path d="M20 3l-9 9-3-3 9-9 3 3zM7 11l-2 2 3 3-4 4 2 2 4-4 3 3 2-2-8-8z"/>
+  </symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24">
+    <path d="M7 8h10l1.5 12h-13L7 8zm2 0V6a3 3 0 0 1 6 0v2h-2V6a1 1 0 0 0-2 0v2H9z"/>
+  </symbol>
+  <symbol id="i-book" viewBox="0 0 24 24">
+    <path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v11.2c.3-.1.7-.2 1-.2h11V5H6zm0 14a1 1 0 0 0 0 2h11v-2H6z"/>
+  </symbol>
+  <symbol id="i-spell" viewBox="0 0 24 24">
+    <path d="M12 2l2.4 6.2L21 9.6l-4.9 4.3 1.4 6.5L12 17l-5.5 3.4 1.4-6.5L3 9.6l6.6-1.4L12 2z"/>
+  </symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24">
+    <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+  </symbol>
+  <symbol id="i-star" viewBox="0 0 24 24">
+    <path d="M12 3l2.7 6.1 6.6.7-4.9 4.5 1.3 6.5L12 17.7 6.3 20.8l1.3-6.5L2.7 9.8l6.6-.7L12 3z"/>
+  </symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24">
+    <path d="M7 10V8a5 5 0 0 1 10 0v2h1.5v11h-13V10H7zm2 0h6V8a3 3 0 0 0-6 0v2z"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <path d="M10.5 3a7.5 7.5 0 1 1-4.7 13.3l-4 4L.4 18.9l4-4A7.5 7.5 0 0 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4z"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 17.2V21h3.8L19 9.8 15.2 6 4 17.2zM20.7 7.1a1 1 0 0 0 0-1.4l-2.4-2.4a1 1 0 0 0-1.4 0L15 5.2 18.8 9l1.9-1.9z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7L6 7zm3-4h6l1 2h4v2H4V5h4l1-2z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm-1 5v2h2V7h-2zm0 4v7h2v-7h-2z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24">
+    <path d="M3 5h3v3H3V5zm5 .5h13v2H8v-2zM3 10.5h3v3H3v-3zm5 .5h13v2H8v-2zM3 16h3v3H3v-3zm5 .5h13v2H8v-2z"/>
+  </symbol>
+  <symbol id="i-feather" viewBox="0 0 24 24">
+    <path d="M20.5 3.5c-3 0-7 1-10 4l-3 3v5l5-5c1.5-1.5 3-2 4-2-1 1-2 2-3 3.5L8.5 19 6 21l-1-1 2-2.5 3-5 .5-.7-4 4H3v-3l3.5-3.5c2.6-2.6 5.6-4.4 8.5-5.3 1.6-.5 3.3-.7 5.5-.5z"/>
+  </symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7-1.4-1.4L13.2 12 7.6 6.4 9 5z"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M12 5V1L6 6l6 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm-1 2h2v1.2c1.1.2 2 .9 2 2.1h-1.7c0-.6-.5-1-1.3-1s-1.3.4-1.3.9.5.7 1.6 1c1.5.4 2.8.8 2.8 2.4 0 1.2-.9 2-2.1 2.2V16h-2v-1.2c-1.3-.2-2.2-1-2.2-2.3H10c0 .7.6 1.1 1.6 1.1 1 0 1.5-.4 1.5-.9 0-.6-.5-.8-1.7-1.1-1.4-.4-2.7-.9-2.7-2.3 0-1.2.9-2 2.3-2.2V7z"/></symbol>
+</defs></svg>
+
+<!-- ===== 角色卡窗口 ===== -->
+<main class="c7t-window" role="application" aria-label="调查员角色卡">
+  <div class="c7t-sheet">
+
+    <!-- ========== 顶部横幅 ========== -->
+    <header class="c7t-banner">
+      <div class="c7t-banner-bg"></div>
+      <div class="c7t-banner-inner">
+
+        <!-- 头像 -->
+        <div class="c7t-portrait" title="点击更换头像 / 右键裁切">
+          <div class="c7t-portrait-frame">
+            <svg viewBox="0 0 100 100" class="c7t-portrait-art">
+              <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#4a4a52"/><stop offset="1" stop-color="#23232a"/>
+              </linearGradient></defs>
+              <rect width="100" height="100" fill="url(#pg)"/>
+              <circle cx="50" cy="38" r="17" fill="#8b8577"/>
+              <path d="M18 92c3-19 15-28 32-28s29 9 32 28z" fill="#8b8577"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 身份 + 控制 -->
+        <div class="c7t-identity">
+          <div class="c7t-identity-main">
+            <h1 class="c7t-name">埃莉诺·万斯</h1>
+            <div class="c7t-controls">
+              <button class="c7t-ctrl" title="解锁编辑"><svg><use href="#i-lock"/></svg></button>
+              <button class="c7t-ctrl" title="当前效果"><svg><use href="#i-bolt"/></svg><span class="c7t-ctrl-badge">2</span></button>
+              <button class="c7t-ctrl" title="更多"><svg><use href="#i-chev"/></svg></button>
+            </div>
+          </div>
+          <div class="c7t-subtitle">
+            <span>记者</span><i>·</i><span>32 岁</span><i>·</i><span>女</span><i>·</i><span>居住地：波士顿</span><i>·</i><span>玩家：小明</span>
+          </div>
+
+          <!-- 资源条（Tidy 式 vitals 胶囊） -->
+          <div class="c7t-vitals">
+            <div class="c7t-vital is-hp">
+              <span class="c7t-vital-label">HP</span>
+              <span class="c7t-vital-val"><b>6</b><em>/14</em></span>
+              <span class="c7t-vital-bar" style="--pct:43%"><i></i></span>
+            </div>
+            <div class="c7t-vital is-mp">
+              <span class="c7t-vital-label">MP</span>
+              <span class="c7t-vital-val"><b>10</b><em>/10</em></span>
+              <span class="c7t-vital-bar" style="--pct:100%"><i></i></span>
+            </div>
+            <div class="c7t-vital is-san">
+              <span class="c7t-vital-label">SAN</span>
+              <span class="c7t-vital-val"><b>55</b><em>/99</em></span>
+              <span class="c7t-vital-bar" style="--pct:56%"><i></i></span>
+            </div>
+            <div class="c7t-vital is-luck">
+              <span class="c7t-vital-label">幸运</span>
+              <span class="c7t-vital-val"><b>60</b><em>/99</em></span>
+              <span class="c7t-vital-bar" style="--pct:61%"><i></i></span>
+            </div>
+            <div class="c7t-deriveds">
+              <span class="c7t-derived" title="伤害加成">DB <b>0</b></span>
+              <span class="c7t-derived" title="体格">体格 <b>0</b></span>
+              <span class="c7t-derived" title="移动力">MOV <b>8</b></span>
+              <span class="c7t-derived" title="护甲">护甲 <b>0</b></span>
+              <span class="c7t-derived roll" title="灵感检定">灵感 <b>70</b></span>
+              <span class="c7t-derived roll" title="知识检定">知识 <b>75</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8 特性徽章 -->
+      <div class="c7t-abilities">
+        <button class="c7t-ability"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">STR</span><span class="c7t-ability-value">60</span><span class="c7t-ability-sub">30<i>/</i>12</span></button>
+        <button class="c7t-ability"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">CON</span><span class="c7t-ability-value">55</span><span class="c7t-ability-sub">27<i>/</i>11</span></button>
+        <button class="c7t-ability"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">SIZ</span><span class="c7t-ability-value">55</span><span class="c7t-ability-sub">27<i>/</i>11</span></button>
+        <button class="c7t-ability is-modified" title="受效果影响"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">DEX</span><span class="c7t-ability-value">65</span><span class="c7t-ability-sub">32<i>/</i>13</span><span class="c7t-ability-ae"></span></button>
+        <button class="c7t-ability"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">APP</span><span class="c7t-ability-value">45</span><span class="c7t-ability-sub">22<i>/</i>9</span></button>
+        <button class="c7t-ability"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">INT</span><span class="c7t-ability-value">70</span><span class="c7t-ability-sub">35<i>/</i>14</span></button>
+        <button class="c7t-ability"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">POW</span><span class="c7t-ability-value">50</span><span class="c7t-ability-sub">25<i>/</i>10</span></button>
+        <button class="c7t-ability"><svg class="c7t-ability-shield"><use href="#i-shield"/></svg><span class="c7t-ability-abbr">EDU</span><span class="c7t-ability-value">75</span><span class="c7t-ability-sub">37<i>/</i>15</span></button>
+      </div>
+
+      <!-- 状态 + 今日 SAN -->
+      <div class="c7t-banner-foot">
+        <div class="c7t-conditions">
+          <button class="c7t-chip is-wound">重伤</button>
+          <button class="c7t-chip">昏迷</button>
+          <button class="c7t-chip">濒死</button>
+          <button class="c7t-chip">死亡</button>
+          <button class="c7t-chip">倒地</button>
+          <button class="c7t-chip">临时疯狂</button>
+          <button class="c7t-chip">长期疯狂</button>
+        </div>
+        <div class="c7t-daily">
+          今日 SAN <b>3</b><i>/</i><b>5</b>
+          <button class="c7t-icon-btn" title="重置今日损失"><svg><use href="#i-undo"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Tab 行 -->
+      <nav class="c7t-tabs" role="tablist">
+        <button class="c7t-tab is-active" data-tab="skills" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-die"/></svg></span>技能</button>
+        <button class="c7t-tab" data-tab="summary" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-list"/></svg></span>简表</button>
+        <button class="c7t-tab" data-tab="possessions" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-bag"/></svg></span>物品</button>
+        <button class="c7t-tab" data-tab="background" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-book"/></svg></span>背景</button>
+        <button class="c7t-tab" data-tab="growth" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-star"/></svg></span>成长</button>
+        <button class="c7t-tab" data-tab="notes" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-feather"/></svg></span>笔记</button>
+        <button class="c7t-tab" data-tab="effects" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-bolt"/></svg></span>效果<span class="c7t-tab-count">2</span></button>
+      </nav>
+    </header>
+
+    <!-- ========== 主体 ========== -->
+    <div class="c7t-body">
+
+      <!-- 收藏侧栏 -->
+      <aside class="c7t-sidebar" id="sidebar">
+        <div class="c7t-sidebar-head">
+          <span>收藏</span>
+          <button class="c7t-icon-btn" id="pin-add" title="添加收藏"><svg><use href="#i-plus"/></svg></button>
+        </div>
+        <div class="c7t-sidebar-list">
+          <button class="c7t-pin"><span class="c7t-pin-ico"><svg><use href="#i-die"/></svg></span><span class="c7t-pin-name">侦查</span><b class="c7t-pin-val">65</b></button>
+          <button class="c7t-pin"><span class="c7t-pin-ico"><svg><use href="#i-die"/></svg></span><span class="c7t-pin-name">闪避</span><b class="c7t-pin-val">32</b></button>
+          <button class="c7t-pin"><span class="c7t-pin-ico"><svg><use href="#i-die"/></svg></span><span class="c7t-pin-name">图书馆使用</span><b class="c7t-pin-val">55</b></button>
+          <button class="c7t-pin"><span class="c7t-pin-ico"><svg><use href="#i-sword"/></svg></span><span class="c7t-pin-name">.45 自动手枪</span><b class="c7t-pin-val">40</b></button>
+          <button class="c7t-pin"><span class="c7t-pin-ico"><svg><use href="#i-die"/></svg></span><span class="c7t-pin-name">精神分析</span><b class="c7t-pin-val">1</b></button>
+        </div>
+        <div class="c7t-sidebar-foot">拖拽或右键可添加收藏</div>
+      </aside>
+
+      <!-- 内容区 -->
+      <div class="c7t-content">
+
+        <!-- ===== 技能 tab ===== -->
+        <section class="c7t-panel is-active" data-panel="skills">
+          <div class="c7t-toolbar">
+            <div class="c7t-search"><svg><use href="#i-search"/></svg><input type="text" placeholder="搜索技能…"></div>
+            <div class="c7t-seg">
+              <button class="is-active">按数值</button>
+              <button>按名称</button>
+            </div>
+            <label class="c7t-check"><input type="checkbox"> 显示罕见技能</label>
+            <span class="c7t-toolbar-spacer"></span>
+            <button class="c7t-btn"><svg><use href="#i-plus"/></svg>新增技能</button>
+          </div>
+
+          <div class="c7t-table skills">
+            <div class="c7t-thead">
+              <span class="col-name">技能</span>
+              <span class="col-base">基础</span>
+              <span class="col-val">当前</span>
+              <span class="col-half">半值</span>
+              <span class="col-fifth">1/5</span>
+              <span class="col-dev">成长</span>
+              <span class="col-act"></span>
+            </div>
+            <div class="c7t-tbody">
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">侦查</span></span>
+                <span class="col-base">25</span><span class="col-val is-strong">65</span><span class="col-half">32</span><span class="col-fifth">13</span>
+                <span class="col-dev"><i class="c7t-dev is-on"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable demo-hover">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">图书馆使用</span></span>
+                <span class="col-base">20</span><span class="col-val is-strong">55</span><span class="col-half">27</span><span class="col-fifth">11</span>
+                <span class="col-dev"><i class="c7t-dev is-on"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">聆听</span></span>
+                <span class="col-base">20</span><span class="col-val is-strong">45</span><span class="col-half">22</span><span class="col-fifth">9</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+
+              <!-- 专长分组 -->
+              <div class="c7t-group">
+                <button class="c7t-group-head"><svg class="c7t-caret is-open"><use href="#i-chev"/></svg><span>射击</span><span class="c7t-group-meta">专长 · 2 项</span></button>
+                <div class="c7t-group-body">
+                  <div class="c7t-row is-rollable">
+                    <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">手枪</span></span>
+                    <span class="col-base">20</span><span class="col-val is-strong">40</span><span class="col-half">20</span><span class="col-fifth">8</span>
+                    <span class="col-dev"><i class="c7t-dev"></i></span>
+                    <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+                  </div>
+                  <div class="c7t-row is-rollable">
+                    <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">步枪/霰弹枪</span></span>
+                    <span class="col-base">25</span><span class="col-val is-strong">25</span><span class="col-half">12</span><span class="col-fifth">5</span>
+                    <span class="col-dev"><i class="c7t-dev"></i></span>
+                    <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">说服</span></span>
+                <span class="col-base">10</span><span class="col-val is-strong">40</span><span class="col-half">20</span><span class="col-fifth">8</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">潜行</span></span>
+                <span class="col-base">20</span><span class="col-val is-strong">40</span><span class="col-half">20</span><span class="col-fifth">8</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">闪避</span></span>
+                <span class="col-base">32</span><span class="col-val is-strong">32</span><span class="col-half">16</span><span class="col-fifth">6</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">急救</span></span>
+                <span class="col-base">30</span><span class="col-val is-strong">30</span><span class="col-half">15</span><span class="col-fifth">6</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">心理学</span></span>
+                <span class="col-base">10</span><span class="col-val is-strong">35</span><span class="col-half">17</span><span class="col-fifth">7</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">母语（英语）</span></span>
+                <span class="col-base">75</span><span class="col-val is-strong">75</span><span class="col-half">37</span><span class="col-fifth">15</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">历史</span></span>
+                <span class="col-base">20</span><span class="col-val is-strong">20</span><span class="col-half">10</span><span class="col-fifth">4</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">神秘学</span></span>
+                <span class="col-base">5</span><span class="col-val is-strong">31</span><span class="col-half">15</span><span class="col-fifth">6</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">攀爬</span></span>
+                <span class="col-base">20</span><span class="col-val is-strong">20</span><span class="col-half">10</span><span class="col-fifth">4</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">医学</span></span>
+                <span class="col-base">1</span><span class="col-val is-strong">21</span><span class="col-half">10</span><span class="col-fifth">4</span>
+                <span class="col-dev"><i class="c7t-dev"></i></span>
+                <span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+
+            </div>
+          </div>
+          <div class="c7t-table-foot">共 43 项技能 · 已标记成长 2 项 · 点击技能名投骰，右键进行对抗检定</div>
+        </section>
+
+        <!-- ===== 简表 tab ===== -->
+        <section class="c7t-panel" data-panel="summary">
+          <div class="c7t-toolbar">
+            <span class="c7t-toolbar-title">速查</span>
+            <span class="c7t-toolbar-hint">武器与技能 · 技能按类别分组，仅列出已投入点数的条目</span>
+            <span class="c7t-toolbar-spacer"></span>
+            <label class="c7t-check"><input type="checkbox" checked> 仅显示已投入</label>
+            <button class="c7t-btn"><svg><use href="#i-plus"/></svg>新增武器</button>
+          </div>
+
+          <div class="c7t-table weapons compact">
+            <div class="c7t-thead">
+              <span class="col-name">武器</span><span class="col-skill">技能</span><span class="col-dmg">伤害</span>
+              <span class="col-range">射程</span><span class="col-rate">每轮</span><span class="col-ammo">弹药</span>
+              <span class="col-malf">故障</span><span class="col-act"></span>
+            </div>
+            <div class="c7t-tbody">
+              <div class="c7t-row demo-hover">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-sword"/></svg></i><span class="c7t-row-name">.45 自动手枪</span></span>
+                <span class="col-skill">40%</span><span class="col-dmg">1D10+2</span><span class="col-range">15 码</span>
+                <span class="col-rate">2</span><span class="col-ammo">7/7</span><span class="col-malf">100</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn act" title="攻击"><svg><use href="#i-die"/></svg></button>
+                  <button class="c7t-icon-btn act" title="掷伤害"><svg><use href="#i-bolt"/></svg></button>
+                </span>
+              </div>
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-sword"/></svg></i><span class="c7t-row-name">折叠刀</span></span>
+                <span class="col-skill">45%</span><span class="col-dmg">1D4+DB</span><span class="col-range">接触</span>
+                <span class="col-rate">1</span><span class="col-ammo">—</span><span class="col-malf">—</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn act" title="攻击"><svg><use href="#i-die"/></svg></button>
+                  <button class="c7t-icon-btn act" title="掷伤害"><svg><use href="#i-bolt"/></svg></button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="c7t-quick-skills">
+            <div class="c7t-skillgroup">
+              <h3>战斗技能<span class="c7t-qcount">4</span></h3>
+              <div class="c7t-chips">
+                <button class="c7t-skillchip"><span class="c7t-chip-name">格斗（斗殴）</span><b>45</b><span class="c7t-chip-sub">22 / 9</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">射击（手枪）</span><b>40</b><span class="c7t-chip-sub">20 / 8</span></button>
+                <button class="c7t-skillchip is-base" title="未投入点数，使用基础值"><span class="c7t-chip-name">闪避</span><b>32</b><span class="c7t-chip-sub">16 / 6</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">投掷</span><b>26</b><span class="c7t-chip-sub">13 / 5</span></button>
+              </div>
+            </div>
+
+            <div class="c7t-skillgroup">
+              <h3>调查技能<span class="c7t-qcount">7</span></h3>
+              <div class="c7t-chips">
+                <button class="c7t-skillchip"><span class="c7t-chip-name">侦查</span><b>65</b><span class="c7t-chip-sub">32 / 13</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">图书馆使用</span><b>55</b><span class="c7t-chip-sub">27 / 11</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">聆听</span><b>45</b><span class="c7t-chip-sub">22 / 9</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">心理学</span><b>35</b><span class="c7t-chip-sub">17 / 7</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">神秘学</span><b>31</b><span class="c7t-chip-sub">15 / 6</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">科学（生物学）</span><b>21</b><span class="c7t-chip-sub">10 / 4</span></button>
+              </div>
+            </div>
+
+            <div class="c7t-skillgroup">
+              <h3>社交技能<span class="c7t-qcount">2</span></h3>
+              <div class="c7t-chips">
+                <button class="c7t-skillchip"><span class="c7t-chip-name">说服</span><b>40</b><span class="c7t-chip-sub">20 / 8</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">信用评级</span><b>30</b><span class="c7t-chip-sub">15 / 6</span></button>
+              </div>
+            </div>
+
+            <div class="c7t-skillgroup">
+              <h3>生存技能<span class="c7t-qcount">2</span></h3>
+              <div class="c7t-chips">
+                <button class="c7t-skillchip"><span class="c7t-chip-name">潜行</span><b>40</b><span class="c7t-chip-sub">20 / 8</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">骑术</span><b>25</b><span class="c7t-chip-sub">12 / 5</span></button>
+              </div>
+            </div>
+
+            <div class="c7t-skillgroup">
+              <h3>技艺技能<span class="c7t-qcount">2</span></h3>
+              <div class="c7t-chips">
+                <button class="c7t-skillchip"><span class="c7t-chip-name">摄影</span><b>21</b><span class="c7t-chip-sub">10 / 4</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">电气维修</span><b>21</b><span class="c7t-chip-sub">10 / 4</span></button>
+              </div>
+            </div>
+
+            <div class="c7t-skillgroup">
+              <h3>医疗与精神<span class="c7t-qcount">2</span></h3>
+              <div class="c7t-chips">
+                <button class="c7t-skillchip is-base" title="未投入点数，使用基础值"><span class="c7t-chip-name">急救</span><b>30</b><span class="c7t-chip-sub">15 / 6</span></button>
+                <button class="c7t-skillchip"><span class="c7t-chip-name">医学</span><b>21</b><span class="c7t-chip-sub">10 / 4</span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== 物品 tab ===== -->
+        <section class="c7t-panel" data-panel="possessions">
+          <div class="c7t-money">
+            <div class="c7t-money-item"><span>信用评级</span><b>30</b><em>普通</em></div>
+            <div class="c7t-money-item"><span>现金</span><b>$ 38</b></div>
+            <div class="c7t-money-item"><span>资产</span><b>$ 1,200</b></div>
+            <div class="c7t-money-item"><span>消费水平</span><b>$ 10</b></div>
+          </div>
+          <div class="c7t-group is-open">
+            <button class="c7t-group-head"><svg class="c7t-caret is-open"><use href="#i-chev"/></svg><span>书籍</span><span class="c7t-group-meta">2 项</span></button>
+            <div class="c7t-group-body c7t-items-list">
+              <div class="c7t-row"><span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-book"/></svg></i><span class="c7t-row-name">《新英格兰民间传说》</span></span><span class="c7t-row-note">神话 +2% · 阅读 40%</span></div>
+              <div class="c7t-row"><span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-book"/></svg></i><span class="c7t-row-name">《阿卡姆郡志》</span></span><span class="c7t-row-note">阅读 100%</span></div>
+            </div>
+          </div>
+          <div class="c7t-group is-open">
+            <button class="c7t-group-head"><svg class="c7t-caret is-open"><use href="#i-chev"/></svg><span>物品</span><span class="c7t-group-meta">3 项</span></button>
+            <div class="c7t-group-body c7t-items-list">
+              <div class="c7t-row"><span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bag"/></svg></i><span class="c7t-row-name">记者证与笔记本</span></span><span class="c7t-row-note">随身</span></div>
+              <div class="c7t-row"><span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bag"/></svg></i><span class="c7t-row-name">柯达便携相机</span></span><span class="c7t-row-note">1 台</span></div>
+              <div class="c7t-row"><span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bag"/></svg></i><span class="c7t-row-name">手电筒与备用电池</span></span><span class="c7t-row-note">2 组</span></div>
+            </div>
+          </div>
+          <div class="c7t-group">
+            <button class="c7t-group-head"><svg class="c7t-caret"><use href="#i-chev"/></svg><span>法术</span><span class="c7t-group-meta">0 项</span></button>
+          </div>
+          <div class="c7t-group">
+            <button class="c7t-group-head"><svg class="c7t-caret"><use href="#i-chev"/></svg><span>天赋</span><span class="c7t-group-meta">1 项</span></button>
+          </div>
+        </section>
+
+        <!-- ===== 背景 tab ===== -->
+        <section class="c7t-panel" data-panel="background">
+          <div class="c7t-cols">
+            <div class="c7t-field"><span>职业</span><b>记者</b></div>
+            <div class="c7t-field"><span>年龄</span><b>32</b></div>
+            <div class="c7t-field"><span>性别</span><b>女</b></div>
+            <div class="c7t-field"><span>出生地</span><b>塞勒姆</b></div>
+            <div class="c7t-field"><span>居住地</span><b>波士顿</b></div>
+            <div class="c7t-field"><span>组织</span><b>《阿卡姆广告人报》</b></div>
+          </div>
+
+          <div class="c7t-toolbar">
+            <span class="c7t-toolbar-title">背景</span>
+            <span class="c7t-toolbar-hint">规则书背景要素 · 可勾选多项作为「关键链接」</span>
+            <span class="c7t-toolbar-spacer"></span>
+            <span class="c7t-key-summary"><svg><use href="#i-star"/></svg>关键链接：思想信念、重要之人</span>
+          </div>
+
+          <div class="c7t-bio-grid">
+            <section class="c7t-bio-card is-wide">
+              <header class="c7t-bio-head">
+                <h3>外貌形象</h3>
+                <button class="c7t-key-toggle" type="button"><span class="c7t-key-box"></span>关键链接</button>
+                <button class="c7t-icon-btn" title="编辑"><svg><use href="#i-pencil"/></svg></button>
+              </header>
+              <div class="c7t-prose">三十出头，深棕色短发总有些乱；常年穿一件男式风衣，口袋里塞着笔记本和半截铅笔。左手腕有一道旧疤。</div>
+            </section>
+
+            <section class="c7t-bio-card is-key">
+              <header class="c7t-bio-head">
+                <h3>思想信念</h3>
+                <button class="c7t-key-toggle is-on" type="button"><span class="c7t-key-box"></span>关键链接</button>
+                <button class="c7t-icon-btn" title="编辑"><svg><use href="#i-pencil"/></svg></button>
+              </header>
+              <div class="c7t-prose">真相必须被记录，哪怕没有人愿意刊登。</div>
+            </section>
+
+            <section class="c7t-bio-card">
+              <header class="c7t-bio-head">
+                <h3>宝贵之物</h3>
+                <button class="c7t-key-toggle" type="button"><span class="c7t-key-box"></span>关键链接</button>
+                <button class="c7t-icon-btn" title="编辑"><svg><use href="#i-pencil"/></svg></button>
+              </header>
+              <div class="c7t-prose">母亲留下的黄铜怀表，表盖内侧刻着一行小字：“别回头”。</div>
+            </section>
+
+            <section class="c7t-bio-card">
+              <header class="c7t-bio-head">
+                <h3>意义非凡之地</h3>
+                <button class="c7t-key-toggle" type="button"><span class="c7t-key-box"></span>关键链接</button>
+                <button class="c7t-icon-btn" title="编辑"><svg><use href="#i-pencil"/></svg></button>
+              </header>
+              <div class="c7t-prose">塞勒姆郊外那座烧毁的旧宅——她童年的最后一年。</div>
+            </section>
+
+            <section class="c7t-bio-card is-key">
+              <header class="c7t-bio-head">
+                <h3>重要之人</h3>
+                <button class="c7t-key-toggle is-on" type="button"><span class="c7t-key-box"></span>关键链接</button>
+                <button class="c7t-icon-btn" title="编辑"><svg><use href="#i-pencil"/></svg></button>
+              </header>
+              <div class="c7t-prose">报社主编 哈维·邓恩——唯一相信她、也唯一敢压住她稿子的人。</div>
+            </section>
+
+            <section class="c7t-bio-card is-wide">
+              <header class="c7t-bio-head">
+                <h3>特质</h3>
+                <button class="c7t-key-toggle" type="button"><span class="c7t-key-box"></span>关键链接</button>
+                <button class="c7t-icon-btn" title="编辑"><svg><use href="#i-pencil"/></svg></button>
+              </header>
+              <div class="c7t-prose">好奇心压过恐惧；对同行有近乎固执的义气；习惯用玩笑掩饰不安。</div>
+            </section>
+
+            <section class="c7t-bio-card is-wide">
+              <header class="c7t-bio-head">
+                <h3>伤疤和恐惧症</h3>
+                <button class="c7t-key-toggle" type="button"><span class="c7t-key-box"></span>关键链接</button>
+                <button class="c7t-icon-btn" title="编辑"><svg><use href="#i-pencil"/></svg></button>
+              </header>
+              <div class="c7t-prose">伤疤：左前臂有一道烧伤疤痕（1924 年，阿卡姆仓库火灾）。<br>
+恐惧症：黑暗、密闭空间。<br>
+狂热症：收集旧报纸。</div>
+            </section>
+          </div>
+
+          <div class="c7t-section" style="margin-top:10px">
+            <div class="c7t-section-head">背景故事</div>
+            <div class="c7t-prose">在《阿卡姆广告人报》跑社会新闻的第五年，埃莉诺开始收到一些无法见报的匿名信。信里提到的“塞勒姆旧宅”与她童年的记忆严丝合缝——那是母亲反复叮嘱她永远不要回去的地方。</div>
+          </div>
+          <div class="c7t-section" style="margin-top:8px">
+            <div class="c7t-section-head">遭遇记录</div>
+            <div class="c7t-prose">1925 年春，阿卡姆码头仓库——目击不可名状的阴影，SAN -4。</div>
+          </div>
+        </section>
+
+        <!-- ===== 其余 tab 占位 ===== -->
+        <section class="c7t-panel" data-panel="growth"><div class="c7t-empty"><b>成长</b><p>幕间成长：个人 / 职业 / 原型 / 经验包点数分配，技能成长检定。</p></div></section>
+        <section class="c7t-panel" data-panel="notes"><div class="c7t-empty"><b>笔记</b><p>守秘笔记、书籍进度、SAN 损失事件、状态清除与货币配置（GM 可见）。</p></div></section>
+        <section class="c7t-panel" data-panel="effects">
+          <div class="c7t-table effects">
+            <div class="c7t-row"><span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bolt"/></svg></i><span class="c7t-row-name">肾上腺素上涌</span></span><span class="c7t-row-note">力量 +10 · 持续 3 轮</span><span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span></div>
+            <div class="c7t-row"><span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bolt"/></svg></i><span class="c7t-row-name">恐惧</span></span><span class="c7t-row-note">所有检定 -1 惩罚骰</span><span class="col-act"><button class="c7t-icon-btn"><svg><use href="#i-trash"/></svg></button></span></div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// 仅用于样稿演示：tab 切换 / 主题切换 / 侧栏折叠 / URL 参数预设
+document.querySelectorAll('.c7t-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.c7t-tab').forEach(t => t.classList.remove('is-active'));
+    tab.classList.add('is-active');
+    document.querySelectorAll('.c7t-panel').forEach(p => p.classList.toggle('is-active', p.dataset.panel === tab.dataset.tab));
+  });
+});
+document.getElementById('toggle-theme').addEventListener('click', (e) => {
+  const dark = document.body.classList.toggle('theme-dark');
+  document.body.classList.toggle('theme-light', !dark);
+  e.target.textContent = dark ? '切换亮色' : '切换暗色';
+});
+document.getElementById('toggle-sidebar').addEventListener('click', (e) => {
+  const collapsed = document.getElementById('sidebar').classList.toggle('is-collapsed');
+  e.target.textContent = collapsed ? '展开收藏栏' : '收起收藏栏';
+});
+
+// URL 参数预设（便于截图评审）：?theme=dark&tab=combat&sidebar=collapsed
+const params = new URLSearchParams(location.search);
+if (params.get('theme') === 'dark') document.getElementById('toggle-theme').click();
+if (params.get('tab')) {
+  const t = document.querySelector('.c7t-tab[data-tab="' + params.get('tab') + '"]');
+  if (t) t.click();
+}
+if (params.get('sidebar') === 'collapsed') document.getElementById('toggle-sidebar').click();
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<div class="c7t-toolbar">
+  <span class="c7t-toolbar-title">{{localize 'C7TIDY.Summary.Weapons'}}</span>
+  <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Summary.Hint'}}</span>
+  {{#if isEditing}}
+    <button type="button" class="c7t-btn" data-action="createItem" data-type="weapon">
+      <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Summary.AddWeapon'}}
+    </button>
+  {{/if}}
+</div>
+
+<div class="c7t-table weapons compact">
+  <div class="c7t-thead">
+    <span class="col-name">{{localize 'C7TIDY.Weapon.Name'}}</span>
+    <span class="col-skill">{{localize 'C7TIDY.Weapon.Skill'}}</span>
+    <span class="col-dmg">{{localize 'C7TIDY.Weapon.Damage'}}</span>
+    <span class="col-range">{{localize 'C7TIDY.Weapon.Range'}}</span>
+    <span class="col-rate">{{localize 'C7TIDY.Weapon.Rate'}}</span>
+    <span class="col-ammo">{{localize 'C7TIDY.Weapon.Ammo'}}</span>
+    <span class="col-malf">{{localize 'C7TIDY.Weapon.Malfunction'}}</span>
+    <span class="col-act"></span>
+  </div>
+  <div class="c7t-tbody">
+    {{#each weapons as |weapon|}}
+      <div class="c7t-row" data-item-id="{{weapon.id}}">
+        <span class="col-name">
+          {{#if weapon.img}}<img class="c7t-row-ico" src="{{weapon.img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-gun"></i></i>{{/if}}
+          <span class="c7t-row-name">{{weapon.name}}</span>
+        </span>
+        <span class="col-skill">{{weapon.skillValue}}%</span>
+        <span class="col-dmg">{{weapon.damage}}</span>
+        <span class="col-range">{{weapon.range}}</span>
+        <span class="col-rate">{{weapon.rate}}</span>
+        <span class="col-ammo">{{weapon.bullets}}</span>
+        <span class="col-malf">{{weapon.malfunction}}</span>
+        <span class="col-act">
+          <button type="button" class="c7t-icon-btn act" data-action="weaponAttack" data-tooltip="C7TIDY.Weapon.Attack">
+            <i class="fa-solid fa-crosshairs"></i>
+          </button>
+          <button type="button" class="c7t-icon-btn" data-action="weaponDamage" data-tooltip="C7TIDY.Weapon.DamageRoll">
+            <i class="fa-solid fa-dice-d6"></i>
+          </button>
+          <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+        </span>
+      </div>
+    {{else}}
+      <div class="c7t-empty"><b>{{localize 'C7TIDY.Weapon.Empty'}}</b></div>
+    {{/each}}
+  </div>
+</div>
+
+<div class="c7t-quick-skills">
+  {{#each summary as |category|}}
+    {{#if category.count}}
+      <div class="c7t-skillgroup">
+        <h3>{{localize category.label}}<span class="c7t-qcount">{{category.count}}</span></h3>
+        <div class="c7t-chips">
+          {{#each category.skills as |skill|}}
+            <button type="button" class="c7t-skillchip{{#unless skill.invested}} is-base{{/unless}}"
+              data-action="rollSkill" data-item-id="{{skill.id}}"
+              data-tooltip="{{#if skill.invested}}{{localize 'C7TIDY.Summary.Invested'}}{{else}}{{localize 'C7TIDY.Summary.Base'}}{{/if}}">
+              <span class="c7t-chip-name">{{skill.name}}</span>
+              <b>{{skill.value}}</b>
+              <span class="c7t-chip-sub">{{skill.half}} / {{skill.fifth}}</span>
+            </button>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+  {{/each}}
+</div>

@@ -1,0 +1,65 @@
+<div class="c7t-section">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Notes.Keeper'}}</div>
+  {{#if isEditing}}
+    <textarea class="c7t-bio-input is-block" name="system.description.keeper" placeholder="{{localize 'C7TIDY.Notes.Keeper'}}">{{notes.keeper}}</textarea>
+  {{else}}
+    <div class="c7t-prose">{{{notes.keeperHtml}}}</div>
+  {{/if}}
+</div>
+
+<div class="c7t-section" style="margin-top:8px">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Notes.Books'}}</div>
+  {{#if notes.books.length}}
+    <div class="c7t-table effects">
+      {{#each notes.books as |book|}}
+        <div class="c7t-row">
+          <span class="col-name"><i class="c7t-row-ico"><i class="fa-solid fa-book"></i></i><span class="c7t-row-name">{{book.name}}</span></span>
+          <span class="c7t-row-note">{{localize 'C7TIDY.Notes.ReadProgress'}}
+            {{#if @root.isEditing}}
+              <input class="c7t-book-progress" type="number" min="0" step="1" value="{{book.progress}}" data-index="{{book.index}}">/{{book.necessary}}
+            {{else}}
+              {{book.progress}}/{{book.necessary}}
+            {{/if}}
+          </span>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="c7t-prose">{{localize 'C7TIDY.Notes.NoBooks'}}</div>
+  {{/if}}
+</div>
+
+<div class="c7t-section" style="margin-top:8px">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Notes.SanEvents'}}</div>
+  {{#if notes.sanEvents.length}}
+    <div class="c7t-table effects">
+      {{#each notes.sanEvents as |event|}}
+        <div class="c7t-row">
+          <span class="col-name"><span class="c7t-row-name">{{event.type}}</span></span>
+          <span class="c7t-row-note">-{{event.totalLoss}} SAN{{#if event.immunity}} · {{localize 'C7TIDY.Notes.Immune'}}{{/if}}</span>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="c7t-prose">{{localize 'C7TIDY.Notes.NoSanEvents'}}</div>
+  {{/if}}
+</div>
+
+<div class="c7t-section" style="margin-top:8px">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Notes.Flags'}}</div>
+  <div class="c7t-flags">
+    <button type="button" class="c7t-chip{{#if notes.mythosHardened}} is-active{{/if}}"
+      data-action="toggleActorFlag" data-flag="mythosHardened">{{localize 'C7TIDY.Notes.MythosHardened'}}</button>
+    <button type="button" class="c7t-chip{{#if notes.mythosExperienced}} is-active{{/if}}"
+      data-action="toggleActorFlag" data-flag="mythosInsanityExperienced">{{localize 'C7TIDY.Notes.MythosExperienced'}}</button>
+  </div>
+</div>
+
+<div class="c7t-section" style="margin-top:8px">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Notes.Conditions'}}</div>
+  <div class="c7t-flags">
+    <button type="button" class="c7t-btn" data-action="clearConditions">
+      <i class="fa-solid fa-broom"></i>{{localize 'C7TIDY.Notes.ClearConditions'}}
+    </button>
+  </div>
+</div>

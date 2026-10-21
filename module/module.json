@@ -1,0 +1,53 @@
+{
+  "id": "coc7-tidy-investigator",
+  "title": "CoC7 Tidy 调查员卡",
+  "description": "仿 Tidy 5e Sheets 风格的 CoC7 调查员角色卡：横幅特性盾徽、技能/简表/物品/背景/成长/笔记/效果七个标签页、收藏侧栏、拖拽排序、成长记录与撤销。可选注册，不替换系统默认卡。",
+  "version": "0.7.2",
+  "authors": [
+    {
+      "name": "JshGao",
+      "url": "https://github.com/JshGao"
+    }
+  ],
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14.368"
+  },
+  "esmodules": [
+    "scripts/module.js"
+  ],
+  "styles": [
+    "styles/tokens.css",
+    "styles/sheet.css"
+  ],
+  "languages": [
+    {
+      "lang": "cn",
+      "name": "中文（简体）",
+      "path": "lang/cn.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "CoC7",
+        "type": "system",
+        "compatibility": {
+          "minimum": "8.16"
+        }
+      }
+    ]
+  },
+  "readme": "README.md",
+  "url": "https://github.com/JshGao/coc7-tidy-investigator",
+  "manifest": "https://raw.githubusercontent.com/JshGao/coc7-tidy-investigator/main/module/module.json",
+  "license": "MIT",
+  "download": "https://github.com/JshGao/coc7-tidy-investigator/releases/download/v0.7.2/coc7-tidy-investigator-v0.7.2.zip",
+  "bugs": "https://github.com/JshGao/coc7-tidy-investigator/issues",
+  "changelog": "https://github.com/JshGao/coc7-tidy-investigator/blob/main/CHANGELOG.md"
+}

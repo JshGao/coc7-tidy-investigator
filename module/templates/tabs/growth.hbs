@@ -1,0 +1,105 @@
+<div class="c7t-cols is-four">
+  {{#each growth.pools as |pool|}}
+    <div class="c7t-field"><span>{{localize pool.label}}</span><b>{{pool.total}}</b>
+      <em class="c7t-field-sub">{{localize 'C7TIDY.Growth.Spent'}} {{pool.spent}}</em></div>
+  {{/each}}
+</div>
+
+<div class="c7t-toolbar">
+  <span class="c7t-toolbar-title">{{localize 'C7TIDY.Growth.CanGrow'}}</span>
+  <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Growth.Hint'}}</span>
+  <button type="button" class="c7t-btn" data-action="growthAll">
+    <i class="fa-solid fa-angles-up"></i>{{localize 'C7TIDY.Growth.GrowthAll'}}
+  </button>
+</div>
+
+<div class="c7t-table skills">
+  <div class="c7t-thead">
+    <span class="col-name">{{localize 'C7TIDY.Skills.Name'}}</span>
+    <span class="col-base">{{localize 'C7TIDY.Skills.Base'}}</span>
+    <span class="col-val">{{localize 'C7TIDY.Skills.Value'}}</span>
+    <span class="col-half">{{localize 'C7TIDY.Skills.Half'}}</span>
+    <span class="col-fifth">{{localize 'C7TIDY.Skills.Fifth'}}</span>
+    <span class="col-dev">{{localize 'C7TIDY.Skills.Development'}}</span>
+    <span class="col-act"></span>
+  </div>
+  <div class="c7t-tbody">
+    {{#each growth.marked as |skill|}}
+      <div class="c7t-row is-growth-row{{#if @root.isEditing}} is-rollable{{/if}}" data-item-id="{{skill.id}}">
+        <span class="col-name">
+          {{#if skill.img}}<img class="c7t-row-ico" src="{{skill.img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-dice-d20"></i></i>{{/if}}
+          <span class="c7t-row-name">{{skill.name}}</span>
+        </span>
+        <span class="col-base">{{skill.base}}</span>
+        <span class="col-val is-strong">{{skill.value}}</span>
+        <span class="col-half">{{skill.half}}</span>
+        <span class="col-fifth">{{skill.fifth}}</span>
+        <span class="col-dev">
+          <button type="button" class="c7t-dev-hit" data-tooltip="C7TIDY.Growth.Unmark">
+            <span class="c7t-dev is-on"></span>
+          </button>
+        </span>
+        <span class="col-act">
+          {{#if @root.isEditing}}
+            <input class="c7t-growth-manual" type="number" step="1" value="{{skill.value}}"
+              data-item-id="{{skill.id}}" data-current="{{skill.value}}"
+              data-tooltip="{{localize 'C7TIDY.Growth.Manual'}}">
+          {{else}}
+            <span class="c7t-growth-value-text">{{skill.value}}</span>
+          {{/if}}
+          <button type="button" class="c7t-icon-btn" data-action="developSkill" data-tooltip="C7TIDY.Growth.Develop">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+          </button>
+        </span>
+      </div>
+    {{else}}
+      <div class="c7t-empty"><b>{{localize 'C7TIDY.Growth.Empty'}}</b></div>
+    {{/each}}
+  </div>
+</div>
+
+<div class="c7t-toolbar" style="margin-top:14px">
+  <span class="c7t-toolbar-title">{{localize 'C7TIDY.Growth.History'}}</span>
+  <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-growth-active">{{localize 'C7TIDY.Growth.ActiveModule'}}<b>{{growth.activeLabel}}</b></span>
+  <button type="button" class="c7t-btn" data-action="newGrowthModule">
+    <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Growth.NewModule'}}
+  </button>
+</div>
+
+<div class="c7t-growth-groups">
+  {{#each growth.historyGroups as |group|}}
+    <section class="c7t-growth-group">
+      <header class="c7t-growth-group-head">
+        <i class="fa-solid fa-book-open"></i>
+        <input class="c7t-growth-label" type="text" value="{{group.label}}" data-old-label="{{group.label}}"
+          placeholder="{{localize 'C7TIDY.Growth.DefaultModule'}}">
+        <span class="c7t-growth-group-count">{{group.records.length}}</span>
+      </header>
+      <div class="c7t-growth-records">
+        {{#each group.records as |record|}}
+          <div class="c7t-growth-record">
+            <span class="c7t-growth-date">{{record.date}}</span>
+            {{#if record.img}}<img class="c7t-row-ico" src="{{record.img}}" alt="">{{/if}}
+            <span class="c7t-growth-skill">{{record.name}}</span>
+            <span class="c7t-growth-nums">{{record.before}} →</span>
+            {{#if @root.isEditing}}
+              <input class="c7t-growth-after" type="number" step="1" value="{{record.after}}"
+                data-record-id="{{record.id}}" data-tooltip="{{localize 'C7TIDY.Growth.Manual'}}">
+            {{else}}
+              <b class="c7t-growth-value-text">{{record.after}}</b>
+            {{/if}}
+            <b class="c7t-growth-gain{{#if record.gain}} is-plus{{/if}}">+{{record.gain}}</b>
+            <button type="button" class="c7t-icon-btn" data-action="undoGrowth" data-record-id="{{record.id}}"
+              data-tooltip="{{localize 'C7TIDY.Growth.Undo'}}">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </div>
+        {{/each}}
+      </div>
+    </section>
+  {{else}}
+    <div class="c7t-empty"><b>{{localize 'C7TIDY.Growth.NoHistory'}}</b></div>
+  {{/each}}
+</div>
