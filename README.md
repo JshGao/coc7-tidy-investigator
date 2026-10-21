@@ -4,7 +4,7 @@
 把 CoC7 的调查员卡做成 **Tidy 5e Sheets** 那种干净、信息密度高的样子。
 可选注册，**不替换**系统默认角色卡；纯 Handlebars + CSS，无构建依赖。
 
-![技能页](docs/screenshots/skills.png)
+![封面](docs/screenshots/cover.png)
 
 ---
 
@@ -112,6 +112,7 @@ ln -s "$PWD/module" \
 
 - [调研报告](docs/01-调研报告.md)：CoC7 架构、Tidy 设计语言、Foundry 14 API、兼容红线
 - [设计文档](docs/02-设计文档.md)：布局方案、视觉 token、组件、交互、数据映射、技能分类
+- [宣传稿 / 功能导览](docs/03-宣传稿.md)
 - [更新日志](CHANGELOG.md)
 
 ---
