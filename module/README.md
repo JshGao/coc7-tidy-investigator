@@ -2,7 +2,7 @@
 
 *Tidy-style investigator, NPC/creature and container sheets for Call of Cthulhu 7e on Foundry VTT 14.*
 
-**当前版本：0.8.2**
+**当前版本：0.8.3**
 
 仿 **Tidy 5e Sheets** 风格的 CoC7 角色卡：**调查员卡** + **生物 / NPC 卡**，可选注册、不替换系统默认卡。
 纯 Handlebars + CSS，无构建依赖。

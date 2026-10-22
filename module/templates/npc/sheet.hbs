@@ -44,7 +44,7 @@
           {{/if}}
         </div>
 
-        <div class="c7t-vitals">
+        <div class="c7t-vitals{{#if isEditing}} is-editing{{/if}}">
           {{#each resources as |res|}}
             <div class="c7t-vital {{res.cls}}{{#if res.low}} is-low{{/if}}">
               <span class="c7t-vital-label">{{localize res.label}}</span>

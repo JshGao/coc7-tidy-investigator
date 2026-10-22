@@ -5,7 +5,7 @@
 **调查员卡** + **生物 / NPC 卡** + **容器卡**。
 可选注册，**不替换**系统默认卡；纯 Handlebars + CSS，无构建依赖。
 
-**当前版本：0.8.2**（2026-10-22） · [Release Notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
+**当前版本：0.8.3**（2026-10-22） · [Release Notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
 
 ![封面](docs/screenshots/cover.png)
 
@@ -38,6 +38,14 @@
 - 编辑态：公式模式（特性公式 + 掷特性 / 取平均）、auto 齿轮、资源/派生内联编辑；技能当前值内联、物品数量/拖拽排序
 - 描述与守秘：personalDescription 富文本、GM 笔记、骰子宏（拖入添加 / 执行 / 删除）
 - 静态样稿：[prototype/npc.html](prototype/npc.html) · 设计文档：[docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
+
+| 生物 / NPC 卡 · 战斗 | 编辑态 |
+|---|---|
+| ![生物卡·战斗](docs/screenshots/npc-combat.png) | ![生物卡·编辑态](docs/screenshots/npc-combat-edit.png) |
+
+| 技能页 | 暗色主题 |
+|---|---|
+| ![生物卡·技能](docs/screenshots/npc-skills.png) | ![生物卡·暗色](docs/screenshots/npc-dark.png) |
 
 | 简表 | 背景 |
 |---|---|
@@ -104,7 +112,7 @@ https://raw.githubusercontent.com/JshGao/coc7-tidy-investigator/main/module/modu
 
 ## 版本
 
-- **0.8.2（2026-10-22）**：Tidy 生物 / NPC 卡 + 容器卡；调查员卡资源拖拽排序；三卡统一 Tab 样式与若干修复。
+- **0.8.3（2026-10-22）**：Tidy 生物 / NPC 卡 + 容器卡；调查员卡资源拖拽排序；三卡统一 Tab 样式；编辑态资源布局修复与若干细节修复。
   - 设计文档：[docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
   - 静态预览：[prototype/npc.html](prototype/npc.html)
   - 更新日志：[CHANGELOG.md](CHANGELOG.md)

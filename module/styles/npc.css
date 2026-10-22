@@ -59,6 +59,17 @@
 .c7t-npc .c7t-auto-gear.is-on { color: #d8c49a; }
 .c7t-npc .c7t-auto-gear i { font-size: 10px; }
 
+
+/* 编辑态：资源改为 2 列网格，给输入框 + auto 齿轮留足宽度 */
+.c7t-npc .c7t-vitals.is-editing {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+.c7t-npc .c7t-vitals.is-editing .c7t-vital { width: auto; }
+.c7t-npc .c7t-vitals.is-editing .c7t-vital-label { white-space: nowrap; }
+.c7t-npc .c7t-vitals.is-editing .c7t-deriveds { grid-column: 1 / -1; row-gap: 6px; }
+
 /* ---------- 横幅底行：每轮攻击 / SAN 损失 / 护甲 ---------- */
 .c7t-npc .c7t-banner-foot { flex-wrap: wrap; row-gap: 6px; }
 .c7t-npc .c7t-combatbar {
