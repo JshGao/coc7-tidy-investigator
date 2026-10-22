@@ -1,0 +1,49 @@
+<div class="c7t-cols c7t-npc-cols{{#if npc.isCreature}} is-single{{/if}}">
+  {{#if npc.isCreature}}
+    <div class="c7t-field">
+      <span>{{localize 'C7TIDY.Npc.Type'}}</span>
+      {{#if isEditing}}
+        <input class="c7t-field-input" type="text" name="system.infos.type" value="{{npc.type}}">
+      {{else}}
+        <b>{{#if npc.type}}{{npc.type}}{{else}}—{{/if}}</b>
+      {{/if}}
+    </div>
+  {{else}}
+    <div class="c7t-field">
+      <span>{{localize 'C7TIDY.Npc.Occupation'}}</span>
+      {{#if isEditing}}
+        <input class="c7t-field-input" type="text" name="system.infos.occupation" value="{{npc.occupation}}">
+      {{else}}
+        <b>{{#if npc.occupation}}{{npc.occupation}}{{else}}—{{/if}}</b>
+      {{/if}}
+    </div>
+    <div class="c7t-field">
+      <span>{{localize 'C7TIDY.Npc.Age'}}</span>
+      {{#if isEditing}}
+        <input class="c7t-field-input" type="text" name="system.infos.age" value="{{npc.age}}">
+      {{else}}
+        <b>{{#if npc.age}}{{npc.age}}{{else}}—{{/if}}</b>
+      {{/if}}
+    </div>
+    <div class="c7t-field">
+      <span>{{localize 'C7TIDY.Npc.Organization'}}</span>
+      {{#if isEditing}}
+        <input class="c7t-field-input" type="text" name="system.infos.organization" value="{{npc.organization}}">
+      {{else}}
+        <b>{{#if npc.organization}}{{npc.organization}}{{else}}—{{/if}}</b>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
+
+<div class="c7t-section c7t-npc-section">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Npc.Description'}}</div>
+  {{#if isEditing}}
+    <prose-mirror class="c7t-npc-prose" name="system.biography.personalDescription.value"
+      value="{{npcText.personal}}" data-document-uuid="{{actor.uuid}}" toggled>{{{npcText.personalHtml}}}</prose-mirror>
+  {{else}}
+    <div class="c7t-prose c7t-npc-prose">{{{npcText.personalHtml}}}</div>
+  {{/if}}
+</div>
+
+<div class="c7t-table-foot">{{localize 'C7TIDY.Npc.DescriptionFoot'}}</div>

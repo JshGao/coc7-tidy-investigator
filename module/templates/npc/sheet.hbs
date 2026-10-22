@@ -1,0 +1,217 @@
+<div class="c7t-sheet{{#if isGM}} is-gm{{/if}}{{#if isCompact}} is-compact{{/if}}{{#if formulaMode}} is-formula{{/if}}">
+  {{> "modules/coc7-tidy-investigator/templates/parts/icons.hbs"}}
+
+  <header class="c7t-banner">
+    <div class="c7t-banner-bg"></div>
+
+    <div class="c7t-banner-inner">
+      <div class="c7t-portrait">
+        <img class="c7t-portrait-img" src="{{actor.img}}" {{#if canEdit}}data-edit="img" data-action="editImage"{{/if}} alt="{{actor.name}}">
+      </div>
+
+      <div class="c7t-identity">
+        <div class="c7t-identity-main">
+          <h1 class="c7t-name">
+            {{#if isEditing}}
+              <input class="c7t-name-input" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'C7TIDY.Npc.NamePlaceholder'}}">
+            {{else}}
+              <span class="c7t-name-text">{{actor.name}}</span>
+            {{/if}}
+          </h1>
+          <div class="c7t-controls">
+            {{#if canEdit}}
+              <button type="button" class="c7t-ctrl" data-action="toggleLock"
+                data-tooltip="{{#if isLocked}}C7TIDY.Action.Unlock{{else}}C7TIDY.Action.Lock{{/if}}">
+                <i class="fa-solid {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+              </button>
+            {{/if}}
+            {{#if isEditing}}
+              <button type="button" class="c7t-ctrl{{#if formulaMode}} is-on{{/if}}" data-action="toggleFormulaMode"
+                data-tooltip="{{#if formulaMode}}C7TIDY.Npc.FormulaOff{{else}}C7TIDY.Npc.FormulaOn{{/if}}">
+                <span class="c7t-ctrl-fx">ƒ</span>
+              </button>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="c7t-subtitle">
+          {{#if npc.isCreature}}
+            {{#if npc.type}}<span>{{localize 'C7TIDY.Npc.Type'}}：{{npc.type}}</span>{{/if}}
+          {{else}}
+            {{#if npc.occupation}}<span>{{npc.occupation}}</span><i>·</i>{{/if}}
+            {{#if npc.age}}<span>{{npc.age}}</span><i>·</i>{{/if}}
+            {{#if npc.organization}}<span>{{npc.organization}}</span>{{/if}}
+          {{/if}}
+        </div>
+
+        <div class="c7t-vitals">
+          {{#each resources as |res|}}
+            <div class="c7t-vital {{res.cls}}{{#if res.low}} is-low{{/if}}">
+              <span class="c7t-vital-label">{{localize res.label}}</span>
+              {{#if @root.isEditing}}
+                <span class="c7t-vital-val is-editing">
+                  <input class="c7t-vital-input" type="number" step="1"
+                    name="system.attribs.{{res.key}}.value" value="{{res.inputValue}}">
+                  {{#if res.hasMax}}
+                    <em>/</em>
+                    <input class="c7t-vital-input is-max" type="number" step="1"
+                      name="system.attribs.{{res.key}}.max" value="{{res.max}}"
+                      {{#if res.auto}}readonly{{/if}}>
+                  {{/if}}
+                  {{#if res.autoCapable}}
+                    <button type="button" class="c7t-icon-btn c7t-auto-gear{{#if res.auto}} is-on{{/if}}"
+                      data-action="toggleAuto" data-key="{{res.key}}"
+                      data-tooltip="{{#if res.auto}}C7TIDY.Npc.AutoOff{{else}}C7TIDY.Npc.AutoOn{{/if}}">
+                      <i class="fa-solid fa-gear"></i>
+                    </button>
+                  {{/if}}
+                </span>
+              {{else}}
+                <span class="c7t-vital-val"><b>{{res.value}}</b>{{#if res.hasMax}}<em>/{{res.max}}</em>{{/if}}</span>
+              {{/if}}
+              <span class="c7t-vital-bar" style="--pct:{{res.pct}}%"><i></i></span>
+            </div>
+          {{/each}}
+
+          <div class="c7t-deriveds">
+            {{#each derived as |item|}}
+              {{#if @root.isEditing}}
+                {{#if item.editable}}
+                  <span class="c7t-derived is-editing">
+                    {{localize item.label}}
+                    <input class="c7t-derived-input" type="text" name="system.attribs.{{item.key}}.value"
+                      value="{{item.value}}" {{#if item.auto}}readonly{{/if}}>
+                    {{#if item.autoCapable}}
+                      <button type="button" class="c7t-icon-btn c7t-auto-gear{{#if item.auto}} is-on{{/if}}"
+                        data-action="toggleAuto" data-key="{{item.key}}"
+                        data-tooltip="{{#if item.auto}}C7TIDY.Npc.AutoOff{{else}}C7TIDY.Npc.AutoOn{{/if}}">
+                        <i class="fa-solid fa-gear"></i>
+                      </button>
+                    {{/if}}
+                  </span>
+                {{else}}
+                  <span class="c7t-derived" data-tooltip="C7TIDY.Npc.MovHint">{{localize item.label}} <b>{{item.value}}</b></span>
+                {{/if}}
+              {{else}}
+                <span class="c7t-derived">{{localize item.label}} <b>{{item.value}}</b></span>
+              {{/if}}
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="c7t-abilities">
+      {{#each characteristics as |char|}}
+        {{#if @root.isEditing}}
+          <div class="c7t-ability is-editing{{#if char.modified}} is-modified{{/if}}{{#if char.empty}} is-empty{{/if}}" data-key="{{char.key}}">
+            <svg class="c7t-ability-shield"><use href="#c7t-shield"></use></svg>
+            <button type="button" class="c7t-ability-abbr c7t-as-button" data-action="rollCharacteristic"
+              data-key="{{char.key}}" data-tooltip="{{localize char.label}}">{{char.abbr}}</button>
+            {{#if @root.formulaMode}}
+              <span class="c7t-ability-value-row is-formula">
+                <input class="c7t-ability-input is-formula" type="text"
+                  name="system.characteristics.{{char.key}}.formula" value="{{char.formula}}" placeholder="Formula">
+              </span>
+              <span class="c7t-ability-fx">ƒ</span>
+            {{else}}
+              <span class="c7t-ability-value-row">
+                <input class="c7t-ability-input" type="number" step="1"
+                  name="system.characteristics.{{char.key}}.value" value="{{char.inputValue}}">
+              </span>
+              <span class="c7t-ability-sub">{{#unless char.empty}}{{char.half}}<i>/</i>{{char.fifth}}{{/unless}}</span>
+            {{/if}}
+          </div>
+        {{else}}
+          <button type="button" class="c7t-ability{{#if char.modified}} is-modified{{/if}}{{#if char.empty}} is-empty{{/if}}"
+            data-action="rollCharacteristic" data-key="{{char.key}}" data-tooltip="{{localize char.label}}">
+            <svg class="c7t-ability-shield"><use href="#c7t-shield"></use></svg>
+            <span class="c7t-ability-abbr">{{char.abbr}}</span>
+            <span class="c7t-ability-value">{{#if char.empty}}—{{else}}{{char.value}}{{/if}}</span>
+            <span class="c7t-ability-sub">{{#unless char.empty}}{{char.half}}<i>/</i>{{char.fifth}}{{/unless}}</span>
+          </button>
+        {{/if}}
+      {{/each}}
+    </div>
+
+    {{#if isEditing}}
+      {{#unless formulaMode}}
+        <div class="c7t-ability-tools">
+          <button type="button" class="c7t-btn c7t-btn-ghost" data-action="rollCharacteristics">
+            <i class="fa-solid fa-dice-d20"></i>{{localize 'C7TIDY.Npc.RollCharacteristics'}}
+          </button>
+          <button type="button" class="c7t-btn c7t-btn-ghost" data-action="averageCharacteristics">
+            <i class="fa-solid fa-scale-balanced"></i>{{localize 'C7TIDY.Npc.AverageCharacteristics'}}
+          </button>
+        </div>
+      {{/unless}}
+    {{/if}}
+
+    <div class="c7t-banner-foot">
+      <div class="c7t-conditions">
+        {{#each conditions as |cond|}}
+          <button type="button" class="c7t-chip {{#if cond.active}}is-active {{cond.cls}}{{/if}}"
+            data-action="toggleCondition" data-key="{{cond.key}}">{{localize cond.label}}</button>
+        {{/each}}
+      </div>
+
+      <div class="c7t-combatbar">
+        <div class="c7t-combat-pill" data-tooltip="C7TIDY.Npc.AttacksPerRound">
+          <span class="label">{{localize 'C7TIDY.Npc.AttacksPerRoundShort'}}</span>
+          <span class="value">{{special.attacksPerRound}}</span>
+          <button type="button" class="c7t-icon-btn" data-action="rollAttacksPerRound"
+            data-tooltip="C7TIDY.Npc.RollApr" {{#unless special.attacksRollable}}disabled{{/unless}}>
+            <i class="fa-solid fa-burst"></i>
+          </button>
+        </div>
+        <div class="c7t-combat-pill is-san" data-tooltip="C7TIDY.Npc.SanLinkHint">
+          <span class="label">{{localize 'C7TIDY.Npc.SanLoss'}}</span>
+          <span class="value"><b>{{special.sanPassedDisplay}}</b><i>/</i><b>{{special.sanFailedDisplay}}</b></span>
+          <button type="button" class="c7t-icon-btn" data-action="sanLossLink" data-tooltip="C7TIDY.Npc.SanLink">
+            <i class="fa-solid fa-link"></i>
+          </button>
+        </div>
+        <div class="c7t-combat-pill">
+          <span class="label">{{localize 'C7TIDY.Npc.Armor'}}</span>
+          <span class="value">{{special.armorValue}}</span>
+          <button type="button" class="c7t-icon-btn{{#if special.armorNotes}} is-on{{/if}}"
+            data-action="toggleArmorNotes" data-tooltip="C7TIDY.Npc.ArmorNotes">
+            <i class="fa-solid fa-note-sticky"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {{> "modules/coc7-tidy-investigator/templates/parts/tabs-nav.hbs"}}
+  </header>
+
+  <div class="c7t-body">
+    <div class="c7t-content c7t-scroll">
+      <section class="tab {{tabs.combat.cssClass}}" data-group="primary" data-tab="combat">
+        {{> "modules/coc7-tidy-investigator/templates/npc/tabs/combat.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.skills.cssClass}}" data-group="primary" data-tab="skills">
+        {{> "modules/coc7-tidy-investigator/templates/npc/tabs/skills.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.inventory.cssClass}}" data-group="primary" data-tab="inventory">
+        {{> "modules/coc7-tidy-investigator/templates/npc/tabs/inventory.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.description.cssClass}}" data-group="primary" data-tab="description">
+        {{> "modules/coc7-tidy-investigator/templates/npc/tabs/description.hbs"}}
+      </section>
+
+      {{#if isGM}}
+        <section class="tab {{tabs.keeper.cssClass}}" data-group="primary" data-tab="keeper">
+          {{> "modules/coc7-tidy-investigator/templates/npc/tabs/keeper.hbs"}}
+        </section>
+      {{/if}}
+
+      <section class="tab {{tabs.effects.cssClass}}" data-group="primary" data-tab="effects">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/effects.hbs"}}
+      </section>
+    </div>
+  </div>
+</div>

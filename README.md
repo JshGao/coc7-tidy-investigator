@@ -1,8 +1,11 @@
-# CoC7 Tidy 调查员卡
+# CoC7 Tidy 角色卡
 ### coc7-tidy-investigator · Foundry VTT 14 · Call of Cthulhu 7e
 
-把 CoC7 的调查员卡做成 **Tidy 5e Sheets** 那种干净、信息密度高的样子。
-可选注册，**不替换**系统默认角色卡；纯 Handlebars + CSS，无构建依赖。
+把 CoC7 的角色卡做成 **Tidy 5e Sheets** 那种干净、信息密度高的样子：
+**调查员卡** + **生物 / NPC 卡** + **容器卡**。
+可选注册，**不替换**系统默认卡；纯 Handlebars + CSS，无构建依赖。
+
+**当前版本：0.8.2**（2026-10-22） · [Release Notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
 
 ![封面](docs/screenshots/cover.png)
 
@@ -26,6 +29,15 @@
 | 效果 | 新增、点击打开配置、启用/禁用、删除 |
 
 **其他**：可收起收藏侧栏（技能投骰 / 武器攻击 / 物品打开）、右键菜单（打开 / 加入或移除收藏 / 删除）、窗口八向缩放与尺寸记忆、紧凑模式、暗色主题跟随 Foundry。
+
+**生物 / NPC 卡（`npc` + `creature`，v0.8 新增）**
+
+- 横幅：类型 / 职业信息、HP/MP/SAN/幸运（空值自动隐藏）、DB/体格/MOV/护甲、八枚盾形特性徽章（缺值显示 `—`）、状态芯片、**每轮攻击 / SAN 损失 / 护甲**
+- 六个标签页：**战斗（默认）** / 技能 / 物品 / 描述 / 守秘（GM）/ 效果
+- 战斗：每轮攻击（可掷）、SAN 损失（生成系统原生链接卡）、武器表（攻击/掷伤害/霰弹枪分档）、特殊能力速查、移动方式增删
+- 编辑态：公式模式（特性公式 + 掷特性 / 取平均）、auto 齿轮、资源/派生内联编辑；技能当前值内联、物品数量/拖拽排序
+- 描述与守秘：personalDescription 富文本、GM 笔记、骰子宏（拖入添加 / 执行 / 删除）
+- 静态样稿：[prototype/npc.html](prototype/npc.html) · 设计文档：[docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
 
 | 简表 | 背景 |
 |---|---|
@@ -77,9 +89,26 @@ https://raw.githubusercontent.com/JshGao/coc7-tidy-investigator/main/module/modu
 | Foundry VTT | 14（在 14.368 验证） |
 | Call of Cthulhu 7e | ≥ 8.16 |
 
-依赖：无。只注册 `character` 类型，不会影响 NPC / 生物 / 载具。
+依赖：无。注册 `character`、`npc`、`creature`、`container` 四种类型，不改变系统默认卡，不影响载具。
 
 ---
+
+**容器卡（`container`，v0.8 新增）**
+
+- 紧凑横幅：96px 头像 / 名称 / 容器件数 / 分类计数芯片
+- 四个标签页：内容（默认）/ 描述 / 守秘（GM）/ 效果
+- 内容页：武器 / 护具 / 书籍 / 法术 / 天赋 / 道具 / 状态分节，折叠、数量编辑、编辑态拖拽排序、分组 `+`
+- 描述 / 守秘富文本（prose-mirror），内容与系统容器卡完全互通
+
+---
+
+## 版本
+
+- **0.8.2（2026-10-22）**：Tidy 生物 / NPC 卡 + 容器卡；调查员卡资源拖拽排序；三卡统一 Tab 样式与若干修复。
+  - 设计文档：[docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
+  - 静态预览：[prototype/npc.html](prototype/npc.html)
+  - 更新日志：[CHANGELOG.md](CHANGELOG.md)
+- 0.7.2：调查员卡稳定版。
 
 ## 开发
 
@@ -89,10 +118,10 @@ module/                 模组本体（发布 zip 的内容）
   scripts/
     module.js           入口：注册角色卡、设置、预加载模板
     constants.js        MODULE_ID / 模板路径 / tab / 背景要素 / 技能分类
-    services/           纯数据层（view-data / tabs-data）
-    sheets/             AppV2 基类与调查员卡
-  templates/            Handlebars（investigator / tabs / parts）
-  styles/               tokens.css + sheet.css
+    services/           纯数据层（view-data / tabs-data / npc-data / container-data）
+    sheets/             AppV2 基类、调查员卡、生物 / NPC 卡、容器卡
+  templates/            Handlebars（investigator / npc / container / tabs / parts）
+  styles/               tokens.css + sheet.css + npc.css + container.css
   lang/                 中 / 英
 docs/                   调研报告、设计文档、截图
 prototype/              静态视觉样稿（浏览器可直接打开）
@@ -111,8 +140,9 @@ ln -s "$PWD/module" \
 
 ## 文档
 
-- [调研报告](docs/01-调研报告.md)：CoC7 架构、Tidy 设计语言、Foundry 14 API、兼容红线
+- [调研报告](docs/01-调研报告.md)：CoC7 架构、Tidy 设计语言、Foundry 14 API、兼容红线（含 NPC / 生物数据模型附录）
 - [设计文档](docs/02-设计文档.md)：布局方案、视觉 token、组件、交互、数据映射、技能分类
+- [生物卡设计文档](docs/04-生物卡设计文档.md)：`npc` / `creature` / 容器卡设计（v0.8.2 已发布）
 - [宣传稿 / 功能导览](docs/03-宣传稿.md)
 - [更新日志](CHANGELOG.md)
 

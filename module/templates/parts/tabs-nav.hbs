@@ -1,0 +1,8 @@
+<nav class="c7t-tabs tabs" data-group="primary" aria-roledescription="{{localize 'SHEETS.FormNavLabel'}}">
+  {{#each tabs as |tab|}}
+    <a class="c7t-tab {{tab.cssClass}}" data-action="tab" data-group="{{tab.group}}" data-tab="{{tab.id}}">
+      {{#if tab.icon}}<i class="{{tab.icon}} inert"></i>{{/if}}
+      <span>{{localize tab.label}}</span>
+    </a>
+  {{/each}}
+</nav>

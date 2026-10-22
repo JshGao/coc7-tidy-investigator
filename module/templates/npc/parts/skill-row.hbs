@@ -1,0 +1,19 @@
+<div class="c7t-row is-rollable" data-item-id="{{id}}">
+  <span class="col-name" data-action="rollSkill" data-item-id="{{id}}">
+    {{#if img}}<img class="c7t-row-ico" src="{{img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-dice-d20"></i></i>{{/if}}
+    <span class="c7t-row-name">{{name}}</span>
+  </span>
+  <span class="col-val is-strong">{{value}}</span>
+  <span class="col-half">{{half}}</span>
+  <span class="col-fifth">{{fifth}}</span>
+  <span class="col-act">
+    <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
+      <i class="fa-solid fa-pen"></i>
+    </button>
+    {{#if @root.isEditing}}
+      <button type="button" class="c7t-icon-btn" data-action="deleteItem" data-tooltip="C7TIDY.Action.DeleteItem">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    {{/if}}
+  </span>
+</div>

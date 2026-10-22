@@ -38,6 +38,7 @@ export function buildSkillRow(item) {
     cocid,
     category: COCID_TO_CATEGORY.get(cocid) ?? "other",
     value,
+    unmodified: num(system.valueUnmodified ?? value),
     base,
     occupation: num(adjustments.occupation),
     personal: num(adjustments.personal),
@@ -102,27 +103,50 @@ export function prepareSummary(actor) {
   return categories;
 }
 
-/** 简表：武器速查 */
+/** 简表 / 战斗页：武器速查 */
 export function prepareWeapons(actor) {
   return actor.items
     .filter((item) => item.type === "weapon")
     .map((item) => {
       const system = item.system ?? {};
-      const range = system.range?.normal ?? {};
-      const skillName = String(system.skill?.main?.name ?? "");
-      const skill = skillName ? actor.getSkillByName?.(skillName) : null;
+      let main = null;
+      let alt = null;
+      try {
+        main = system.skillMain ?? null;
+        alt = system.skillAlternative ?? null;
+      } catch {
+        main = null;
+        alt = null;
+      }
+      if (!main) {
+        const skillName = String(system.skill?.main?.name ?? "");
+        main = skillName ? actor.getSkillByName?.(skillName) ?? null : null;
+      }
+      const skillName = String(main?.name ?? system.skill?.main?.name ?? "");
+      const ranges = ["normal", "long", "extreme"]
+        .map((key) => ({
+          key,
+          damage: text(system.range?.[key]?.damage, ""),
+          value: text(system.range?.[key]?.value, ""),
+        }))
+        .filter((row) => row.damage || row.value);
+      const normal = system.range?.normal ?? {};
       return {
         id: item.id,
         name: item.name,
         img: item.img,
         skillName,
-        skillValue: num(skill?.system?.value),
-        damage: text(range.damage, "—"),
-        range: text(range.value, "—"),
+        skillValue: num(main?.system?.value),
+        altSkillName: String(alt?.name ?? system.skill?.alternativ?.name ?? ""),
+        altSkillValue: num(alt?.system?.value),
+        damage: text(normal.damage, "—"),
+        range: text(normal.value, "—"),
         rate: text(system.usesPerRound?.normal, "—"),
         bullets: text(system.bullets, "—"),
         ammo: text(system.ammo, "—"),
         malfunction: text(system.malfunction, "—"),
+        shotgun: Boolean(system.properties?.shotgun),
+        ranges,
       };
     })
     .sort((a, b) => a.name.localeCompare(b.name, game.i18n?.lang ?? "en"));
@@ -130,8 +154,12 @@ export function prepareWeapons(actor) {
 
 const POSSESSION_TYPES = ["weapon", "armor", "book", "spell", "talent", "item", "status"];
 
-/** 物品页：货币 + 分节物品 */
-export function preparePossessions(actor) {
+/**
+ * 物品页：货币 + 分节物品。
+ * @param {Actor} actor
+ * @param {{types?: string[], keepEmpty?: boolean}} [options] 生物卡只取部分类型（无武器 / 无货币）
+ */
+export function preparePossessions(actor, { types = POSSESSION_TYPES, keepEmpty = false } = {}) {
   const money = actor.system?.monetary ?? {};
   const creditSkill =
     (typeof actor.getFirstItemByCoCID === "function" ? actor.getFirstItemByCoCID("i.skill.credit-rating") : null) ??
@@ -144,7 +172,7 @@ export function preparePossessions(actor) {
       return text(money?.[key], "—");
     }
   };
-  const groups = POSSESSION_TYPES.map((type) => {
+  const groups = types.map((type) => {
     const items = actor.items
       .filter((item) => item.type === type)
       .map((item) => ({
@@ -165,7 +193,7 @@ export function preparePossessions(actor) {
       }))
       .sort((a, b) => a.sort - b.sort);
     return { type, label: `TYPES.Item.${type}`, items, count: items.length };
-  }).filter((group) => group.count > 0);
+  }).filter((group) => keepEmpty || group.count > 0);
 
   return {
     money: {

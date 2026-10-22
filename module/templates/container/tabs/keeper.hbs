@@ -1,0 +1,17 @@
+<div class="c7t-toolbar">
+  <span class="c7t-toolbar-title">{{localize 'C7TIDY.Notes.Keeper'}}</span>
+  <span class="c7t-gm-badge">{{localize 'C7TIDY.Npc.GMOnly'}}</span>
+  <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Npc.KeeperHint'}}</span>
+</div>
+
+<div class="c7t-section c7t-container-section is-keeper">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Notes.Keeper'}}</div>
+  {{#if isEditing}}
+    <prose-mirror class="c7t-container-prose" name="system.description.keeper"
+      value="{{containerText.keeper}}" data-document-uuid="{{actor.uuid}}" toggled>{{{containerText.keeperHtml}}}</prose-mirror>
+  {{else}}
+    <div class="c7t-prose c7t-container-prose">{{{containerText.keeperHtml}}}</div>
+  {{/if}}
+</div>
+<div class="c7t-table-foot">{{localize 'C7TIDY.Container.KeeperFoot'}}</div>

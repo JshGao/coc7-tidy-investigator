@@ -1,8 +1,10 @@
 export const MODULE_ID = "coc7-tidy-investigator";
 
 export const TEMPLATES = {
+  // 调查员卡
   sheet: `modules/${MODULE_ID}/templates/investigator/sheet.hbs`,
   icons: `modules/${MODULE_ID}/templates/parts/icons.hbs`,
+  tabsNav: `modules/${MODULE_ID}/templates/parts/tabs-nav.hbs`,
   skillRow: `modules/${MODULE_ID}/templates/parts/skill-row.hbs`,
   skillRowEdit: `modules/${MODULE_ID}/templates/parts/skill-row-edit.hbs`,
   skills: `modules/${MODULE_ID}/templates/tabs/skills.hbs`,
@@ -12,9 +14,33 @@ export const TEMPLATES = {
   growth: `modules/${MODULE_ID}/templates/tabs/growth.hbs`,
   notes: `modules/${MODULE_ID}/templates/tabs/notes.hbs`,
   effects: `modules/${MODULE_ID}/templates/tabs/effects.hbs`,
+
+  // 生物 / NPC 卡
+  npcSheet: `modules/${MODULE_ID}/templates/npc/sheet.hbs`,
+  npcSkillRow: `modules/${MODULE_ID}/templates/npc/parts/skill-row.hbs`,
+  npcSkillRowEdit: `modules/${MODULE_ID}/templates/npc/parts/skill-row-edit.hbs`,
+  npcCombat: `modules/${MODULE_ID}/templates/npc/tabs/combat.hbs`,
+  npcSkills: `modules/${MODULE_ID}/templates/npc/tabs/skills.hbs`,
+  npcInventory: `modules/${MODULE_ID}/templates/npc/tabs/inventory.hbs`,
+  npcDescription: `modules/${MODULE_ID}/templates/npc/tabs/description.hbs`,
+  npcKeeper: `modules/${MODULE_ID}/templates/npc/tabs/keeper.hbs`,
+
+  // 容器卡
+  containerSheet: `modules/${MODULE_ID}/templates/container/sheet.hbs`,
+  containerItems: `modules/${MODULE_ID}/templates/container/tabs/items.hbs`,
+  containerDescription: `modules/${MODULE_ID}/templates/container/tabs/description.hbs`,
+  containerKeeper: `modules/${MODULE_ID}/templates/container/tabs/keeper.hbs`,
 };
 
-export const TAB_IDS = ["skills", "summary", "possessions", "background", "growth", "notes", "effects"];
+/** 生物 / NPC 卡可出现的物品分组（武器在战斗页，无货币） */
+export const NPC_ITEM_TYPES = ["armor", "book", "spell", "talent", "item", "status"];
+
+export const NPC_TAB_IDS = ["combat", "skills", "inventory", "description", "keeper", "effects"];
+
+/** 容器卡可收纳的物品类型（与系统容器卡一致，另保留天赋 / 状态） */
+export const CONTAINER_ITEM_TYPES = ["weapon", "armor", "book", "spell", "talent", "item", "status"];
+
+export const CONTAINER_TAB_IDS = ["items", "description", "keeper", "effects"];
 
 /** 背景（Backstory）七要素：slot id → 默认中文标题 */
 export const BACKGROUND_SLOTS = [
@@ -22,7 +48,7 @@ export const BACKGROUND_SLOTS = [
   { id: "beliefs", label: "C7TIDY.Background.Beliefs", aliases: ["思想信念", "思想与信念", "意识形态与信念", "Ideology & Beliefs", "Ideology and Beliefs"] },
   { id: "treasured", label: "C7TIDY.Background.Treasured", aliases: ["宝贵之物", "珍视之物", "Treasured Possessions"] },
   { id: "locations", label: "C7TIDY.Background.Locations", aliases: ["意义非凡之地", "有意义的地点", "Meaningful Locations"] },
-  { id: "people", label: "C7TIDY.Background.People", aliases: ["重要之人", "重要的人", "Significant People"] },
+  { id: "people", label: "C7TIDY.Background.People", aliases: ["重要的人", "重要之人", "Significant People"] },
   { id: "traits", label: "C7TIDY.Background.Traits", aliases: ["特质", "Traits"] },
   { id: "scars", label: "C7TIDY.Background.Scars", aliases: ["伤疤和恐惧症", "伤害与疤痕", "伤疤", "Injuries & Scars", "Scars and Phobias"] },
 ];

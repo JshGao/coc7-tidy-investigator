@@ -1,0 +1,19 @@
+<div class="c7t-row is-edit-row" draggable="{{#if @root.isCustomSort}}true{{else}}false{{/if}}" data-item-id="{{id}}">
+  <span class="col-name" data-action="rollSkill" data-item-id="{{id}}" data-tooltip="C7TIDY.Skills.RollHint">
+    {{#if img}}<img class="c7t-row-ico" src="{{img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-dice-d20"></i></i>{{/if}}
+    <span class="c7t-row-name">{{name}}</span>
+  </span>
+  <span class="col-val">
+    <input class="c7t-skill-input" type="number" step="1" value="{{unmodified}}" data-tooltip="{{localize 'C7TIDY.Npc.SkillValueHint'}}">
+  </span>
+  <span class="col-half">{{half}}</span>
+  <span class="col-fifth">{{fifth}}</span>
+  <span class="col-act">
+    <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
+      <i class="fa-solid fa-pen"></i>
+    </button>
+    <button type="button" class="c7t-icon-btn" data-action="deleteItem" data-tooltip="C7TIDY.Action.DeleteItem">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </span>
+</div>

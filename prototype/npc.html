@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>CoC7 Tidy 生物卡 — 静态设计样稿</title>
+<link rel="stylesheet" href="prototype.css">
+<link rel="stylesheet" href="npc.css?v=3">
+</head>
+<body class="theme-light npc-proto">
+
+<!-- ===== 原型工具条（不属于角色卡） ===== -->
+<div class="proto-bar">
+  <span class="proto-title">CoC7 Tidy NPC / 生物卡 · 静态样稿 v1.0</span>
+  <span class="proto-hint">6 个 tab · 默认「战斗」· 无收藏侧栏 · 点击 tab / 锁定按钮 / 编辑态体验</span>
+  <div class="proto-actions">
+    <button id="toggle-theme" class="proto-btn">切换暗色</button>
+    <button id="toggle-width" class="proto-btn">宽度：900</button>
+    <button id="toggle-edit" class="proto-btn">进入编辑态</button>
+    <button id="toggle-formula" class="proto-btn" disabled>公式模式</button>
+  </div>
+</div>
+
+<!-- ===== SVG 符号 ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-shield" viewBox="0 0 100 112">
+    <path d="M50 5 L91 19 V56 C91 84 71 100 50 106 C29 100 9 84 9 56 V19 Z"/>
+  </symbol>
+  <symbol id="i-die" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="18" height="18" rx="3.5"/>
+    <circle cx="8.5" cy="8.5" r="1.4"/><circle cx="15.5" cy="15.5" r="1.4"/>
+    <circle cx="12" cy="12" r="1.4"/><circle cx="15.5" cy="8.5" r="1.4"/><circle cx="8.5" cy="15.5" r="1.4"/>
+  </symbol>
+  <symbol id="i-sword" viewBox="0 0 24 24">
+    <path d="M20 3l-9 9-3-3 9-9 3 3zM7 11l-2 2 3 3-4 4 2 2 4-4 3 3 2-2-8-8z"/>
+  </symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24">
+    <path d="M7 8h10l1.5 12h-13L7 8zm2 0V6a3 3 0 0 1 6 0v2h-2V6a1 1 0 0 0-2 0v2H9z"/>
+  </symbol>
+  <symbol id="i-book" viewBox="0 0 24 24">
+    <path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v11.2c.3-.1.7-.2 1-.2h11V5H6zm0 14a1 1 0 0 0 0 2h11v-2H6z"/>
+  </symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24">
+    <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+  </symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24">
+    <path d="M7 10V8a5 5 0 0 1 10 0v2h1.5v11h-13V10H7zm2 0h6V8a3 3 0 0 0-6 0v2z"/>
+  </symbol>
+  <symbol id="i-unlock" viewBox="0 0 24 24">
+    <path d="M7 10V8a5 5 0 0 1 9.6-1.9l-1.8.8A3 3 0 0 0 9 8v2h9.5v11h-13V10H7zm2 2v7h9v-7H9z"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24">
+    <path d="M10.5 3a7.5 7.5 0 1 1-4.7 13.3l-4 4L.4 18.9l4-4A7.5 7.5 0 0 1 10.5 3zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11z"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4z"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 17.2V21h3.8L19 9.8 15.2 6 4 17.2zM20.7 7.1a1 1 0 0 0 0-1.4l-2.4-2.4a1 1 0 0 0-1.4 0L15 5.2 18.8 9l1.9-1.9z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M6 7h12l-1 14H7L6 7zm3-4h6l1 2h4v2H4V5h4l1-2z"/></symbol>
+  <symbol id="i-feather" viewBox="0 0 24 24">
+    <path d="M20.5 3.5c-3 0-7 1-10 4l-3 3v5l5-5c1.5-1.5 3-2 4-2-1 1-2 2-3 3.5L8.5 19 6 21l-1-1 2-2.5 3-5 .5-.7-4 4H3v-3l3.5-3.5c2.6-2.6 5.6-4.4 8.5-5.3 1.6-.5 3.3-.7 5.5-.5z"/>
+  </symbol>
+  <symbol id="i-list" viewBox="0 0 24 24">
+    <path d="M3 5h3v3H3V5zm5 .5h13v2H8v-2zM3 10.5h3v3H3v-3zm5 .5h13v2H8v-2zM3 16h3v3H3v-3zm5 .5h13v2H8v-2z"/>
+  </symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7-1.4-1.4L13.2 12 7.6 6.4 9 5z"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 3h14v13l-5 5H5V3zm2 2v14h6v-4h4V5H7z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a4 4 0 0 1 0-5.7l3-3a4 4 0 0 1 5.7 5.7l-1.6 1.6-1.4-1.4 1.6-1.6a2 2 0 0 0-2.9-2.9l-3 3a2 2 0 0 0 0 2.9L10 13zm4-2a4 4 0 0 1 0 5.7l-3 3A4 4 0 0 1 5.3 14l1.6-1.6 1.4 1.4-1.6 1.6a2 2 0 0 0 2.9 2.9l3-3a2 2 0 0 0 0-2.9L14 11z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm9 3v2l-2.2.6-.7 1.7 1.2 2-1.4 1.4-2-1.2-1.7.7L13.6 21h-2l-.6-2.2-1.7-.7-2 1.2L6 17.9l1.2-2-.7-1.7L4.3 13v-2l2.2-.6.7-1.7-1.2-2L7.4 5.3l2 1.2 1.7-.7L11.6 3h2l.6 2.2 1.7.7 2-1.2 1.4 1.4-1.2 2 .7 1.7L21 11z"/></symbol>
+  <symbol id="i-burst" viewBox="0 0 24 24"><path d="M12 2l1.8 5.4L19 4l-1.4 5.2L23 11l-4.6 2.6L21 19l-5.2-2.4L14 22h-4l-1.8-5.4L3 19l2.6-5.2L1 11l4.8-1.8L4 4l5.2 3.4L12 2z"/></symbol>
+  <symbol id="i-tentacle" viewBox="0 0 24 24"><path d="M4 4c3 0 4 2 4 5 0 4-2 6-2 9 0 2 1 3 3 3s3-1 3-3c0-2-1-3-1-5 0-1 .5-2 1.5-2S14 12 14 14c0 3 2 4 3 4 2 0 3-2 3-4 0-4-2-6-2-9 0-3 1-5 2-6" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+</defs></svg>
+
+<!-- ===== 角色卡窗口 ===== -->
+<main class="c7t-window npc-window w900" role="application" aria-label="生物角色卡">
+
+  <div class="c7t-sheet">
+
+    <!-- ========== 顶部横幅 ========== -->
+    <header class="c7t-banner">
+      <div class="c7t-banner-bg"></div>
+      <div class="c7t-banner-inner">
+
+        <div class="c7t-portrait" title="点击更换头像">
+          <div class="c7t-portrait-frame">
+            <svg viewBox="0 0 100 100" class="c7t-portrait-art npc-portrait">
+              <defs>
+                <linearGradient id="deep" x1="0" y1="0" x2="0.2" y2="1">
+                  <stop offset="0" stop-color="#0e3438"/><stop offset=".55" stop-color="#0a2226"/><stop offset="1" stop-color="#061417"/>
+                </linearGradient>
+                <radialGradient id="glow" cx=".5" cy=".42" r=".5">
+                  <stop offset="0" stop-color="#8fd6c0" stop-opacity=".45"/><stop offset="1" stop-color="#8fd6c0" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <rect width="100" height="100" fill="url(#deep)"/>
+              <circle cx="50" cy="44" r="40" fill="url(#glow)"/>
+              <path d="M28 50c0-15 9-26 22-26s22 11 22 26c0 7-3 12-8 15 2 6 1 10-2 13-2-6-6-9-12-10-6 1-10 4-12 10-3-3-4-7-2-13-5-3-8-8-8-15z" fill="#123b40" stroke="#2b6a6b" stroke-width="1.2"/>
+              <ellipse cx="42" cy="44" rx="4" ry="3" fill="#b8f0dd"/>
+              <ellipse cx="58" cy="44" rx="4" ry="3" fill="#b8f0dd"/>
+              <circle cx="42" cy="44" r="1.3" fill="#0a1a1c"/>
+              <circle cx="58" cy="44" r="1.3" fill="#0a1a1c"/>
+              <path d="M34 72c-4 8-9 12-16 16M66 72c4 8 9 12 16 16M44 74c-2 9-5 15-9 21M56 74c2 9 5 15 9 21" fill="none" stroke="#2b6a6b" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="c7t-identity">
+          <div class="c7t-identity-main">
+            <h1 class="c7t-name"><span class="view-only">深潜者</span><input class="c7t-name-input edit-only" value="深潜者"></h1>
+            <div class="c7t-controls">
+              <button class="c7t-ctrl" id="lock-btn" title="解锁编辑（当前：锁定态）"><svg><use href="#i-lock"/></svg></button>
+              <button class="c7t-ctrl edit-only" id="formula-btn" title="公式模式：编辑特性公式">ƒ</button>
+              <button class="c7t-ctrl" title="当前效果（2）"><svg><use href="#i-bolt"/></svg><span class="c7t-ctrl-badge">2</span></button>
+              <button class="c7t-ctrl" title="更多"><svg><use href="#i-chev"/></svg></button>
+            </div>
+          </div>
+          <div class="c7t-subtitle">
+            <span class="npc-type">类型：异界生物</span><i>·</i><span>眷族</span><i>·</i><span>深海栖息</span>
+          </div>
+
+          <!-- 资源条：SAN / 幸运为 null → 锁定态隐藏，编辑态出现 -->
+          <div class="c7t-vitals">
+            <div class="c7t-vital is-hp">
+              <span class="c7t-vital-label">HP</span>
+              <span class="c7t-vital-val view-only"><b>13</b><em>/13</em></span>
+              <span class="c7t-vital-val is-editing edit-only">
+                <input class="c7t-vinput" value="13"><em>/</em><input class="c7t-vinput is-max" value="13" readonly>
+                <button class="c7t-gear is-on" title="auto：由系统派生（点击关闭后手填）"><svg><use href="#i-gear"/></svg></button>
+              </span>
+              <span class="c7t-vital-bar" style="--pct:100%"><i></i></span>
+            </div>
+            <div class="c7t-vital is-mp">
+              <span class="c7t-vital-label">MP</span>
+              <span class="c7t-vital-val view-only"><b>16</b><em>/16</em></span>
+              <span class="c7t-vital-val is-editing edit-only">
+                <input class="c7t-vinput" value="16"><em>/</em><input class="c7t-vinput is-max" value="16" readonly>
+                <button class="c7t-gear is-on" title="auto：由系统派生（点击关闭后手填）"><svg><use href="#i-gear"/></svg></button>
+              </span>
+              <span class="c7t-vital-bar" style="--pct:100%"><i></i></span>
+            </div>
+            <div class="c7t-vital is-san only-editing">
+              <span class="c7t-vital-label">SAN</span>
+              <span class="c7t-vital-val view-only"><b>—</b><em>/99</em></span>
+              <span class="c7t-vital-val is-editing edit-only">
+                <input class="c7t-vinput" value="" placeholder="—"><em>/</em><input class="c7t-vinput is-max" value="99" readonly>
+                <button class="c7t-gear is-on" title="auto：由系统派生"><svg><use href="#i-gear"/></svg></button>
+              </span>
+              <span class="c7t-vital-bar" style="--pct:0%"><i></i></span>
+            </div>
+            <div class="c7t-vital is-luck only-editing">
+              <span class="c7t-vital-label">幸运</span>
+              <span class="c7t-vital-val view-only"><b>—</b><em>/99</em></span>
+              <span class="c7t-vital-val is-editing edit-only">
+                <input class="c7t-vinput" value="" placeholder="—">
+              </span>
+              <span class="c7t-vital-bar" style="--pct:0%"><i></i></span>
+            </div>
+            <div class="c7t-deriveds">
+              <span class="c7t-derived" title="伤害加值">DB <b class="view-only">1D4</b><input class="c7t-dinput edit-only" value="1D4"></span>
+              <span class="c7t-derived" title="体格">体格 <b class="view-only">1</b><input class="c7t-dinput edit-only" value="1"></span>
+              <span class="c7t-derived" title="移动力">MOV <b class="view-only">8</b><input class="c7t-dinput edit-only" value="8"></span>
+              <span class="c7t-derived" title="护甲">护甲 <b class="view-only">1</b><input class="c7t-dinput edit-only" value="1"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8 特性徽章：缺值显示 — -->
+      <div class="c7t-abilities">
+        <button class="c7t-ability" data-key="str" title="力量检定">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">STR</span>
+          <span class="c7t-ability-value view-only">70</span>
+          <input class="c7t-ability-input edit-only" value="70">
+          <input class="c7t-ability-formula edit-only formula-only" value="3D6*5">
+          <span class="c7t-ability-sub">35<i>/</i>14</span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+        <button class="c7t-ability" data-key="con" title="体质检定">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">CON</span>
+          <span class="c7t-ability-value view-only">65</span>
+          <input class="c7t-ability-input edit-only" value="65">
+          <input class="c7t-ability-formula edit-only formula-only" value="3D6*5">
+          <span class="c7t-ability-sub">32<i>/</i>13</span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+        <button class="c7t-ability" data-key="siz" title="体型检定">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">SIZ</span>
+          <span class="c7t-ability-value view-only">80</span>
+          <input class="c7t-ability-input edit-only" value="80">
+          <input class="c7t-ability-formula edit-only formula-only" value="3D6*5">
+          <span class="c7t-ability-sub">40<i>/</i>16</span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+        <button class="c7t-ability" data-key="dex" title="敏捷检定">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">DEX</span>
+          <span class="c7t-ability-value view-only">50</span>
+          <input class="c7t-ability-input edit-only" value="50">
+          <input class="c7t-ability-formula edit-only formula-only" value="3D6*5">
+          <span class="c7t-ability-sub">25<i>/</i>10</span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+        <button class="c7t-ability is-empty" data-key="app" title="外貌：无数据">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">APP</span>
+          <span class="c7t-ability-value view-only">—</span>
+          <input class="c7t-ability-input edit-only" value="" placeholder="—">
+          <input class="c7t-ability-formula edit-only formula-only" value="" placeholder="公式">
+          <span class="c7t-ability-sub"></span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+        <button class="c7t-ability" data-key="int" title="智力检定">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">INT</span>
+          <span class="c7t-ability-value view-only">65</span>
+          <input class="c7t-ability-input edit-only" value="65">
+          <input class="c7t-ability-formula edit-only formula-only" value="3D6*5">
+          <span class="c7t-ability-sub">32<i>/</i>13</span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+        <button class="c7t-ability is-modified" data-key="pow" title="意志检定（受效果影响）">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">POW</span>
+          <span class="c7t-ability-value view-only">80</span>
+          <input class="c7t-ability-input edit-only" value="80">
+          <input class="c7t-ability-formula edit-only formula-only" value="3D6*5">
+          <span class="c7t-ability-sub">40<i>/</i>16</span>
+          <span class="c7t-ability-ae"></span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+        <button class="c7t-ability is-empty" data-key="edu" title="教育：无数据">
+          <svg class="c7t-ability-shield"><use href="#i-shield"/></svg>
+          <span class="c7t-ability-abbr">EDU</span>
+          <span class="c7t-ability-value view-only">—</span>
+          <input class="c7t-ability-input edit-only" value="" placeholder="—">
+          <input class="c7t-ability-formula edit-only formula-only" value="" placeholder="公式">
+          <span class="c7t-ability-sub"></span>
+          <span class="c7t-ability-fx formula-only">ƒ</span>
+        </button>
+      </div>
+
+      <!-- 状态 + 每轮攻击 + SAN 损失（取代调查员的「今日 SAN」） -->
+      <div class="c7t-banner-foot">
+        <div class="c7t-conditions">
+          <button class="c7t-chip" data-cond="wound">重伤</button>
+          <button class="c7t-chip" data-cond="unconscious">昏迷</button>
+          <button class="c7t-chip" data-cond="dying">濒死</button>
+          <button class="c7t-chip" data-cond="dead">死亡</button>
+          <button class="c7t-chip" data-cond="prone">倒地</button>
+          <button class="c7t-chip" data-cond="tempo">临时疯狂</button>
+          <button class="c7t-chip" data-cond="indef">长期疯狂</button>
+        </div>
+
+        <div class="c7t-combatbar">
+          <div class="c7t-combat-pill" title="每轮攻击次数：含公式可点击掷骰">
+            <span class="label">每轮攻击</span>
+            <span class="value view-only">1D3</span>
+            <input class="c7t-pill-input edit-only" value="1D3">
+            <button class="c7t-icon-btn" title="掷每轮攻击次数"><svg><use href="#i-burst"/></svg></button>
+          </div>
+          <div class="c7t-combat-pill is-san" title="SAN 损失：通过 / 失败。点击生成系统 SAN 损失链接卡">
+            <span class="label">SAN 损失</span>
+            <span class="value view-only"><b>0</b><i>/</i><b>1D6</b></span>
+            <input class="c7t-pill-input is-min edit-only" value="0">
+            <i class="edit-only">/</i>
+            <input class="c7t-pill-input edit-only" value="1D6">
+            <button class="c7t-icon-btn" title="生成 SAN 损失链接卡（由点击者发起检定）"><svg><use href="#i-link"/></svg></button>
+          </div>
+          <div class="c7t-combat-pill" title="护甲值；右侧图标切换备注">
+            <span class="label">护甲</span>
+            <span class="value view-only">1</span>
+            <input class="c7t-pill-input edit-only" value="1">
+            <button class="c7t-icon-btn is-on" title="护甲备注：厚皮"><svg><use href="#i-note"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 行：战斗默认 -->
+      <nav class="c7t-tabs" role="tablist">
+        <button class="c7t-tab is-active" data-tab="combat" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-sword"/></svg></span>战斗</button>
+        <button class="c7t-tab" data-tab="skills" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-die"/></svg></span>技能</button>
+        <button class="c7t-tab" data-tab="inventory" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-bag"/></svg></span>物品</button>
+        <button class="c7t-tab" data-tab="description" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-book"/></svg></span>描述</button>
+        <button class="c7t-tab" data-tab="keeper" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-feather"/></svg></span>守秘<span class="c7t-tab-gm">GM</span></button>
+        <button class="c7t-tab" data-tab="effects" role="tab"><span class="c7t-tab-ico"><svg><use href="#i-bolt"/></svg></span>效果<span class="c7t-tab-count">2</span></button>
+      </nav>
+    </header>
+
+    <!-- ========== 主体（无侧栏，全宽） ========== -->
+    <div class="c7t-body npc-body">
+      <div class="c7t-content npc-content">
+
+        <!-- ===================== 战斗 ===================== -->
+        <section class="c7t-panel is-active" data-panel="combat">
+          <div class="c7t-combat-strip">
+            <div class="c7t-strip-item">
+              <span class="c7t-strip-label">每轮攻击</span>
+              <span class="c7t-strip-value view-only">1D3</span>
+              <input class="c7t-strip-input edit-only" value="1D3">
+              <button class="c7t-icon-btn" title="掷每轮攻击次数"><svg><use href="#i-burst"/></svg></button>
+              <span class="c7t-strip-hint view-only">可掷</span>
+            </div>
+            <div class="c7t-strip-item is-san">
+              <span class="c7t-strip-label">SAN 损失</span>
+              <span class="c7t-strip-value view-only"><b>0</b><i>/</i><b>1D6</b></span>
+              <input class="c7t-strip-input is-min edit-only" value="0">
+              <i class="edit-only">/</i>
+              <input class="c7t-strip-input edit-only" value="1D6">
+              <button class="c7t-icon-btn" title="生成系统 SAN 损失链接卡"><svg><use href="#i-link"/></svg></button>
+              <span class="c7t-strip-hint view-only">点击发起检定</span>
+            </div>
+            <div class="c7t-strip-item">
+              <span class="c7t-strip-label">护甲</span>
+              <span class="c7t-strip-value view-only">1</span>
+              <input class="c7t-strip-input edit-only" value="1">
+              <button class="c7t-icon-btn is-on" title="护甲备注：厚皮"><svg><use href="#i-note"/></svg></button>
+            </div>
+            <span class="c7t-strip-spacer"></span>
+            <span class="c7t-strip-meta">伤害加值 DB 1D4 已计入下方伤害公式</span>
+          </div>
+
+          <div class="c7t-toolbar">
+            <span class="c7t-toolbar-title">武器与攻击</span>
+            <span class="c7t-toolbar-spacer"></span>
+            <span class="c7t-toolbar-hint">点击「攻击」投掷 ·「伤害」直接掷 · 编辑武器请打开物品卡</span>
+            <button class="c7t-btn edit-only"><svg><use href="#i-plus"/></svg>添加武器</button>
+          </div>
+
+          <div class="c7t-table npc-weapons">
+            <div class="c7t-thead">
+              <span class="col-name">武器</span>
+              <span class="col-skill">使用技能</span>
+              <span class="col-alt">备选技能</span>
+              <span class="col-dmg">伤害</span>
+              <span class="col-range">射程</span>
+              <span class="col-ammo">弹药</span>
+              <span class="col-malf">故障</span>
+              <span class="col-act"></span>
+            </div>
+            <div class="c7t-tbody">
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-sword"/></svg></i><span class="c7t-row-name">爪击</span></span>
+                <span class="col-skill">格斗（斗殴）40%</span>
+                <span class="col-alt">—</span>
+                <span class="col-dmg">1D6+1D4</span>
+                <span class="col-range">触及</span>
+                <span class="col-ammo">—</span>
+                <span class="col-malf">—</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn act" title="攻击"><svg><use href="#i-burst"/></svg></button>
+                  <button class="c7t-icon-btn" title="掷伤害"><svg><use href="#i-die"/></svg></button>
+                  <button class="c7t-icon-btn" title="打开武器卡"><svg><use href="#i-pencil"/></svg></button>
+                  <button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button>
+                </span>
+              </div>
+              <div class="c7t-row demo-hover">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-sword"/></svg></i><span class="c7t-row-name">咬击</span></span>
+                <span class="col-skill">格斗（斗殴）40%</span>
+                <span class="col-alt">—</span>
+                <span class="col-dmg">1D4+1D4</span>
+                <span class="col-range">触及</span>
+                <span class="col-ammo">—</span>
+                <span class="col-malf">—</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn act" title="攻击"><svg><use href="#i-burst"/></svg></button>
+                  <button class="c7t-icon-btn" title="掷伤害"><svg><use href="#i-die"/></svg></button>
+                  <button class="c7t-icon-btn" title="打开武器卡"><svg><use href="#i-pencil"/></svg></button>
+                  <button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button>
+                </span>
+              </div>
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-burst"/></svg></i><span class="c7t-row-name">投掷巨石</span></span>
+                <span class="col-skill">投掷 35%</span>
+                <span class="col-alt">—</span>
+                <span class="col-dmg">2D6+1D4</span>
+                <span class="col-range">20m</span>
+                <span class="col-ammo">1</span>
+                <span class="col-malf">—</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn act" title="攻击"><svg><use href="#i-burst"/></svg></button>
+                  <button class="c7t-icon-btn" title="掷伤害"><svg><use href="#i-die"/></svg></button>
+                  <button class="c7t-icon-btn" title="打开武器卡"><svg><use href="#i-pencil"/></svg></button>
+                  <button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="c7t-section npc-section">
+            <div class="c7t-section-head">特殊能力 <span class="c7t-section-meta">天赋 · 3 项</span></div>
+            <div class="c7t-talents">
+              <button class="c7t-talent">
+                <span class="c7t-talent-name">两栖</span>
+                <span class="c7t-talent-desc">可在水中自由行动；水下移动力等同于游泳移动力，无需呼吸。</span>
+              </button>
+              <button class="c7t-talent">
+                <span class="c7t-talent-name">深渊凝视</span>
+                <span class="c7t-talent-desc">与深潜者对视的调查员须进行 POW 检定；失败者损失 1/1D4 点 SAN。</span>
+              </button>
+              <button class="c7t-talent">
+                <span class="c7t-talent-name">再生</span>
+                <span class="c7t-talent-desc">每轮恢复 1 点 HP；火焰或魔法造成的伤害无法以此方式恢复。</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="c7t-section npc-section">
+            <div class="c7t-section-head">移动方式 <span class="c7t-section-meta">主 MOV 在横幅显示</span></div>
+            <div class="c7t-movrows">
+              <div class="c7t-movrow">
+                <span class="c7t-movrow-label">主移动力</span>
+                <span class="c7t-movrow-value view-only">8</span>
+                <input class="c7t-movrow-value edit-only" value="8">
+                <span class="c7t-movrow-type view-only">步行</span>
+                <select class="c7t-movrow-type edit-only"><option>步行</option><option>游泳</option><option>攀爬</option></select>
+                <button class="c7t-gear is-on edit-only" title="auto：由系统派生"><svg><use href="#i-gear"/></svg></button>
+                <span class="c7t-movrow-auto view-only">由系统派生</span>
+              </div>
+              <div class="c7t-movrow">
+                <span class="c7t-movrow-label">额外移动</span>
+                <span class="c7t-movrow-value view-only">8</span>
+                <input class="c7t-movrow-value edit-only" value="8">
+                <span class="c7t-movrow-type view-only">游泳</span>
+                <select class="c7t-movrow-type edit-only"><option>步行</option><option selected>游泳</option><option>攀爬</option></select>
+                <button class="c7t-icon-btn edit-only" title="移除"><svg><use href="#i-trash"/></svg></button>
+              </div>
+              <div class="c7t-movrow">
+                <span class="c7t-movrow-label">额外移动</span>
+                <span class="c7t-movrow-value view-only">4</span>
+                <input class="c7t-movrow-value edit-only" value="4">
+                <span class="c7t-movrow-type view-only">攀爬</span>
+                <select class="c7t-movrow-type edit-only"><option>步行</option><option>游泳</option><option selected>攀爬</option></select>
+                <button class="c7t-icon-btn edit-only" title="移除"><svg><use href="#i-trash"/></svg></button>
+              </div>
+              <button class="c7t-btn c7t-movrow-add edit-only"><svg><use href="#i-plus"/></svg>添加移动方式</button>
+            </div>
+          </div>
+
+          <div class="c7t-table-foot">锁定态只读；点击徽章 / 武器按钮即检定与掷骰。解锁后所有数值原位变输入框。</div>
+        </section>
+
+        <!-- ===================== 技能 ===================== -->
+        <section class="c7t-panel" data-panel="skills">
+          <div class="c7t-toolbar">
+            <div class="c7t-search"><svg><use href="#i-search"/></svg><input type="text" placeholder="搜索技能…"></div>
+            <div class="c7t-seg">
+              <button class="is-active">按数值</button>
+              <button>按名称</button>
+              <button>自定义</button>
+            </div>
+            <span class="c7t-toolbar-spacer"></span>
+            <span class="c7t-toolbar-hint">共 9 项 · 无成长列</span>
+            <button class="c7t-btn edit-only"><svg><use href="#i-plus"/></svg>添加技能</button>
+          </div>
+
+          <div class="c7t-table npc-skills">
+            <div class="c7t-thead">
+              <span class="col-name">技能</span>
+              <span class="col-val">当前</span>
+              <span class="col-half">半值</span>
+              <span class="col-fifth">1/5</span>
+              <span class="col-act"></span>
+            </div>
+            <div class="c7t-tbody">
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">游泳</span></span>
+                <span class="col-val is-strong view-only">80</span><input class="c7t-skill-input col-val edit-only" value="80">
+                <span class="col-half">40</span><span class="col-fifth">16</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">侦查</span></span>
+                <span class="col-val is-strong view-only">50</span><input class="c7t-skill-input col-val edit-only" value="50">
+                <span class="col-half">25</span><span class="col-fifth">10</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">聆听</span></span>
+                <span class="col-val is-strong view-only">45</span><input class="c7t-skill-input col-val edit-only" value="45">
+                <span class="col-half">22</span><span class="col-fifth">9</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+
+              <div class="c7t-group">
+                <button class="c7t-group-head"><svg class="c7t-caret is-open"><use href="#i-chev"/></svg><span>格斗</span><span class="c7t-group-meta">专长 · 2 项</span></button>
+                <div class="c7t-group-body">
+                  <div class="c7t-row is-rollable">
+                    <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">斗殴</span></span>
+                    <span class="col-val is-strong view-only">40</span><input class="c7t-skill-input col-val edit-only" value="40">
+                    <span class="col-half">20</span><span class="col-fifth">8</span>
+                    <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+                  </div>
+                  <div class="c7t-row is-rollable">
+                    <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">撕咬</span></span>
+                    <span class="col-val is-strong view-only">45</span><input class="c7t-skill-input col-val edit-only" value="45">
+                    <span class="col-half">22</span><span class="col-fifth">9</span>
+                    <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">潜行</span></span>
+                <span class="col-val is-strong view-only">40</span><input class="c7t-skill-input col-val edit-only" value="40">
+                <span class="col-half">20</span><span class="col-fifth">8</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">投掷</span></span>
+                <span class="col-val is-strong view-only">35</span><input class="c7t-skill-input col-val edit-only" value="35">
+                <span class="col-half">17</span><span class="col-fifth">7</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">神秘学</span></span>
+                <span class="col-val is-strong view-only">30</span><input class="c7t-skill-input col-val edit-only" value="30">
+                <span class="col-half">15</span><span class="col-fifth">6</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row is-rollable">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i><span class="c7t-row-name">闪避</span></span>
+                <span class="col-val is-strong view-only">25</span><input class="c7t-skill-input col-val edit-only" value="25">
+                <span class="col-half">12</span><span class="col-fifth">5</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开技能卡"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+            </div>
+          </div>
+          <div class="c7t-table-foot">生物技能通常较少：保留搜索、三态排序与专长分组，不做成长 / 职业 / 兴趣拆分。</div>
+        </section>
+
+        <!-- ===================== 物品 ===================== -->
+        <section class="c7t-panel" data-panel="inventory">
+          <div class="c7t-toolbar">
+            <span class="c7t-toolbar-title">携带物</span>
+            <span class="c7t-toolbar-spacer"></span>
+            <span class="c7t-toolbar-hint">无货币条 · 武器在战斗页 · 空分组自动隐藏</span>
+          </div>
+
+          <div class="c7t-group is-open">
+            <div class="c7t-group-head is-static">
+              <svg class="c7t-caret is-open"><use href="#i-chev"/></svg>
+              <span>法术</span><span class="c7t-group-meta">2</span>
+              <button class="c7t-icon-btn edit-only" title="新增法术"><svg><use href="#i-plus"/></svg></button>
+            </div>
+            <div class="c7t-group-body c7t-items-list">
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bolt"/></svg></i><span class="c7t-row-name">深渊之息</span></span>
+                <span class="c7t-row-note">法术</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bolt"/></svg></i><span class="c7t-row-name">召唤深潜者</span></span>
+                <span class="c7t-row-note">法术</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="c7t-group is-open">
+            <div class="c7t-group-head is-static">
+              <svg class="c7t-caret is-open"><use href="#i-chev"/></svg>
+              <span>天赋</span><span class="c7t-group-meta">3</span>
+              <button class="c7t-icon-btn edit-only" title="新增天赋"><svg><use href="#i-plus"/></svg></button>
+            </div>
+            <div class="c7t-group-body c7t-items-list">
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-tentacle"/></svg></i><span class="c7t-row-name">两栖</span></span>
+                <span class="c7t-row-note">天赋</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-tentacle"/></svg></i><span class="c7t-row-name">深渊凝视</span></span>
+                <span class="c7t-row-note">天赋</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-tentacle"/></svg></i><span class="c7t-row-name">再生</span></span>
+                <span class="c7t-row-note">天赋</span>
+                <span class="col-act"><button class="c7t-icon-btn" title="打开"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="c7t-group is-open">
+            <div class="c7t-group-head is-static">
+              <svg class="c7t-caret is-open"><use href="#i-chev"/></svg>
+              <span>道具</span><span class="c7t-group-meta">1</span>
+              <button class="c7t-icon-btn edit-only" title="新增道具"><svg><use href="#i-plus"/></svg></button>
+            </div>
+            <div class="c7t-group-body c7t-items-list">
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bag"/></svg></i><span class="c7t-row-name">沉船宝藏</span></span>
+                <span class="c7t-row-note view-only">×3</span>
+                <input class="c7t-qty-input edit-only" value="3">
+                <span class="col-act"><button class="c7t-icon-btn" title="打开"><svg><use href="#i-pencil"/></svg></button><button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="c7t-table-foot">护甲 / 书籍 / 状态为空 → 不渲染分组；天赋同时出现在战斗页「特殊能力」速查。</div>
+        </section>
+
+        <!-- ===================== 描述 ===================== -->
+        <section class="c7t-panel" data-panel="description">
+          <div class="c7t-cols npc-cols">
+            <div class="c7t-field">
+              <span>类型</span>
+              <b class="view-only">异界生物</b>
+              <input class="c7t-field-input edit-only" value="异界生物">
+            </div>
+            <div class="c7t-field">
+              <span>栖息地</span>
+              <b class="view-only">深海 / 沿海洞穴</b>
+              <span class="c7t-field-hint view-only">creature 仅显示「类型」；npc 显示职业 / 年龄 / 组织</span>
+            </div>
+          </div>
+
+          <div class="c7t-section npc-section">
+            <div class="c7t-section-head">外貌与习性</div>
+            <div class="c7t-prose view-only">
+              深潜者直立时约有 2 米高，灰绿色的皮肤覆着细鳞，手脚具蹼，指间生有吸盘。头部呈鱼形，眼球外凸、无法闭合，颈侧有鳃裂。离开海水后动作略显笨拙，但一旦进入水中便极为敏捷。
+            </div>
+            <textarea class="c7t-prose-input edit-only" rows="5">深潜者直立时约有 2 米高，灰绿色的皮肤覆着细鳞，手脚具蹼，指间生有吸盘。头部呈鱼形，眼球外凸、无法闭合，颈侧有鳃裂。离开海水后动作略显笨拙，但一旦进入水中便极为敏捷。</textarea>
+          </div>
+
+          <div class="c7t-section npc-section">
+            <div class="c7t-section-head">行为与栖息地</div>
+            <div class="c7t-prose view-only">
+              深潜者在近海的沉船与海底石城中建立聚落，与人类沿海村落保持隐秘往来。它们崇拜克苏鲁与父神达贡，会掳走人类进行杂交。遭遇时通常先以深渊凝视削弱调查员，再以利爪与撕咬近身。
+            </div>
+            <textarea class="c7t-prose-input edit-only" rows="5">深潜者在近海的沉船与海底石城中建立聚落，与人类沿海村落保持隐秘往来。它们崇拜克苏鲁与父神达贡，会掳走人类进行杂交。遭遇时通常先以深渊凝视削弱调查员，再以利爪与撕咬近身。</textarea>
+          </div>
+
+          <div class="c7t-table-foot">生物只有 personalDescription 一个描述字段（无七要素 / 背景故事 / 遭遇记录），因此「描述」页保持单栏长文。</div>
+        </section>
+
+        <!-- ===================== 守秘（GM） ===================== -->
+        <section class="c7t-panel" data-panel="keeper">
+          <div class="c7t-toolbar">
+            <span class="c7t-toolbar-title">守秘面板</span>
+            <span class="c7t-gm-badge">仅 GM 可见</span>
+            <span class="c7t-toolbar-spacer"></span>
+            <span class="c7t-toolbar-hint">锁定态下笔记只读；解锁后可编辑</span>
+          </div>
+
+          <div class="c7t-section npc-section is-keeper">
+            <div class="c7t-section-head">守秘笔记</div>
+            <div class="c7t-prose view-only">
+              深潜者不会主动离开水域太远。若调查员在夜间靠近海边礁石，可听见它们低沉的吟唱。聚落入口位于灯塔东北约 400 米的礁洞，退潮时露出。
+            </div>
+            <textarea class="c7t-prose-input edit-only" rows="4">深潜者不会主动离开水域太远。若调查员在夜间靠近海边礁石，可听见它们低沉的吟唱。聚落入口位于灯塔东北约 400 米的礁洞，退潮时露出。</textarea>
+          </div>
+
+          <div class="c7t-section npc-section">
+            <div class="c7t-section-head">骰子宏 <span class="c7t-section-meta">2 个 · 拖入 Macro 添加</span></div>
+            <div class="c7t-macros">
+              <div class="c7t-macro-row">
+                <i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i>
+                <span class="c7t-macro-name">深潜者·爪击</span>
+                <button class="c7t-icon-btn" title="执行宏"><svg><use href="#i-burst"/></svg></button>
+                <button class="c7t-icon-btn edit-only" title="移除宏"><svg><use href="#i-trash"/></svg></button>
+              </div>
+              <div class="c7t-macro-row">
+                <i class="c7t-row-ico"><svg><use href="#i-die"/></svg></i>
+                <span class="c7t-macro-name">深潜者·SAN 检定</span>
+                <button class="c7t-icon-btn" title="执行宏"><svg><use href="#i-burst"/></svg></button>
+                <button class="c7t-icon-btn edit-only" title="移除宏"><svg><use href="#i-trash"/></svg></button>
+              </div>
+              <div class="c7t-macro-empty edit-only">把宏（Macro）拖到这张角色卡上即可添加。</div>
+            </div>
+          </div>
+
+          <div class="c7t-section npc-section">
+            <div class="c7t-section-head">状态</div>
+            <div class="c7t-keeper-actions">
+              <button class="c7t-btn"><svg><use href="#i-undo"/></svg>清除全部状态</button>
+              <span class="c7t-toolbar-hint">会清空重伤 / 昏迷 / 濒死 / 死亡 / 倒地 / 疯狂</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== 效果 ===================== -->
+        <section class="c7t-panel" data-panel="effects">
+          <div class="c7t-toolbar">
+            <span class="c7t-toolbar-title">效果列表</span>
+            <span class="c7t-toolbar-spacer"></span>
+            <span class="c7t-toolbar-hint">点击名称打开配置 · 开关即时生效</span>
+            <button class="c7t-btn edit-only"><svg><use href="#i-plus"/></svg>新增效果</button>
+          </div>
+          <div class="c7t-table npc-effects">
+            <div class="c7t-tbody">
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bolt"/></svg></i><span class="c7t-row-name">水下呼吸</span></span>
+                <span class="col-note">启用 · 被动</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn is-on" title="禁用效果"><svg><use href="#i-bolt"/></svg></button>
+                  <button class="c7t-icon-btn" title="打开配置"><svg><use href="#i-pencil"/></svg></button>
+                  <button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button>
+                </span>
+              </div>
+              <div class="c7t-row">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bolt"/></svg></i><span class="c7t-row-name">深潜者之触</span></span>
+                <span class="col-note">启用 · 攻击附加</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn is-on" title="禁用效果"><svg><use href="#i-bolt"/></svg></button>
+                  <button class="c7t-icon-btn" title="打开配置"><svg><use href="#i-pencil"/></svg></button>
+                  <button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button>
+                </span>
+              </div>
+              <div class="c7t-row is-disabled">
+                <span class="col-name"><i class="c7t-row-ico"><svg><use href="#i-bolt"/></svg></i><span class="c7t-row-name">虚化</span></span>
+                <span class="col-note">已禁用</span>
+                <span class="col-act">
+                  <button class="c7t-icon-btn" title="启用效果"><svg><use href="#i-bolt"/></svg></button>
+                  <button class="c7t-icon-btn" title="打开配置"><svg><use href="#i-pencil"/></svg></button>
+                  <button class="c7t-icon-btn edit-only" title="删除"><svg><use href="#i-trash"/></svg></button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="c7t-table-foot">效果页与调查员卡一致：新增 / 启停 / 打开配置 / 删除。</div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== 样稿说明（不属于角色卡） ===== -->
+<div class="proto-notes">
+  <div class="proto-notes-col">
+    <h4>看这张样稿的 6 个点</h4>
+    <ul>
+      <li><b>横幅是同一套语言</b>：头像 + 身份 + 8 盾徽 + 资源块 + 状态/战斗行 + tab，与调查员卡一致。</li>
+      <li><b>战斗优先</b>：默认打开「战斗」；每轮攻击、SAN 损失、护甲在横幅底行与战斗页速览条双处展示。</li>
+      <li><b>空值隐藏</b>：深潜者没有 SAN / 幸运 → 锁定态不显示；点「进入编辑态」才出现输入框。</li>
+      <li><b>缺值盾徽</b>：APP / EDU 显示「—」；编辑态可补值，公式模式下输入公式。</li>
+      <li><b>轻量取舍</b>：无收藏侧栏、无货币条、无成长列；天赋在战斗页速查 + 物品页列表。</li>
+      <li><b>守秘是 GM 页</b>：笔记 + 骰子宏 + 清除状态；无神话标记 / SAN 事件（NPC 无这些字段）。</li>
+    </ul>
+  </div>
+  <div class="proto-notes-col">
+    <h4>可以点的地方</h4>
+    <ul>
+      <li>工具条：<b>切换暗色</b> / <b>宽度 780</b>（看窄窗降级）/ <b>进入编辑态</b> / <b>公式模式</b>（需先编辑态）。</li>
+      <li>Tab 行：战斗 / 技能 / 物品 / 描述 / 守秘 / 效果 可切换。</li>
+      <li>状态芯片可点亮；技能/武器行悬停出现操作按钮；分组标题可折叠。</li>
+      <li>锁定按钮在横幅右上角；编辑态下所有数值原位变成输入框（示意，无真实保存）。</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+(function () {
+  const win = document.querySelector('.c7t-window');
+  const body = document.body;
+  const editBtn = document.getElementById('toggle-edit');
+  const formulaBtn = document.getElementById('toggle-formula');
+  const lockBtn = document.getElementById('lock-btn');
+  const themeBtn = document.getElementById('toggle-theme');
+  const widthBtn = document.getElementById('toggle-width');
+  const widths = [
+    { cls: 'w780', num: 780, narrow: true },
+    { cls: 'w900', num: 900, narrow: false },
+    { cls: 'w1020', num: 1020, narrow: false },
+  ];
+  let wi = 1; // 默认 w900
+
+  function setEditing(on) {
+    win.classList.toggle('is-editing', on);
+    editBtn.textContent = on ? '退出编辑态' : '进入编辑态';
+    formulaBtn.disabled = !on;
+    lockBtn.title = on ? '锁定（回到只读态）' : '解锁编辑（当前：锁定态）';
+    lockBtn.querySelector('use').setAttribute('href', on ? '#i-unlock' : '#i-lock');
+    if (!on) win.classList.remove('is-formula');
+  }
+
+  editBtn.addEventListener('click', () => setEditing(!win.classList.contains('is-editing')));
+  lockBtn.addEventListener('click', () => setEditing(!win.classList.contains('is-editing')));
+
+  formulaBtn.addEventListener('click', () => {
+    if (!win.classList.contains('is-editing')) return;
+    const on = win.classList.toggle('is-formula');
+    formulaBtn.classList.toggle('is-on', on);
+  });
+
+  themeBtn.addEventListener('click', () => {
+    const dark = body.classList.toggle('theme-dark');
+    body.classList.toggle('theme-light', !dark);
+    themeBtn.textContent = dark ? '切换亮色' : '切换暗色';
+  });
+
+  function applyWidth(index) {
+    wi = index;
+    win.classList.remove('w780', 'w900', 'w1020');
+    win.classList.add(widths[wi].cls);
+    win.classList.toggle('is-narrow', widths[wi].narrow);
+    widthBtn.textContent = '宽度：' + widths[wi].num;
+  }
+  widthBtn.addEventListener('click', () => applyWidth((wi + 1) % widths.length));
+
+  document.querySelectorAll('.c7t-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.c7t-tab').forEach((t) => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      const id = tab.dataset.tab;
+      document.querySelectorAll('.c7t-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === id));
+    });
+  });
+
+  document.querySelectorAll('.c7t-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const madness = chip.dataset.cond === 'tempo' || chip.dataset.cond === 'indef';
+      chip.classList.toggle(madness ? 'is-mad' : 'is-wound');
+    });
+  });
+
+  document.querySelectorAll('.c7t-group-head').forEach((head) => {
+    head.addEventListener('click', () => {
+      const group = head.closest('.c7t-group');
+      if (!group) return;
+      group.classList.toggle('is-collapsed');
+      head.querySelector('.c7t-caret')?.classList.toggle('is-open');
+    });
+  });
+
+  setEditing(false);
+  applyWidth(wi);
+
+  // 演示用 hash：npc.html#edit / #formula / #dark / #skills / #inventory / #description / #keeper / #effects / #780
+  const hash = (location.hash || '').replace(/^#/, '');
+  if (hash) {
+    if (hash.includes('780')) applyWidth(0);
+    if (hash.includes('dark')) {
+      body.classList.add('theme-dark');
+      body.classList.remove('theme-light');
+      themeBtn.textContent = '切换亮色';
+    }
+    if (hash.includes('edit') || hash.includes('formula')) setEditing(true);
+    if (hash.includes('formula')) {
+      win.classList.add('is-formula');
+      formulaBtn.classList.add('is-on');
+    }
+    const tabId = ['combat', 'skills', 'inventory', 'description', 'keeper', 'effects']
+      .find((id) => hash.includes(id));
+    if (tabId) {
+      document.querySelectorAll('.c7t-tab').forEach((t) => t.classList.toggle('is-active', t.dataset.tab === tabId));
+      document.querySelectorAll('.c7t-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === tabId));
+    }
+  }
+})();
+</script>
+</body>
+</html>

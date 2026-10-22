@@ -1,0 +1,401 @@
+/* ============================================================
+   CoC7 Tidy 生物卡（NPC / creature）— 静态样稿
+   复用 prototype.css 的 .c7t-* 视觉组件，只补充生物卡新增组件
+   ============================================================ */
+
+/* ---------- 页面 ---------- */
+body.npc-proto{padding-bottom:26px}
+.c7t-window.npc-window{height:960px; transition:width .2s ease}
+.c7t-window.npc-window.w780{width:780px}
+.c7t-window.npc-window.w900{width:900px}
+.c7t-window.npc-window.w1020{width:1020px}
+
+/* 编辑态：给横幅一个极轻的提示描边 */
+.c7t-window.is-editing .c7t-banner{box-shadow:inset 0 0 0 2px rgba(226,208,168,.22)}
+.c7t-window.is-formula .c7t-abilities{outline:1px dashed rgba(226,208,168,.35); outline-offset:4px; border-radius:4px}
+
+/* ---------- 状态切换工具类 ---------- */
+.edit-only{display:none !important}
+.c7t-window.is-editing .edit-only{display:revert !important}
+.c7t-window.is-editing button.edit-only,
+.c7t-window.is-editing .c7t-btn.edit-only{display:inline-flex !important}
+.c7t-window.is-editing input.edit-only,
+.c7t-window.is-editing textarea.edit-only{display:block !important}
+.c7t-window.is-editing .view-only{display:none !important}
+
+.c7t-window:not(.is-editing) .only-editing{display:none !important}
+.c7t-window.is-editing .c7t-vital.only-editing{display:grid}
+
+.c7t-window .formula-only,
+.c7t-window.is-editing input.edit-only.formula-only,
+.c7t-window.is-editing .c7t-ability-fx.formula-only{display:none !important}
+.c7t-window.is-editing.is-formula input.edit-only.formula-only,
+.c7t-window.is-editing.is-formula .c7t-ability-fx.formula-only{display:block !important}
+
+/* ---------- 横幅身份 ---------- */
+.c7t-name-input{
+  width:100%; margin:0; padding:0;
+  font:inherit; color:#f6eeda; letter-spacing:inherit;
+  background:transparent; border:0; border-bottom:1px dashed rgba(226,208,168,.55);
+  outline:0;
+}
+.c7t-name-input:focus{border-bottom-color:#e2d0a8}
+.c7t-subtitle .npc-type{color:#d8c49a; letter-spacing:.03em}
+
+/* ---------- 特性：编辑 / 公式态 ---------- */
+.c7t-ability.is-empty .c7t-ability-value{color:#8d8164}
+.c7t-ability.is-empty .c7t-ability-shield{stroke:rgba(189,168,120,.5)}
+.c7t-ability-input{
+  position:absolute; top:27px; left:50%; transform:translateX(-50%);
+  width:58px; height:27px; padding:0 2px;
+  font:inherit; font-size:22px; font-weight:700; text-align:center;
+  font-variant-numeric:tabular-nums;
+  color:#f7efdb; background:rgba(0,0,0,.28);
+  border:0; border-bottom:1px solid rgba(226,208,168,.6); border-radius:2px 2px 0 0;
+  outline:0;
+}
+.c7t-ability-input:focus{background:rgba(192,173,129,.2); border-bottom-color:#e2d0a8}
+.c7t-ability-formula{
+  position:absolute; top:36px; left:50%; transform:translateX(-50%);
+  width:82px; height:22px; padding:0 3px;
+  font:inherit; font-size:11.5px; text-align:center;
+  color:#f2e8d0; background:rgba(0,0,0,.3);
+  border:1px solid rgba(192,173,129,.4); border-radius:2px;
+  outline:0;
+}
+.c7t-ability-fx{
+  position:absolute; top:9px; right:15px;
+  font:italic 700 11px/1 Georgia, serif; color:#d8c49a;
+}
+.c7t-window.is-formula .c7t-ability .c7t-ability-value,
+.c7t-window.is-formula .c7t-ability .c7t-ability-sub,
+.c7t-window.is-formula .c7t-ability .c7t-ability-input{display:none !important}
+.c7t-window.is-editing.is-formula .c7t-ability .c7t-ability-formula{display:block !important}
+
+/* ---------- 资源 / 派生：编辑态输入 ---------- */
+.c7t-vital-val.is-editing{display:flex; align-items:center; gap:2px}
+.c7t-vinput{
+  width:34px; padding:1px 2px;
+  font:inherit; font-size:14px; font-weight:700; text-align:center;
+  font-variant-numeric:tabular-nums;
+  color:#f6eeda; background:rgba(255,255,255,.07);
+  border:1px solid var(--bn-line-soft); border-radius:2px;
+  outline:0;
+}
+.c7t-vinput:focus{border-color:rgba(226,208,168,.7); background:rgba(192,173,129,.16)}
+.c7t-vinput.is-max{font-weight:500; color:#cbbf9e}
+.c7t-vinput::placeholder{color:#7f7460}
+.c7t-gear{
+  width:18px; height:18px; padding:0; cursor:pointer; flex:0 0 auto;
+  display:grid; place-items:center;
+  color:#8d8164; background:transparent; border:1px solid transparent; border-radius:2px;
+}
+.c7t-gear svg{width:11px; height:11px; fill:currentColor}
+.c7t-gear:hover{color:#f2e8d0; border-color:rgba(192,173,129,.45)}
+.c7t-gear.is-on{color:#d8c49a}
+.c7t-gear.is-on:hover{color:#f6eeda; text-shadow:0 0 6px rgba(226,208,168,.6)}
+.c7t-dinput{
+  width:46px; margin-left:3px; padding:1px 3px;
+  font:inherit; font-size:11.5px; text-align:center;
+  color:#f2e8d0; background:rgba(0,0,0,.25);
+  border:1px solid var(--bn-line-soft); border-radius:2px; outline:0;
+}
+.c7t-dinput:focus{border-color:rgba(226,208,168,.7)}
+
+/* ---------- 横幅底行：每轮攻击 / SAN 损失 / 护甲 ---------- */
+.c7t-combatbar{display:flex; align-items:center; gap:7px; margin-left:auto}
+.c7t-combat-pill{
+  display:flex; align-items:center; gap:6px;
+  padding:3px 9px;
+  background:rgba(255,255,255,.045);
+  border:1px solid var(--bn-line-soft); border-radius:3px;
+  color:#cbbf9e;
+  transition:all var(--c7t-trans);
+}
+.c7t-combat-pill:hover{border-color:rgba(226,208,168,.5); background:rgba(255,255,255,.075)}
+.c7t-combat-pill .label{
+  font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--bn-mute); white-space:nowrap;
+}
+.c7t-combat-pill .value{
+  font-size:14px; font-weight:700; color:#f6eeda;
+  font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+.c7t-combat-pill .value b{font-size:15px}
+.c7t-combat-pill .value i,
+.c7t-combat-pill.edit-only i{font-style:normal; color:#8d8164; margin:0 1px}
+.c7t-combat-pill.is-san{border-color:rgba(146,45,46,.55); background:rgba(146,45,46,.18)}
+.c7t-combat-pill.is-san:hover{background:rgba(146,45,46,.28); border-color:#c0504d}
+.c7t-combat-pill .c7t-icon-btn{width:19px; height:19px; color:#b6a883}
+.c7t-combat-pill .c7t-icon-btn svg{width:12px; height:12px}
+.c7t-combat-pill .c7t-icon-btn:hover{color:#f6eeda; background:rgba(192,173,129,.22)}
+.c7t-combat-pill .c7t-icon-btn.is-on{color:#d8c49a}
+.c7t-pill-input{
+  width:42px; padding:1px 2px;
+  font:inherit; font-size:12px; text-align:center;
+  color:#f6eeda; background:rgba(0,0,0,.28);
+  border:1px solid var(--bn-line-soft); border-radius:2px; outline:0;
+}
+.c7t-pill-input.is-min{width:30px}
+.c7t-pill-input:focus{border-color:rgba(226,208,168,.7)}
+
+/* ---------- 主体：无侧栏 ---------- */
+.c7t-body.npc-body{position:relative}
+.c7t-content.npc-content{padding:12px 14px 16px}
+
+/* ---------- 战斗页：速览条 ---------- */
+.c7t-combat-strip{
+  display:flex; align-items:center; gap:7px; flex-wrap:wrap;
+  margin-bottom:10px; padding:7px 9px;
+  background:var(--c7t-panel); border:1px solid var(--c7t-line);
+  border-radius:var(--c7t-radius); box-shadow:var(--c7t-shadow-card);
+}
+.c7t-strip-item{
+  display:flex; align-items:center; gap:7px;
+  padding:4px 9px;
+  background:var(--c7t-panel-2); border:1px solid var(--c7t-line);
+  border-radius:3px;
+}
+.c7t-strip-item.is-san{border-color:rgba(146,45,46,.55); background:rgba(146,45,46,.1)}
+.c7t-strip-label{
+  font-size:9.5px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--c7t-gold-strong); white-space:nowrap;
+}
+.c7t-strip-value{
+  font-size:17px; font-weight:700; color:var(--c7t-text);
+  font-variant-numeric:tabular-nums; line-height:1;
+}
+.c7t-strip-value b{font-size:18px}
+.c7t-strip-value i{font-style:normal; color:var(--c7t-text-mute); margin:0 1px; font-size:13px}
+.c7t-strip-item .c7t-icon-btn{width:20px; height:20px; color:var(--c7t-gold-strong)}
+.c7t-strip-item .c7t-icon-btn svg{width:12px; height:12px}
+.c7t-strip-item .c7t-icon-btn:hover{color:var(--c7t-accent); background:rgba(192,173,129,.22)}
+.c7t-strip-item .c7t-icon-btn.is-on{color:var(--c7t-accent)}
+.c7t-strip-hint{font-size:10px; color:var(--c7t-text-mute); white-space:nowrap}
+.c7t-strip-input{
+  width:52px; padding:2px 3px;
+  font:inherit; font-size:13px; text-align:center;
+  color:var(--c7t-text); background:var(--c7t-panel);
+  border:1px solid var(--c7t-line-strong); border-radius:2px; outline:0;
+}
+.c7t-strip-input.is-min{width:36px}
+.c7t-strip-spacer{flex:1}
+.c7t-strip-meta{font-size:10.5px; color:var(--c7t-text-mute)}
+
+/* ---------- 战斗页：武器表 ---------- */
+.c7t-table.npc-weapons .c7t-thead,
+.c7t-table.npc-weapons .c7t-row{
+  grid-template-columns:minmax(0,1fr) 118px 96px 104px 58px 52px 52px 92px;
+}
+.c7t-table.npc-weapons .col-skill,
+.c7t-table.npc-weapons .col-alt,
+.c7t-table.npc-weapons .col-dmg,
+.c7t-table.npc-weapons .col-range,
+.c7t-table.npc-weapons .col-ammo,
+.c7t-table.npc-weapons .col-malf{
+  text-align:right; padding-right:8px;
+  font-variant-numeric:tabular-nums; color:var(--c7t-text-dim);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.c7t-table.npc-weapons .c7t-thead .col-skill,
+.c7t-table.npc-weapons .c7t-thead .col-alt,
+.c7t-table.npc-weapons .c7t-thead .col-dmg,
+.c7t-table.npc-weapons .c7t-thead .col-range,
+.c7t-table.npc-weapons .c7t-thead .col-ammo,
+.c7t-table.npc-weapons .c7t-thead .col-malf{text-align:right; padding-right:8px}
+.c7t-table.npc-weapons .c7t-row .col-dmg{font-weight:700; color:var(--c7t-text)}
+.c7t-table.npc-weapons .c7t-row .col-skill{color:var(--c7t-text)}
+.c7t-table.npc-weapons .col-act{display:flex; justify-content:flex-end; gap:2px}
+
+/* ---------- 战斗页：特殊能力 / 移动方式 ---------- */
+.c7t-section.npc-section{margin-top:10px}
+.c7t-section-meta{margin-left:6px; font-size:10px; font-weight:400; letter-spacing:.02em; text-transform:none; color:var(--c7t-text-mute)}
+.c7t-talents{display:flex; flex-direction:column}
+.c7t-talent{
+  display:flex; flex-direction:column; gap:2px; width:100%;
+  padding:7px 12px; cursor:pointer; text-align:left;
+  font:inherit; color:var(--c7t-text);
+  background:transparent; border:0; border-bottom:1px solid var(--c7t-line-soft);
+  border-left:2px solid transparent;
+  transition:all var(--c7t-trans);
+}
+.c7t-talent:last-child{border-bottom:0}
+.c7t-talent:hover{background:rgba(192,173,129,.16); border-left-color:var(--c7t-accent)}
+.c7t-talent-name{font-size:12.5px; font-weight:700; color:var(--c7t-text)}
+.c7t-talent-desc{font-size:11.5px; line-height:1.5; color:var(--c7t-text-dim)}
+.c7t-talent:hover .c7t-talent-name{color:var(--c7t-accent)}
+body.theme-dark .c7t-talent:hover .c7t-talent-name{color:var(--c7t-gold)}
+
+.c7t-movrows{display:flex; flex-direction:column; padding:2px 10px 9px}
+.c7t-movrow{
+  display:flex; align-items:center; gap:8px;
+  padding:5px 0; border-bottom:1px dashed var(--c7t-line-soft);
+}
+.c7t-movrow:last-of-type{border-bottom:0}
+.c7t-movrow-label{
+  width:64px; flex:0 0 auto;
+  font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--c7t-gold-strong);
+}
+.c7t-movrow-value{
+  width:48px; padding:2px 3px; text-align:center;
+  font:inherit; font-size:13px; font-weight:700; font-variant-numeric:tabular-nums;
+  color:var(--c7t-text); background:var(--c7t-panel);
+  border:1px solid var(--c7t-line); border-radius:2px; outline:0;
+}
+.c7t-movrow-value:focus{border-color:var(--c7t-accent)}
+.c7t-movrow-value.view-only{border:0; background:transparent; padding:0 2px}
+.c7t-movrow-type{
+  padding:2px 5px; font:inherit; font-size:11.5px;
+  color:var(--c7t-text); background:var(--c7t-panel);
+  border:1px solid var(--c7t-line); border-radius:2px; outline:0;
+}
+.c7t-movrow-auto{font-size:10px; color:var(--c7t-text-mute)}
+.c7t-movrow-type.view-only{
+  padding:2px 5px; font:inherit; font-size:12px; color:var(--c7t-text-dim);
+  border:0; background:transparent;
+}
+.c7t-movrow .c7t-icon-btn{color:var(--c7t-text-mute)}
+.c7t-movrow .c7t-icon-btn:hover{color:var(--c7t-accent); background:rgba(192,173,129,.22)}
+.c7t-movrow-add{margin-top:7px; align-self:flex-start}
+
+/* ---------- 技能页 ---------- */
+.c7t-table.npc-skills .c7t-thead,
+.c7t-table.npc-skills .c7t-row{
+  grid-template-columns:minmax(0,1fr) 64px 64px 64px 90px;
+}
+.c7t-table.npc-skills .c7t-row .col-val.is-strong{font-size:14px; font-weight:700; color:var(--c7t-text)}
+.c7t-skill-input{
+  width:46px; margin-left:auto; padding:2px 3px; text-align:right;
+  font:inherit; font-size:13px; font-weight:700; font-variant-numeric:tabular-nums;
+  color:var(--c7t-text); background:var(--c7t-panel);
+  border:1px solid var(--c7t-line-strong); border-radius:2px; outline:0;
+}
+.c7t-skill-input:focus{border-color:var(--c7t-accent)}
+.c7t-table.npc-skills .col-act{display:flex; justify-content:flex-end; gap:2px}
+
+/* ---------- 物品页 ---------- */
+.c7t-group.is-collapsed .c7t-group-body{display:none}
+.c7t-group-head.is-static{cursor:pointer}
+.c7t-group-head .c7t-icon-btn{width:20px; height:20px; color:var(--c7t-gold-strong)}
+.c7t-group-head .c7t-icon-btn svg{width:11px; height:11px}
+.c7t-group-head .c7t-icon-btn:hover{color:var(--c7t-accent); background:rgba(192,173,129,.22)}
+.c7t-items-list .c7t-row .col-act{opacity:0; margin-left:6px}
+.c7t-items-list .c7t-row:hover .col-act{opacity:1}
+.c7t-items-list .c7t-row .col-act .c7t-icon-btn{color:var(--c7t-text-mute)}
+.c7t-items-list .c7t-row .col-act .c7t-icon-btn:hover{color:var(--c7t-accent); background:rgba(192,173,129,.22)}
+.c7t-qty-input{
+  width:42px; margin-left:auto; padding:1px 3px; text-align:center;
+  font:inherit; font-size:12px; color:var(--c7t-text);
+  background:var(--c7t-panel); border:1px solid var(--c7t-line-strong);
+  border-radius:2px; outline:0;
+}
+
+/* ---------- 描述页 ---------- */
+.c7t-cols.npc-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+.c7t-field-input{
+  flex:1; min-width:0; padding:1px 4px;
+  font:inherit; font-size:12.5px; color:var(--c7t-text);
+  background:var(--c7t-panel); border:1px solid var(--c7t-line-strong);
+  border-radius:2px; outline:0;
+}
+.c7t-field-input:focus{border-color:var(--c7t-accent)}
+.c7t-field .c7t-field-hint{font-size:10px; color:var(--c7t-text-mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-transform:none; letter-spacing:0; font-weight:400}
+.c7t-prose-input{
+  display:block; width:calc(100% - 20px); margin:10px;
+  padding:8px 10px; resize:vertical;
+  font-family:var(--c7t-font-long); font-size:12.5px; line-height:1.6;
+  color:var(--c7t-text); background:var(--c7t-panel);
+  border:1px solid var(--c7t-line-strong); border-radius:var(--c7t-radius);
+  outline:0;
+}
+.c7t-prose-input:focus{border-color:var(--c7t-accent)}
+
+/* ---------- 守秘页 ---------- */
+.c7t-gm-badge{
+  margin-left:8px; padding:1px 7px;
+  font-size:9.5px; font-weight:700; letter-spacing:.12em;
+  color:var(--c7t-accent); border:1px solid var(--c7t-accent); border-radius:999px;
+  background:rgba(116,27,43,.08);
+}
+body.theme-dark .c7t-gm-badge{color:var(--c7t-gold); border-color:var(--c7t-gold); background:rgba(192,173,129,.08)}
+.c7t-section.is-keeper{border-color:var(--c7t-accent)}
+.c7t-section.is-keeper .c7t-section-head{
+  color:var(--c7t-accent);
+  background:linear-gradient(90deg, rgba(116,27,43,.18), rgba(192,173,129,.06));
+}
+body.theme-dark .c7t-section.is-keeper{border-color:var(--c7t-gold)}
+body.theme-dark .c7t-section.is-keeper .c7t-section-head{color:var(--c7t-gold)}
+.c7t-macros{display:flex; flex-direction:column; padding:4px 10px 9px}
+.c7t-macro-row{
+  display:flex; align-items:center; gap:8px;
+  padding:5px 0; border-bottom:1px dashed var(--c7t-line-soft);
+}
+.c7t-macro-row:last-of-type{border-bottom:0}
+.c7t-macro-name{flex:1; min-width:0; font-size:12.5px; color:var(--c7t-text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.c7t-macro-row .c7t-icon-btn{color:var(--c7t-gold-strong)}
+.c7t-macro-row .c7t-icon-btn:hover{color:var(--c7t-accent); background:rgba(192,173,129,.22)}
+.c7t-macro-empty{margin-top:8px; font-size:11px; color:var(--c7t-text-mute)}
+.c7t-keeper-actions{display:flex; align-items:center; gap:10px; padding:10px}
+
+/* ---------- 效果页 ---------- */
+.c7t-table.npc-effects .c7t-row{
+  grid-template-columns:minmax(0,1fr) 190px 92px; height:34px;
+}
+.c7t-table.npc-effects .col-note{font-size:11.5px; color:var(--c7t-text-mute)}
+.c7t-table.npc-effects .col-act{display:flex; justify-content:flex-end; gap:2px}
+.c7t-table.npc-effects .c7t-row.is-disabled{opacity:.52}
+.c7t-table.npc-effects .c7t-row.is-disabled .c7t-row-name{text-decoration:line-through}
+.c7t-icon-btn.is-on{color:var(--c7t-accent)}
+body.theme-dark .c7t-icon-btn.is-on{color:var(--c7t-gold)}
+.c7t-tab-gm{
+  margin-left:4px; padding:0 4px;
+  font-size:8.5px; font-weight:700; letter-spacing:.06em;
+  color:#d8c49a; border:1px solid rgba(226,208,168,.45); border-radius:2px;
+}
+.c7t-tab.is-active .c7t-tab-gm{color:#f6eeda; border-color:rgba(246,238,218,.6)}
+
+/* ---------- 窄窗降级（780 宽） ---------- */
+.c7t-window.is-narrow .c7t-name{font-size:26px}
+.c7t-window.is-narrow .c7t-abilities{gap:6px}
+.c7t-window.is-narrow .c7t-ability{height:80px}
+.c7t-window.is-narrow .c7t-ability-value{font-size:23px; top:29px}
+.c7t-window.is-narrow .c7t-ability-input{font-size:19px; width:50px}
+.c7t-window.is-narrow .c7t-strip-hint,
+.c7t-window.is-narrow .c7t-strip-meta,
+.c7t-window.is-narrow .c7t-toolbar-hint{display:none !important}
+.c7t-window.is-narrow .c7t-table.npc-weapons .c7t-thead,
+.c7t-window.is-narrow .c7t-table.npc-weapons .c7t-row{
+  grid-template-columns:minmax(0,1fr) 118px 94px 58px 84px;
+}
+.c7t-window.is-narrow .c7t-table.npc-weapons .col-alt,
+.c7t-window.is-narrow .c7t-table.npc-weapons .col-ammo,
+.c7t-window.is-narrow .c7t-table.npc-weapons .col-malf{display:none}
+.c7t-window.is-narrow .c7t-combat-pill .label{letter-spacing:.06em}
+.c7t-window.is-narrow .c7t-combatbar{gap:5px}
+.c7t-window.is-narrow .c7t-vital{width:118px}
+.c7t-window.is-narrow .proto-bar .proto-hint{display:none}
+
+/* ---------- 样稿说明 ---------- */
+.proto-notes{
+  width:900px; max-width:calc(100vw - 32px);
+  display:grid; grid-template-columns:1fr 1fr; gap:18px;
+  margin:18px 0 10px; padding:16px 18px;
+  color:#c9c4b4; background:#24242b; border:1px solid #3a3a44; border-radius:5px;
+  font-size:12px; line-height:1.6;
+}
+.proto-notes h4{margin:0 0 8px; font-size:12px; letter-spacing:.08em; color:#e8dcc0}
+.proto-notes ul{margin:0; padding-left:16px}
+.proto-notes li{margin:0 0 5px}
+.proto-notes b{color:#e8dcc0; font-weight:700}
+
+/* 暗色下少量硬编码色的可读性兜底 */
+body.theme-dark .c7t-strip-item{background:#20232a}
+body.theme-dark .c7t-talent:hover{background:rgba(192,173,129,.14)}
+body.theme-dark .c7t-movrow-value,
+body.theme-dark .c7t-movrow-type,
+body.theme-dark .c7t-skill-input,
+body.theme-dark .c7t-qty-input,
+body.theme-dark .c7t-field-input,
+body.theme-dark .c7t-prose-input,
+body.theme-dark .c7t-strip-input{background:#1c1e24; color:#e6e6ea}

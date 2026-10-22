@@ -1,0 +1,71 @@
+<div class="c7t-sheet{{#if isGM}} is-gm{{/if}}{{#if isCompact}} is-compact{{/if}}">
+  {{> "modules/coc7-tidy-investigator/templates/parts/icons.hbs"}}
+
+  <header class="c7t-banner c7t-container-header">
+    <div class="c7t-banner-bg"></div>
+
+    <div class="c7t-banner-inner">
+      <div class="c7t-portrait">
+        <img class="c7t-portrait-img" src="{{actor.img}}" {{#if canEdit}}data-edit="img" data-action="editImage"{{/if}} alt="{{actor.name}}">
+      </div>
+
+      <div class="c7t-identity">
+        <div class="c7t-identity-main">
+          <h1 class="c7t-name">
+            {{#if isEditing}}
+              <input class="c7t-name-input" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'C7TIDY.Container.NamePlaceholder'}}">
+            {{else}}
+              <span class="c7t-name-text">{{actor.name}}</span>
+            {{/if}}
+          </h1>
+          <div class="c7t-controls">
+            {{#if canEdit}}
+              <button type="button" class="c7t-ctrl" data-action="toggleLock"
+                data-tooltip="{{#if isLocked}}C7TIDY.Action.Unlock{{else}}C7TIDY.Action.Lock{{/if}}">
+                <i class="fa-solid {{#if isLocked}}fa-lock{{else}}fa-lock-open{{/if}}"></i>
+              </button>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="c7t-subtitle">
+          <span>{{localize 'C7TIDY.Container.Label'}}</span>
+          <i>·</i>
+          <span>{{container.total}} {{localize 'C7TIDY.Container.Unit'}}</span>
+        </div>
+
+        {{#if container.counts.length}}
+          <div class="c7t-vitals c7t-container-chips">
+            {{#each container.counts as |row|}}
+              <span class="c7t-derived">{{localize row.label}} <b>{{row.count}}</b></span>
+            {{/each}}
+          </div>
+        {{/if}}
+      </div>
+    </div>
+
+    {{> "modules/coc7-tidy-investigator/templates/parts/tabs-nav.hbs"}}
+  </header>
+
+  <div class="c7t-body">
+    <div class="c7t-content c7t-scroll">
+      <section class="tab {{tabs.items.cssClass}}" data-group="primary" data-tab="items">
+        {{> "modules/coc7-tidy-investigator/templates/container/tabs/items.hbs"}}
+      </section>
+
+      <section class="tab {{tabs.description.cssClass}}" data-group="primary" data-tab="description">
+        {{> "modules/coc7-tidy-investigator/templates/container/tabs/description.hbs"}}
+      </section>
+
+      {{#if isGM}}
+        <section class="tab {{tabs.keeper.cssClass}}" data-group="primary" data-tab="keeper">
+          {{> "modules/coc7-tidy-investigator/templates/container/tabs/keeper.hbs"}}
+        </section>
+      {{/if}}
+
+      <section class="tab {{tabs.effects.cssClass}}" data-group="primary" data-tab="effects">
+        {{> "modules/coc7-tidy-investigator/templates/tabs/effects.hbs"}}
+      </section>
+    </div>
+  </div>
+</div>

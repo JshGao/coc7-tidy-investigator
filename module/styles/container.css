@@ -1,0 +1,84 @@
+/* ============================================================
+   CoC7 Tidy 容器卡（c7t-container）
+   紧凑横幅：头像 / 名称 / 物品计数；无特性与资源块
+   ============================================================ */
+
+.c7t-container .c7t-container-header { padding: 14px 16px 0; }
+.c7t-container .c7t-banner-inner { grid-template-columns: 96px minmax(0, 1fr); gap: 14px; }
+.c7t-container .c7t-portrait { width: 96px; height: 96px; }
+.c7t-container .c7t-name { font-size: 27px; }
+.c7t-container .c7t-subtitle { margin-top: 4px; }
+.c7t-container .c7t-vitals { margin-top: 8px; gap: 5px; }
+.c7t-container .c7t-container-chips .c7t-derived { font-size: 10.5px; }
+.c7t-container .c7t-content { padding: 12px 14px 14px; }
+.c7t-container .c7t-group.is-empty .c7t-group-head { opacity: .72; }
+.c7t-container .c7t-group.is-empty .c7t-group-body { display: none; }
+
+.c7t-container .c7t-toolbar { margin-bottom: 8px; }
+.c7t-container .c7t-group-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c7t-gold-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.c7t-container .c7t-group-head .c7t-icon-btn { width: 20px; height: 20px; color: var(--c7t-gold-strong); }
+.c7t-container .c7t-group-head .c7t-icon-btn:hover { color: var(--c7t-accent); background: rgba(192, 173, 129, .22); }
+.c7t-container .c7t-items-list .c7t-row .col-act { opacity: 0; margin-left: 6px; }
+.c7t-container .c7t-items-list .c7t-row:hover .col-act { opacity: 1; }
+.c7t-container .c7t-qty-input {
+  width: 42px;
+  margin-left: auto;
+  padding: 1px 3px;
+  text-align: center;
+  font: inherit;
+  font-size: 12px;
+  color: var(--c7t-text);
+  background: var(--c7t-panel);
+  border: 1px solid var(--c7t-line-strong);
+  border-radius: 2px;
+  outline: 0;
+}
+.c7t-container .c7t-qty-input:focus { border-color: var(--c7t-accent); }
+
+.c7t-container .c7t-container-section { margin-top: 6px; }
+.c7t-container .c7t-section-head { display: flex; align-items: center; gap: 6px; }
+.c7t-container prose-mirror.c7t-container-prose { display: block; min-height: 130px; }
+.c7t-container prose-mirror.c7t-container-prose .editor-container { min-height: 110px; }
+.c7t-container .c7t-container-prose {
+  font-family: var(--c7t-font-long);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--c7t-text-dim);
+}
+.c7t-container .c7t-gm-badge {
+  margin-left: 8px;
+  padding: 1px 7px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--c7t-accent);
+  border: 1px solid var(--c7t-accent);
+  border-radius: 999px;
+  background: rgba(116, 27, 43, .08);
+}
+.coc7-tidy.theme-dark .c7t-container .c7t-gm-badge { color: var(--c7t-gold); border-color: var(--c7t-gold); background: rgba(192, 173, 129, .08); }
+.c7t-container .c7t-section.is-keeper { border-color: var(--c7t-accent); }
+.c7t-container .c7t-section.is-keeper .c7t-section-head {
+  color: var(--c7t-accent);
+  background: linear-gradient(90deg, rgba(116, 27, 43, .18), rgba(192, 173, 129, .06));
+}
+.coc7-tidy.theme-dark .c7t-container .c7t-section.is-keeper { border-color: var(--c7t-gold); }
+.coc7-tidy.theme-dark .c7t-container .c7t-section.is-keeper .c7t-section-head { color: var(--c7t-gold); }
+
+/* 暗色下输入底色 */
+.coc7-tidy.theme-dark .c7t-container .c7t-qty-input { background: #1c1e24; color: #e6e6ea; }
+
+@container (max-width: 560px) {
+  .c7t-container .c7t-container-header { padding: 10px 12px 0; }
+  .c7t-container .c7t-name { font-size: 23px; }
+  .c7t-container .c7t-toolbar-hint { display: none; }
+}

@@ -22,6 +22,26 @@ open prototype/index.html
 
 页面顶部工具条上的两个按钮可以实时切换主题与侧栏，仅用于演示。
 
+### 生物 / NPC 卡样稿：`npc.html`
+
+对应 [docs/04-生物卡设计文档.md](../docs/04-生物卡设计文档.md)。直接打开：
+
+```bash
+open prototype/npc.html
+```
+
+顶部工具条可切换**亮/暗色、窗口宽度（780 / 900 / 1020）、锁定 / 编辑态、公式模式**；也可以直接用 hash 打开某个状态：
+
+| hash | 效果 |
+|---|---|
+| `npc.html#edit` | 编辑态（数值原位变输入框、出现增删按钮） |
+| `npc.html#formula` | 编辑态 + 公式模式（特性盾徽显示公式输入） |
+| `npc.html#dark` | 暗色主题 |
+| `npc.html#780` | 780 宽窄窗（特性盾徽缩排、武器表隐藏次要列） |
+| `npc.html#skills` / `#inventory` / `#description` / `#keeper` / `#effects` | 打开指定 tab（默认「战斗」） |
+
+例：`npc.html#edit`；hash 采用「包含匹配」，可组合，如 `npc.html#edit-780-dark` 会同时进入编辑态、780 窄窗与暗色。
+
 ## 截图
 
 | 文件 | 内容 |
@@ -33,6 +53,9 @@ open prototype/index.html
 | `screenshots/05-light-background.png` | 亮色 · **背景五要素 + 关键链接** |
 | `screenshots/06-dark-summary.png` | 暗色 · 简表 |
 | `screenshots/07-dark-background.png` | 暗色 · 背景 |
+| `screenshots/npc-01-combat.png` | 生物卡 · 亮色 · 默认「战斗」tab（锁定态） |
+| `screenshots/npc-02-edit.png` | 生物卡 · 编辑态（输入框 / 增删按钮） |
+| `screenshots/npc-03-dark.png` | 生物卡 · 暗色 · 战斗 tab |
 
 ## 设计要点（与 docs/02-设计文档.md 对应）
 

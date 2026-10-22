@@ -1,0 +1,189 @@
+<div class="c7t-combat-strip">
+  <div class="c7t-strip-item">
+    <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.AttacksPerRound'}}</span>
+    {{#if isEditing}}
+      <input class="c7t-strip-input" type="text" name="system.special.attacksPerRound"
+        value="{{special.attacksPerRound}}" placeholder="1">
+    {{else}}
+      <span class="c7t-strip-value">{{special.attacksPerRound}}</span>
+    {{/if}}
+    <button type="button" class="c7t-icon-btn" data-action="rollAttacksPerRound"
+      data-tooltip="C7TIDY.Npc.RollApr" {{#unless special.attacksRollable}}disabled{{/unless}}>
+      <i class="fa-solid fa-burst"></i>
+    </button>
+  </div>
+
+  <div class="c7t-strip-item is-san">
+    <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.SanLoss'}}</span>
+    {{#if isEditing}}
+      <input class="c7t-strip-input is-min" type="text" name="system.special.sanLoss.checkPassed"
+        value="{{special.sanPassed}}" placeholder="0" data-tooltip="C7TIDY.Npc.SanPassed">
+      <i>/</i>
+      <input class="c7t-strip-input" type="text" name="system.special.sanLoss.checkFailled"
+        value="{{special.sanFailed}}" placeholder="1D6" data-tooltip="C7TIDY.Npc.SanFailed">
+    {{else}}
+      <span class="c7t-strip-value"><b>{{special.sanPassedDisplay}}</b><i>/</i><b>{{special.sanFailedDisplay}}</b></span>
+    {{/if}}
+    <button type="button" class="c7t-icon-btn" data-action="sanLossLink" data-tooltip="C7TIDY.Npc.SanLinkHint">
+      <i class="fa-solid fa-link"></i>
+    </button>
+  </div>
+
+  <div class="c7t-strip-item">
+    <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.Armor'}}</span>
+    <span class="c7t-strip-value">{{special.armorValue}}</span>
+    <button type="button" class="c7t-icon-btn{{#if special.armorNotes}} is-on{{/if}}"
+      data-action="toggleArmorNotes" data-tooltip="C7TIDY.Npc.ArmorNotes">
+      <i class="fa-solid fa-note-sticky"></i>
+    </button>
+  </div>
+
+  <span class="c7t-strip-spacer"></span>
+  <span class="c7t-strip-meta">{{localize 'C7TIDY.Npc.CombatMeta'}}</span>
+</div>
+
+<div class="c7t-toolbar">
+  <span class="c7t-toolbar-title">{{localize 'C7TIDY.Npc.Weapons'}}</span>
+  <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Npc.WeaponsHint'}}</span>
+  {{#if isEditing}}
+    <button type="button" class="c7t-btn" data-action="createItem" data-type="weapon">
+      <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Npc.AddWeapon'}}
+    </button>
+  {{/if}}
+</div>
+
+<div class="c7t-table npc-weapons">
+  <div class="c7t-thead">
+    <span class="col-name">{{localize 'C7TIDY.Weapon.Name'}}</span>
+    <span class="col-skill">{{localize 'C7TIDY.Weapon.Skill'}}</span>
+    <span class="col-alt">{{localize 'C7TIDY.Npc.AltSkill'}}</span>
+    <span class="col-dmg">{{localize 'C7TIDY.Weapon.Damage'}}</span>
+    <span class="col-range">{{localize 'C7TIDY.Weapon.Range'}}</span>
+    <span class="col-ammo">{{localize 'C7TIDY.Weapon.Ammo'}}</span>
+    <span class="col-malf">{{localize 'C7TIDY.Weapon.Malfunction'}}</span>
+    <span class="col-act"></span>
+  </div>
+  <div class="c7t-tbody">
+    {{#each weapons as |weapon|}}
+      <div class="c7t-row" data-item-id="{{weapon.id}}">
+        <span class="col-name" data-action="openItem">
+          {{#if weapon.img}}<img class="c7t-row-ico" src="{{weapon.img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-crosshairs"></i></i>{{/if}}
+          <span class="c7t-row-name">{{weapon.name}}</span>
+        </span>
+        <span class="col-skill">{{#if weapon.skillName}}{{weapon.skillName}} {{weapon.skillValue}}%{{else}}—{{/if}}</span>
+        <span class="col-alt">{{#if weapon.altSkillName}}{{weapon.altSkillName}} {{weapon.altSkillValue}}%{{else}}—{{/if}}</span>
+        <span class="col-dmg">
+          {{#if weapon.shotgun}}
+            {{#each weapon.ranges as |range|}}
+              <button type="button" class="c7t-dmg-btn" data-action="weaponDamage" data-range="{{range.key}}"
+                data-tooltip="{{localize 'C7TIDY.Weapon.DamageRoll'}}">{{range.damage}}</button>{{#unless @last}} {{/unless}}
+            {{/each}}
+          {{else}}
+            {{weapon.damage}}
+          {{/if}}
+        </span>
+        <span class="col-range">{{weapon.range}}</span>
+        <span class="col-ammo">{{weapon.bullets}}</span>
+        <span class="col-malf">{{weapon.malfunction}}</span>
+        <span class="col-act">
+          <button type="button" class="c7t-icon-btn act" data-action="weaponAttack" data-tooltip="C7TIDY.Weapon.Attack">
+            <i class="fa-solid fa-crosshairs"></i>
+          </button>
+          <button type="button" class="c7t-icon-btn" data-action="weaponDamage" data-tooltip="C7TIDY.Weapon.DamageRoll">
+            <i class="fa-solid fa-dice-d6"></i>
+          </button>
+          <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          {{#if @root.isEditing}}
+            <button type="button" class="c7t-icon-btn" data-action="deleteItem" data-tooltip="C7TIDY.Action.DeleteItem">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          {{/if}}
+        </span>
+      </div>
+    {{else}}
+      <div class="c7t-empty"><b>{{localize 'C7TIDY.Weapon.Empty'}}</b></div>
+    {{/each}}
+  </div>
+</div>
+
+<div class="c7t-section c7t-npc-section">
+  <div class="c7t-section-head">
+    {{localize 'C7TIDY.Npc.SpecialAbilities'}}
+    <span class="c7t-section-meta">{{localize 'C7TIDY.Npc.TalentsCount'}} {{talents.length}}</span>
+    {{#if isEditing}}
+      <button type="button" class="c7t-btn c7t-section-add-btn" data-action="createTalent">
+        <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Npc.AddSpecialAbility'}}
+      </button>
+    {{/if}}
+  </div>
+  <div class="c7t-talents">
+    {{#each talents as |talent|}}
+      <button type="button" class="c7t-talent" data-action="openItem" data-item-id="{{talent.id}}">
+        <span class="c7t-talent-name">{{talent.name}}</span>
+        <span class="c7t-talent-desc">{{#if talent.excerpt}}{{talent.excerpt}}{{else}}{{localize 'C7TIDY.Npc.NoExcerpt'}}{{/if}}</span>
+      </button>
+    {{else}}
+      <div class="c7t-empty c7t-empty-slim"><b>{{localize 'C7TIDY.Npc.NoSpecialAbilities'}}</b></div>
+    {{/each}}
+  </div>
+</div>
+
+<div class="c7t-section c7t-npc-section">
+  <div class="c7t-section-head">
+    {{localize 'C7TIDY.Npc.Movement'}}
+    <span class="c7t-section-meta">{{localize 'C7TIDY.Npc.MovementMeta'}}</span>
+  </div>
+  <div class="c7t-movrows">
+    <div class="c7t-movrow">
+      <span class="c7t-movrow-label">{{localize 'C7TIDY.Npc.MainMovement'}}</span>
+      {{#if isEditing}}
+        <input class="c7t-movrow-value" type="number" step="1" value="{{actor.system.attribs.mov.value}}"
+          data-mov-field="value" data-mov-primary="1" {{#if actor.system.attribs.mov.auto}}readonly{{/if}}>
+        <select class="c7t-movrow-type" data-mov-field="type" data-mov-primary="1">
+          {{#each special.movementTypes as |type|}}
+            <option value="{{type.id}}" {{#if (c7t-eq type.id @root.actor.system.attribs.mov.type)}}selected{{/if}}>{{localize type.label}}</option>
+          {{/each}}
+        </select>
+        <button type="button" class="c7t-icon-btn c7t-auto-gear{{#if actor.system.attribs.mov.auto}} is-on{{/if}}"
+          data-action="toggleAuto" data-key="mov"
+          data-tooltip="{{#if actor.system.attribs.mov.auto}}C7TIDY.Npc.AutoOff{{else}}C7TIDY.Npc.AutoOn{{/if}}">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      {{else}}
+        <span class="c7t-movrow-value view-only">{{actor.system.attribs.mov.value}}</span>
+        <span class="c7t-movrow-type view-only">{{special.movTypeLabel}}</span>
+      {{/if}}
+    </div>
+
+    {{#each special.movementRows as |row|}}
+      <div class="c7t-movrow">
+        <span class="c7t-movrow-label">{{localize 'C7TIDY.Npc.ExtraMovement'}}</span>
+        {{#if @root.isEditing}}
+          <input class="c7t-movrow-value" type="number" step="1" value="{{row.value}}"
+            data-mov-field="value" data-mov-index="{{row.index}}">
+          <select class="c7t-movrow-type" data-mov-field="type" data-mov-index="{{row.index}}">
+            {{#each @root.special.movementTypes as |type|}}
+              <option value="{{type.id}}" {{#if (c7t-eq type.id row.type)}}selected{{/if}}>{{localize type.label}}</option>
+            {{/each}}
+          </select>
+          <button type="button" class="c7t-icon-btn" data-action="removeMovement" data-index="{{row.index}}"
+            data-tooltip="C7TIDY.Npc.RemoveMovement"><i class="fa-solid fa-trash"></i></button>
+        {{else}}
+          <span class="c7t-movrow-value view-only">{{row.value}}</span>
+          <span class="c7t-movrow-type view-only">{{row.typeLabel}}</span>
+        {{/if}}
+      </div>
+    {{/each}}
+
+    {{#if isEditing}}
+      <button type="button" class="c7t-btn c7t-movrow-add" data-action="addMovement">
+        <i class="fa-solid fa-plus"></i>{{localize 'C7TIDY.Npc.AddMovement'}}
+      </button>
+    {{/if}}
+  </div>
+</div>
+
+<div class="c7t-table-foot">{{localize 'C7TIDY.Npc.CombatFoot'}}</div>

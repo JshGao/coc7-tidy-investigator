@@ -239,7 +239,29 @@
   min-width:14px; height:14px; padding:0 3px; border-radius:999px;
   font-size:9px; font-weight:700; line-height:14px; text-align:center;
   color:#2a2116; background:#c0ad81;
+}.c7t-tab-count{
+  min-width:14px; height:14px; padding:0 3px; border-radius:999px;
+  font-size:9px; font-weight:700; line-height:14px; text-align:center;
+  color:#2a2116; background:#c0ad81;
 }
+
+/* 覆盖 Foundry 核心 nav.tabs（justify-content:space-evenly / 大行高 / 大间距），
+   保持 Tidy 的左侧紧凑 tab 行 */
+.c7t-tabs.tabs{
+  justify-content:flex-start;
+  flex-flow:row wrap;
+  gap:2px;
+  line-height:normal;
+  border-top-color:var(--bn-line-soft);
+}
+.c7t-tabs.tabs .c7t-tab{
+  flex:0 0 auto;
+  text-align:left;
+  color:#a79b7d;
+  letter-spacing:.03em;
+}
+.c7t-tabs.tabs .c7t-tab:hover{color:#e3d7b7}
+.c7t-tabs.tabs .c7t-tab.is-active{color:#f7efdb}
 
 /* ============================================================
    主体

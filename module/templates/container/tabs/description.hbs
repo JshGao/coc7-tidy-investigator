@@ -1,0 +1,10 @@
+<div class="c7t-section c7t-container-section">
+  <div class="c7t-section-head">{{localize 'C7TIDY.Container.Description'}}</div>
+  {{#if isEditing}}
+    <prose-mirror class="c7t-container-prose" name="system.description.value"
+      value="{{containerText.description}}" data-document-uuid="{{actor.uuid}}" toggled>{{{containerText.descriptionHtml}}}</prose-mirror>
+  {{else}}
+    <div class="c7t-prose c7t-container-prose">{{{containerText.descriptionHtml}}}</div>
+  {{/if}}
+</div>
+<div class="c7t-table-foot">{{localize 'C7TIDY.Container.DescriptionFoot'}}</div>

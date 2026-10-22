@@ -67,23 +67,38 @@ export function prepareIdentity(actor, system) {
   };
 }
 
+/** 读取 actor.overrides 的扁平键（用于标记被 ActiveEffect 修正的字段）。 */
+function flattenOverrides(actor) {
+  try {
+    return foundry.utils.flattenObject(actor?.overrides ?? {});
+  } catch {
+    return {};
+  }
+}
+
 /**
  * 八项特性。
  * @param {object} system
+ * @param {Actor} [actor] 传入时用于判断 AE 修正与空值
  */
-export function prepareCharacteristics(system) {
+export function prepareCharacteristics(system, actor = null) {
   const characteristics = system?.characteristics ?? {};
+  const overrides = flattenOverrides(actor);
   return CHARACTERISTICS.map(([key, abbr, label]) => {
     const raw = characteristics[key] ?? {};
+    const empty = raw.value === null || raw.value === undefined;
     const value = num(raw.value);
     return {
       key,
       abbr,
       label,
       value,
+      formula: String(raw.formula ?? ""),
+      empty,
+      inputValue: empty ? "" : value,
       half: half(value),
       fifth: fifth(value),
-      modified: raw.bonusDice !== undefined || raw.activeEffectValue === true,
+      modified: Boolean(overrides[`system.characteristics.${key}.value`]),
     };
   });
 }
@@ -100,7 +115,14 @@ export function prepareResources(system) {
     { key: "san", label: "CoC7.SAN", value: num(attribs.san?.value), max: num(attribs.san?.max), cls: "is-san", hasMax: true, auto: Boolean(attribs.san?.auto), rollable: true },
     { key: "lck", label: "CoC7.Lck", value: num(attribs.lck?.value), max: 99, cls: "is-luck", hasMax: false, auto: false, rollable: true },
   ];
+  const emptyOf = {
+    hp: attribs.hp?.value == null && attribs.hp?.max == null,
+    mp: attribs.mp?.value == null && attribs.mp?.max == null,
+    san: attribs.san?.value == null && attribs.san?.max == null,
+    lck: attribs.lck?.value == null,
+  };
   for (const row of rows) {
+    row.empty = Boolean(emptyOf[row.key]);
     row.pct = row.max > 0 ? Math.max(0, Math.min(100, Math.round((row.value / row.max) * 100))) : 0;
     row.low = row.max > 0 && row.pct <= 25;
   }
@@ -124,13 +146,21 @@ export function orderResources(rows, order) {
 
 export function prepareDerived(system) {
   const attribs = system?.attribs ?? {};
-  const config = system?.config ?? {};
   return [
     { key: "db", label: "CoC7.DB", value: text(attribs.db?.value), editable: true, auto: Boolean(attribs.db?.auto) },
     { key: "build", label: "CoC7.Build", value: text(attribs.build?.value), editable: true, auto: Boolean(attribs.build?.auto) },
     { key: "mov", label: "CoC7.Mov", value: text(attribs.mov?.value), editable: true, auto: Boolean(attribs.mov?.auto) },
     { key: "armor", label: "CoC7.Armor", value: text(attribs.armor?.value), editable: true, auto: false },
   ];
+}
+
+/** 生物卡派生块：MOV 只在战斗页编辑，这里保持只读展示。 */
+export function prepareNpcDerived(system) {
+  return prepareDerived(system).map((row) => ({
+    ...row,
+    ...(row.key === "mov" ? { editable: false } : {}),
+    autoCapable: ["db", "build", "mov"].includes(row.key),
+  }));
 }
 
 /**
