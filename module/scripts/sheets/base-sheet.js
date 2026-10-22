@@ -1,5 +1,6 @@
 import { MODULE_ID } from "../constants.js";
 import {
+  orderResources,
   prepareCharacteristics,
   prepareConditions,
   prepareDailySan,
@@ -169,7 +170,10 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       isGM: game.user.isGM,
       identity: prepareIdentity(actor, system),
       characteristics: prepareCharacteristics(system),
-      resources: prepareResources(system),
+      resources: orderResources(
+        prepareResources(system),
+        this.document.getFlag?.(MODULE_ID, "resourceOrder"),
+      ),
       derived: prepareDerived(system),
       conditions: prepareConditions(system),
       dailySan: prepareDailySan(system),

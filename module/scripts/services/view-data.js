@@ -111,6 +111,17 @@ export function prepareResources(system) {
  * 派生值。
  * @param {object} system
  */
+/** 资源卡顺序（按 flag 中的 key 顺序排列，未知项保持在后） */
+export function orderResources(rows, order) {
+  if (!Array.isArray(order) || !order.length) return rows;
+  const rank = new Map(order.map((key, index) => [key, index]));
+  return [...rows].sort((a, b) => {
+    const ra = rank.has(a.key) ? rank.get(a.key) : Number.MAX_SAFE_INTEGER;
+    const rb = rank.has(b.key) ? rank.get(b.key) : Number.MAX_SAFE_INTEGER;
+    return ra - rb;
+  });
+}
+
 export function prepareDerived(system) {
   const attribs = system?.attribs ?? {};
   const config = system?.config ?? {};

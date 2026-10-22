@@ -130,6 +130,84 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
     this.#installDragSorting();
     this.#installItemQuantityEditing();
     this.#installBookProgressEditing();
+    this.#installResourceDragSorting();
+  }
+
+  /** 资源卡（血量/魔法值/理智/幸运）拖拽排序 */
+  #installResourceDragSorting() {
+    if (!this.element || this.element.dataset.resDragBound) return;
+    this.element.dataset.resDragBound = "1";
+
+    const tileOf = (target) => target?.closest?.(".c7t-vital[draggable='true']");
+    const clearDrop = () => {
+      this.element.querySelectorAll(".c7t-vital.is-drop-before,.c7t-vital.is-drop-after")
+        .forEach((el) => el.classList.remove("is-drop-before", "is-drop-after"));
+    };
+    const clearAll = () => {
+      this.element.querySelectorAll(".c7t-vital.is-dragging,.c7t-vital.is-drop-before,.c7t-vital.is-drop-after")
+        .forEach((el) => el.classList.remove("is-dragging", "is-drop-before", "is-drop-after"));
+    };
+    let dragKey = null;
+
+    this.element.addEventListener("dragstart", (event) => {
+      const tile = tileOf(event.target);
+      if (!tile) return;
+      dragKey = tile.dataset.resourceKey;
+      tile.classList.add("is-dragging");
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = "move";
+        try {
+          event.dataTransfer.setData("text/plain", dragKey ?? "");
+        } catch {
+          /* Safari */
+        }
+      }
+    });
+
+    this.element.addEventListener("dragover", (event) => {
+      const tile = tileOf(event.target);
+      if (!tile || !dragKey || tile.dataset.resourceKey === dragKey) return;
+      event.preventDefault();
+      clearDrop();
+      const rect = tile.getBoundingClientRect();
+      const dragged = this.element.querySelector(`.c7t-vital[data-resource-key="${dragKey}"]`);
+      const dragRect = dragged?.getBoundingClientRect();
+      const sameRow = dragRect ? Math.abs(dragRect.top - rect.top) < rect.height / 2 : true;
+      const after = sameRow
+        ? event.clientX >= rect.left + rect.width / 2
+        : event.clientY >= rect.top + rect.height / 2;
+      tile.classList.add(after ? "is-drop-after" : "is-drop-before");
+    });
+
+    this.element.addEventListener("drop", async (event) => {
+      const tile = tileOf(event.target);
+      if (!tile || !dragKey) return;
+      event.preventDefault();
+      const targetKey = tile.dataset.resourceKey;
+      const parent = tile.parentElement;
+      const keys = [...parent.querySelectorAll(".c7t-vital[data-resource-key]")]
+        .map((el) => el.dataset.resourceKey);
+      const rect = tile.getBoundingClientRect();
+      const dragged = this.element.querySelector(`.c7t-vital[data-resource-key="${dragKey}"]`);
+      const dragRect = dragged?.getBoundingClientRect();
+      const sameRow = dragRect ? Math.abs(dragRect.top - rect.top) < rect.height / 2 : true;
+      const after = sameRow
+        ? event.clientX >= rect.left + rect.width / 2
+        : event.clientY >= rect.top + rect.height / 2;
+
+      const without = keys.filter((key) => key !== dragKey);
+      const targetIndex = without.indexOf(targetKey);
+      if (targetIndex < 0) return;
+      without.splice(targetIndex + (after ? 1 : 0), 0, dragKey);
+      dragKey = null;
+      clearAll();
+      await this.document.setFlag(MODULE_ID, "resourceOrder", without);
+    });
+
+    this.element.addEventListener("dragend", () => {
+      dragKey = null;
+      clearAll();
+    });
   }
 
   /** 物品数量内联编辑 */

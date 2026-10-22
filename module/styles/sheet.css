@@ -1331,3 +1331,9 @@ img.c7t-row-ico {
 .c7t-book-progress:focus { border-color: var(--c7t-accent); }
 .c7t-table.effects .c7t-row-name { cursor: pointer; }
 .c7t-table.effects .c7t-row-name:hover { color: var(--c7t-accent); }
+
+/* 资源卡拖拽排序 */
+.c7t-vital[draggable="true"] { cursor: grab; }
+.c7t-vital.is-dragging { opacity: .45; }
+.c7t-vital.is-drop-before { box-shadow: inset 3px 0 0 var(--c7t-accent); }
+.c7t-vital.is-drop-after { box-shadow: inset -3px 0 0 var(--c7t-accent); }

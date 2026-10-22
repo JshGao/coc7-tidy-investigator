@@ -155,5 +155,6 @@
   "C7TIDY.Skills.SortCustomHint": "Drag rows to reorder (edit mode)",
   "C7TIDY.Effects.New": "New effect",
   "C7TIDY.Effects.Open": "Click to configure effect",
-  "C7TIDY.Items.Quantity": "Quantity"
+  "C7TIDY.Items.Quantity": "Quantity",
+  "C7TIDY.Resource.DragHint": "Drag to reorder (unlock first)"
 }

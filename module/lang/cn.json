@@ -155,5 +155,6 @@
   "C7TIDY.Skills.SortCustomHint": "拖动行可调整顺序（编辑模式）",
   "C7TIDY.Effects.New": "新增效果",
   "C7TIDY.Effects.Open": "点击打开效果配置",
-  "C7TIDY.Items.Quantity": "数量"
+  "C7TIDY.Items.Quantity": "数量",
+  "C7TIDY.Resource.DragHint": "拖动调整顺序（解锁后可拖动）"
 }
