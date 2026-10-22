@@ -108,6 +108,8 @@ https://raw.githubusercontent.com/JshGao/coc7-tidy-investigator/main/module/modu
 - 内容页：武器 / 护具 / 书籍 / 法术 / 天赋 / 道具 / 状态分节，折叠、数量编辑、编辑态拖拽排序、分组 `+`
 - 描述 / 守秘富文本（prose-mirror），内容与系统容器卡完全互通
 
+![容器卡](docs/screenshots/container.png)
+
 ---
 
 ## 版本
@@ -150,7 +152,7 @@ ln -s "$PWD/module" \
 
 - [调研报告](docs/01-调研报告.md)：CoC7 架构、Tidy 设计语言、Foundry 14 API、兼容红线（含 NPC / 生物数据模型附录）
 - [设计文档](docs/02-设计文档.md)：布局方案、视觉 token、组件、交互、数据映射、技能分类
-- [生物卡设计文档](docs/04-生物卡设计文档.md)：`npc` / `creature` / 容器卡设计（v0.8.2 已发布）
+- [生物卡设计文档](docs/04-生物卡设计文档.md)：`npc` / `creature` / 容器卡设计（v0.8.3 已发布）
 - [宣传稿 / 功能导览](docs/03-宣传稿.md)
 - [更新日志](CHANGELOG.md)
 
