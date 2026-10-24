@@ -1,10 +1,100 @@
+[English](#coc7-tidy-sheets) | [中文](#coc7-tidy-角色卡)
+
+# CoC7 Tidy Sheets
+
+Tidy 5e Sheets-style character sheets for **Call of Cthulhu 7e** on **Foundry VTT 14**:
+**Investigator** + **NPC / Creature** + **Container** sheets.
+Opt-in registration — the system's default sheets are never replaced. Pure Handlebars + CSS, no build dependencies.
+
+**Current version: 0.8.3**
+
+- Foundry VTT: `>= 14` (verified on 14.368)
+- CoC7: `>= 8.16`
+
+## Sheets
+
+### Investigator (`character`)
+
+- Banner: portrait, identity, resource bars (drag to reorder once unlocked), eight shield-shaped characteristic badges, condition chips, Daily SAN
+- Seven tabs: Skills / Summary / Possessions / Background / Growth / Notes (GM) / Effects
+- Skills: search, three-way sorting, specialization groups, favorites, inline occupation / interest / development points in edit mode, drag reordering
+- Summary: weapon quick reference + attack / roll damage + six categories of invested skill chips
+- Possessions: collapsible sections, drag reordering, item quantity editing, context menu
+- Background: seven backstory cards + multi-select key connections + backstory + encounters
+- Growth: Develop all, per-check records, editable module-name groups, manual value editing, undo
+- Notes: Keeper notes, book progress, SAN events, Mythos flags, clear conditions
+- Effects: create / open / enable-disable / delete
+
+### NPC / Creature (`npc` + `creature`)
+
+- Banner: type / occupation info, HP/MP/SAN/Luck (empty values hidden), DB / Build / MOV / Armor, eight shield badges (missing values show `—`), condition chips
+- Six tabs: Combat (default) / Skills / Inventory / Description / Keeper (GM) / Effects
+- Combat: attacks per round (rollable), SAN loss (native system link card), armor notes, weapon table (attack / roll damage / shotgun range bands), special abilities quick reference, movement modes (primary MOV plus extra movement add/remove)
+- Skills: search, three-way sorting, specialization groups, inline current value; no growth / occupation / interest split
+- Inventory: armor / books / spells / talents / items / statuses sections, collapsing, drag reordering, quantity editing; no money strip
+- Description: type / occupation / age / organization + `personalDescription` rich text
+- Keeper: GM notes, dice macros (drag to add / execute / delete), clear conditions
+- Edit mode: formula mode (batch characteristic formulas + roll characteristics / average), auto-calculation toggles, inline resource and derived-value editing
+
+### Container (`container`)
+
+- Compact banner: portrait / name / item count / per-type count chips
+- Four tabs: Contents (default) / Description / Keeper (GM) / Effects
+- Contents: weapons / armor / books / spells / talents / items / statuses sections, collapsing, quantity editing, drag reordering in edit mode, group +
+- Description / Keeper prose-mirror; uses AppV2 native drag and drop
+
+### Common
+
+- Settings: compact mode, remember window size, default skill sorting
+- Eight-way window resizing, dark theme follows Foundry
+- English / Chinese UI (follows Foundry's language setting)
+
+## Installation
+
+Extract this folder into `Data/modules/coc7-tidy-investigator/`, or install the module in Foundry with the Manifest URL.
+After enabling the module, choose **CoC7 Tidy Investigator Sheet**, **CoC7 Tidy NPC / Creature Sheet** or **CoC7 Tidy Container Sheet** in the actor's *Configure Sheet* dialog.
+
+## Development notes
+
+- `scripts/sheets/base-sheet.js`: AppV2 base class (window size, eight-way resizing, common actions, search / context menu / drag)
+- `scripts/sheets/investigator-sheet.js`: investigator-only actions and listeners
+- `scripts/sheets/npc-sheet.js`: NPC / creature-only actions and listeners
+- `scripts/sheets/container-sheet.js`: container sheet
+- `scripts/services/view-data.js`: pure data preparation for banner / resources / characteristics
+- `scripts/services/tabs-data.js`: view models for the tabs (shared by two sheets)
+- `scripts/services/npc-data.js`: NPC-only view models (SAN loss / attacks per round / movement / macros / description)
+- `scripts/services/container-data.js`: container view models (counts / description)
+- `templates/`: `investigator/sheet.hbs` and `npc/sheet.hbs` are the single PART each; everything else is a partial / tab fragment
+- `styles/`: `tokens.css` light and dark tokens, `sheet.css` shared components, `npc.css` NPC components, `container.css` container components
+
+Notes:
+
+1. Every AppV2 PART must have exactly one root element.
+2. Array fields (such as `system.biography`, `system.books`, `system.special.movement`) cannot rely on form `name` submission — read the array, change the value and write the whole array back.
+3. A development check must be passed `item.uuid` (the system uses `fromUuid()` internally).
+4. The NPC sheet's SAN loss uses the public `CONFIG.CoC7Link` API to create a system link card and never references the private `CoC7SanCheckCard`.
+5. The NPC / creature sheet window uses the `c7t-npc` class to avoid clashing with the system's `.npc` styles.
+
+## Links
+
+- Repository: <https://github.com/JshGao/coc7-tidy-investigator>
+- The full README (English / Chinese), design documents and screenshots live in the repository root.
+
+## License
+
+MIT
+
+---
+
+[English](#coc7-tidy-sheets) | [中文](#coc7-tidy-角色卡)
+
 # CoC7 Tidy 角色卡
 
 *Tidy-style investigator, NPC/creature and container sheets for Call of Cthulhu 7e on Foundry VTT 14.*
 
 **当前版本：0.8.3**
 
-仿 **Tidy 5e Sheets** 风格的 CoC7 角色卡：**调查员卡** + **生物 / NPC 卡**，可选注册、不替换系统默认卡。
+仿 **Tidy 5e Sheets** 风格的 CoC7 角色卡：**调查员卡** + **生物 / NPC 卡** + **容器卡**，可选注册、不替换系统默认卡。
 纯 Handlebars + CSS，无构建依赖。
 
 - Foundry VTT：`>= 14`（14.368 验证）
@@ -67,11 +157,16 @@
 - `styles/`：`tokens.css` 亮暗 token、`sheet.css` 共用组件、`npc.css` 生物卡组件、`container.css` 容器卡组件
 
 注意：
+
 1. AppV2 每个 PART 必须只有一个根元素；
 2. 数组字段（如 `system.biography`、`system.books`、`system.special.movement`）不能依赖表单 `name` 提交，需读数组改值后整组写回；
 3. 成长检定必须传 `item.uuid`（系统内部 `fromUuid()`）；
 4. 生物卡的 SAN 损失通过公开的 `CONFIG.CoC7Link` 生成系统链接卡，不引用私有 `CoC7SanCheckCard`；
 5. 生物 / NPC 卡的窗口类名使用 `c7t-npc`，避免与系统 `.npc` 样式冲突。
+
+## 链接
+
+- 仓库：<https://github.com/JshGao/coc7-tidy-investigator>
 
 ## 许可
 

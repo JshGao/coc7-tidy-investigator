@@ -1,7 +1,7 @@
 {
   "id": "coc7-tidy-investigator",
   "title": "CoC7 Tidy 角色卡",
-  "description": "仿 Tidy 5e Sheets 风格的 CoC7 角色卡：调查员卡（横幅特性盾徽、技能/简表/物品/背景/成长/笔记/效果七个标签页）；生物 / NPC 卡（战斗/技能/物品/描述/守秘/效果，每轮攻击与 SAN 损失、移动方式、宏、公式模式）；容器卡（内容/描述/守秘/效果，紧凑横幅）。可选注册，不替换系统默认卡。",
+  "description": "Tidy-style character sheets for Call of Cthulhu 7e: Investigator (banner with characteristic shields; Skills / Summary / Possessions / Background / Growth / Notes / Effects tabs), NPC & Creature (Combat / Skills / Inventory / Description / Keeper / Effects, with attacks per round, SAN loss, movement, dice macros and formula mode) and Container (Contents / Description / Keeper / Effects, compact banner). Opt-in registration — the system default sheets are not replaced.<br>仿 Tidy 5e Sheets 风格的 CoC7 角色卡：调查员卡（横幅特性盾徽、技能/简表/物品/背景/成长/笔记/效果七个标签页）；生物 / NPC 卡（战斗/技能/物品/描述/守秘/效果，每轮攻击与 SAN 损失、移动方式、宏、公式模式）；容器卡（内容/描述/守秘/效果，紧凑横幅）。可选注册，不替换系统默认卡。",
   "version": "0.8.3",
   "authors": [
     {
