@@ -1,60 +1,82 @@
 <div class="c7t-toolbar">
   <span class="c7t-toolbar-title">{{localize 'C7TIDY.Container.Inventory'}}</span>
   <span class="c7t-toolbar-spacer"></span>
+  <span class="c7t-container-tally"><b>{{container.total}}</b> {{localize 'C7TIDY.Container.Unit'}}</span>
   <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Container.InventoryHint'}}</span>
 </div>
 
-{{#each inventory.groups as |group|}}
-  <div class="c7t-group{{#if group.collapsed}} is-collapsed{{else}} is-open{{/if}}{{#unless group.count}} is-empty{{/unless}}">
-    <div class="c7t-group-head">
-      <button type="button" class="c7t-group-toggle" data-action="toggleGroup" data-type="{{group.type}}"
-        data-tooltip="C7TIDY.Action.Collapse">
-        <i class="fa-solid fa-chevron-down"></i>
-      </button>
-      <span class="c7t-group-title">{{localize group.label}}</span>
-      <span class="c7t-group-meta">{{group.count}}</span>
-      {{#if @root.isEditing}}
-        <button type="button" class="c7t-icon-btn" data-action="createItem" data-type="{{group.type}}"
-          data-tooltip="C7TIDY.Action.CreateItem"><i class="fa-solid fa-plus"></i></button>
-      {{/if}}
-    </div>
-    <div class="c7t-group-body c7t-items-list">
-      {{#each group.items as |item|}}
-        <div class="c7t-row" data-item-id="{{item.id}}" data-action="openItem"
-          draggable="{{#if @root.isEditing}}true{{else}}false{{/if}}">
-          <span class="col-name">
-            {{#if item.img}}<img class="c7t-row-ico" src="{{item.img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-cube"></i></i>{{/if}}
-            <span class="c7t-row-name">{{item.name}}</span>
-          </span>
-          {{#if item.isStackable}}
-            {{#if @root.isEditing}}
-              <input class="c7t-qty-input" type="number" min="0" step="1" value="{{item.quantity}}"
-                data-tooltip="{{localize 'C7TIDY.Items.Quantity'}}">
+<div class="c7t-container-groups{{#if inventory.groups.length}} is-catalog{{/if}}">
+  {{#each inventory.groups as |group|}}
+    <div class="c7t-group{{#if group.collapsed}} is-collapsed{{else}} is-open{{/if}}{{#unless group.count}} is-empty{{/unless}}"
+      data-group-type="{{group.type}}">
+      <div class="c7t-group-head" data-action="toggleGroup" data-type="{{group.type}}">
+        <button type="button" class="c7t-group-toggle" data-action="toggleGroup" data-type="{{group.type}}"
+          data-tooltip="C7TIDY.Action.Collapse">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <span class="c7t-group-title">{{localize group.label}}</span>
+        <span class="c7t-group-leader" aria-hidden="true"></span>
+        <span class="c7t-group-meta{{#unless group.count}} is-zero{{/unless}}">{{#if group.count}}{{group.count}}{{else}}&mdash;{{/if}}</span>
+        {{#if @root.isEditing}}
+          <button type="button" class="c7t-icon-btn c7t-group-add" data-action="createItem" data-type="{{group.type}}"
+            data-tooltip="C7TIDY.Action.CreateItem"><i class="fa-solid fa-plus"></i></button>
+        {{/if}}
+      </div>
+      <div class="c7t-group-body c7t-items-list">
+        {{#each group.items as |item|}}
+          <div class="c7t-row" data-item-id="{{item.id}}" data-type="{{item.type}}" data-action="openItem"
+            draggable="{{#if @root.isEditing}}true{{else}}false{{/if}}">
+            <span class="c7t-row-grip" aria-hidden="true"></span>
+            <span class="col-name">
+              {{#if item.img}}<img class="c7t-row-ico" src="{{item.img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-cube"></i></i>{{/if}}
+              <span class="c7t-row-name">{{item.name}}</span>
+            </span>
+            {{#if item.isStackable}}
+              {{#if @root.isEditing}}
+                <label class="c7t-qty">
+                  <span class="c7t-qty-mark" aria-hidden="true">&times;</span>
+                  <input class="c7t-qty-input" type="number" min="0" step="1" value="{{item.quantity}}"
+                    data-tooltip="{{localize 'C7TIDY.Items.Quantity'}}">
+                </label>
+              {{else}}
+                {{#if item.note}}<span class="c7t-row-note">{{item.note}}</span>{{/if}}
+              {{/if}}
             {{else}}
               {{#if item.note}}<span class="c7t-row-note">{{item.note}}</span>{{/if}}
             {{/if}}
-          {{else}}
-            {{#if item.note}}<span class="c7t-row-note">{{item.note}}</span>{{/if}}
-          {{/if}}
-          <span class="col-act">
-            <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
-              <i class="fa-solid fa-pen"></i>
-            </button>
-            {{#if @root.isEditing}}
-              <button type="button" class="c7t-icon-btn" data-action="deleteItem" data-tooltip="C7TIDY.Action.DeleteItem">
-                <i class="fa-solid fa-trash"></i>
+            <span class="col-act">
+              <button type="button" class="c7t-icon-btn" data-action="openItem" data-tooltip="C7TIDY.Action.OpenItem">
+                <i class="fa-solid fa-pen"></i>
               </button>
-            {{/if}}
-          </span>
-        </div>
-      {{/each}}
+              {{#if @root.isEditing}}
+                <button type="button" class="c7t-icon-btn" data-action="deleteItem" data-tooltip="C7TIDY.Action.DeleteItem">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              {{/if}}
+            </span>
+          </div>
+        {{/each}}
+        {{#unless group.count}}
+          <div class="c7t-group-blank" aria-hidden="true"></div>
+        {{/unless}}
+      </div>
     </div>
-  </div>
-{{else}}
-  <div class="c7t-empty">
-    <b>{{localize 'C7TIDY.Container.Empty'}}</b>
-    <p>{{localize 'C7TIDY.Container.EmptyHint'}}</p>
-  </div>
-{{/each}}
+  {{else}}
+    <div class="c7t-empty c7t-container-empty">
+      <svg class="c7t-empty-art" viewBox="0 0 96 64" aria-hidden="true">
+        <path d="M12 18h72v36H12z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M12 26h72" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M38 34h20v7H38z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M40 39h16" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
+        <path d="M8 54h80M18 18V10m60 8v-8" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/>
+      </svg>
+      <b>{{localize 'C7TIDY.Container.Empty'}}</b>
+      <p>{{localize 'C7TIDY.Container.EmptyHint'}}</p>
+    </div>
+  {{/each}}
+</div>
 
-<div class="c7t-table-foot">{{localize 'C7TIDY.Container.InventoryFoot'}}</div>
+<div class="c7t-table-foot c7t-container-foot">
+  <span class="c7t-foot-text">{{localize 'C7TIDY.Container.InventoryFoot'}}</span>
+  <span class="c7t-foot-tally">{{container.total}} {{localize 'C7TIDY.Container.Unit'}}</span>
+</div>

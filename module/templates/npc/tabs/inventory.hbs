@@ -28,8 +28,11 @@
           </span>
           {{#if item.isStackable}}
             {{#if @root.isEditing}}
-              <input class="c7t-qty-input" type="number" min="0" step="1" value="{{item.quantity}}"
-                data-tooltip="{{localize 'C7TIDY.Items.Quantity'}}">
+              <span class="c7t-qty">
+                <span class="c7t-qty-mark" aria-hidden="true">×</span>
+                <input class="c7t-qty-input" type="number" min="0" step="1" value="{{item.quantity}}"
+                  data-tooltip="{{localize 'C7TIDY.Items.Quantity'}}">
+              </span>
             {{else}}
               {{#if item.note}}<span class="c7t-row-note">{{item.note}}</span>{{/if}}
             {{/if}}

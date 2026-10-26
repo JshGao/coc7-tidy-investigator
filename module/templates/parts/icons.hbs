@@ -1,7 +1,68 @@
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <symbol id="c7t-shield" viewBox="0 0 100 112">
-      <path d="M50 5 L91 19 V56 C91 84 71 100 50 106 C29 100 9 84 9 56 V19 Z"></path>
-    </symbol>
+    <!-- 特性盾徽：黄铜外框 + 深色描金内场 + 顶部菱形饰 -->
+    <linearGradient id="c7t-shield-rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e2cd97"></stop>
+      <stop offset="0.28" stop-color="#b6985f"></stop>
+      <stop offset="0.58" stop-color="#775c2c"></stop>
+      <stop offset="0.82" stop-color="#9c7f47"></stop>
+      <stop offset="1" stop-color="#c8ae76"></stop>
+    </linearGradient>
+    <linearGradient id="c7t-shield-field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3d3427" stop-opacity="0.96"></stop>
+      <stop offset="0.5" stop-color="#251f18" stop-opacity="0.96"></stop>
+      <stop offset="1" stop-color="#15110d" stop-opacity="0.96"></stop>
+    </linearGradient>
+    <radialGradient id="c7t-shield-sheen" cx="0.5" cy="0" r="0.85">
+      <stop offset="0" stop-color="#f7e7bb" stop-opacity="0.3"></stop>
+      <stop offset="0.6" stop-color="#f7e7bb" stop-opacity="0"></stop>
+    </radialGradient>
   </defs>
+
+  <symbol id="c7t-shield" viewBox="0 0 100 120">
+    <path d="M50 3 L57.5 10.5 L50 18 L42.5 10.5 Z" fill="url(#c7t-shield-rim)" opacity="0.92"></path>
+    <path d="M50 12 L92 26 V58 C92 87.5 71 105.5 50 114.5 C29 105.5 8 87.5 8 58 V26 Z" fill="url(#c7t-shield-rim)"></path>
+    <path d="M50 18 L86 30.5 V58 C86 82.5 69 98 50 106 C31 98 14 82.5 14 58 V30.5 Z" fill="url(#c7t-shield-field)" stroke="#0b0907" stroke-opacity="0.6" stroke-width="1"></path>
+    <path d="M50 18 L86 30.5 V58 C86 82.5 69 98 50 106 C31 98 14 82.5 14 58 V30.5 Z" fill="url(#c7t-shield-sheen)"></path>
+    <path d="M50 23.5 L81.5 34.5 V57.5 C81.5 79.5 66 92.5 50 99.5 C34 92.5 18.5 79.5 18.5 57.5 V34.5 Z" fill="none" stroke="#f2e0b4" stroke-opacity="0.18" stroke-width="0.8"></path>
+    <path d="M50 108.5 L52.8 111.3 L50 114.1 L47.2 111.3 Z" fill="url(#c7t-shield-rim)" opacity="0.75"></path>
+  </symbol>
+
+  <!-- 资源徽记（线稿，继承 currentColor） -->
+  <symbol id="c7t-ico-hp" viewBox="0 0 24 24">
+    <path d="M12 20.4C7 17.3 3.4 14 3.4 10.1c0-2.9 2.1-5 4.7-5 1.7 0 3 .9 3.9 2.2.9-1.3 2.2-2.2 3.9-2.2 2.6 0 4.7 2.1 4.7 5 0 3.9-3.6 7.2-8.6 10.3Z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+    <path d="M6.6 11.6h2.6l1.2-2.2 1.8 4 1.4-2.4h2.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"></path>
+  </symbol>
+  <symbol id="c7t-ico-mp" viewBox="0 0 24 24">
+    <path d="M12 3.1c2.7 2.9 4.8 5.2 4.8 8a4.8 4.8 0 1 1-9.6 0c0-2.8 2.1-5.1 4.8-8Z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+    <path d="M9.6 12.4c0 1.6 1 2.7 2.4 2.7" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.8"></path>
+  </symbol>
+  <symbol id="c7t-ico-san" viewBox="0 0 24 24">
+    <path d="M2.7 12S6.2 5.6 12 5.6 21.3 12 21.3 12 17.8 18.4 12 18.4 2.7 12 2.7 12Z" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+    <circle cx="12" cy="12" r="3.1" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+    <circle cx="12" cy="12" r="1" fill="currentColor"></circle>
+  </symbol>
+  <symbol id="c7t-ico-lck" viewBox="0 0 24 24">
+    <path d="M12 2.8l1.9 5.5 5.5 1.9-5.5 1.9L12 17.6l-1.9-5.5-5.5-1.9 5.5-1.9Z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+    <path d="M18.6 15.4l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9Z" fill="currentColor" opacity="0.7"></path>
+  </symbol>
+
+  <!-- 装饰角饰：Art Deco 双线折角 + 菱形 -->
+  <symbol id="c7t-corner" viewBox="0 0 56 56">
+    <path d="M3 53V13L13 3h40" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="square"></path>
+    <path d="M8.5 53V16.5L16.5 8.5h36.5" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.55"></path>
+    <path d="M3 24 9 18l6 6-6 6Z" fill="currentColor" opacity="0.8"></path>
+    <path d="M24 3 30 9l-6 6-6-6Z" fill="currentColor" opacity="0.8"></path>
+    <path d="M3 35h6M35 3v6" stroke="currentColor" stroke-width="0.9" opacity="0.55"></path>
+  </symbol>
+
+  <!-- 暗纹印记：同心圆 + 星芒（横幅水印用） -->
+  <symbol id="c7t-seal" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"></circle>
+    <circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.35"></circle>
+    <circle cx="60" cy="60" r="30" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.3"></circle>
+    <path d="M60 16 64.5 55.5 104 60 64.5 64.5 60 104 55.5 64.5 16 60 55.5 55.5Z" fill="currentColor" opacity="0.28"></path>
+    <path d="M60 38 62.6 57.4 82 60 62.6 62.6 60 82 57.4 62.6 38 60 57.4 57.4Z" fill="currentColor" opacity="0.5"></path>
+    <path d="M60 44v-8M60 76v8M44 60h-8M76 60h8" stroke="currentColor" stroke-width="0.8" opacity="0.4"></path>
+  </symbol>
 </svg>

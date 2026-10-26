@@ -3,6 +3,7 @@
 
   <header class="c7t-banner">
     <div class="c7t-banner-bg"></div>
+    {{> "modules/coc7-tidy-investigator/templates/parts/banner-art.hbs"}}
 
     <div class="c7t-banner-inner">
       <div class="c7t-portrait">
@@ -36,12 +37,13 @@
           {{#if identity.playername}}<span>{{localize 'C7TIDY.Identity.Player'}}：{{identity.playername}}</span>{{/if}}
         </div>
 
-        <div class="c7t-vitals">
+        <div class="c7t-vitals{{#if isEditing}} is-editing{{/if}}">
           {{#each resources as |res|}}
             <div class="c7t-vital {{res.cls}}{{#if res.low}} is-low{{/if}}{{#unless @root.isEditing}}{{#if res.rollable}} is-rollable{{/if}}{{/unless}}"
               data-resource-key="{{res.key}}" draggable="{{#if @root.isEditing}}true{{else}}false{{/if}}"
               {{#if @root.isEditing}}data-tooltip="C7TIDY.Resource.DragHint"{{/if}}
               {{#unless @root.isEditing}}{{#if res.rollable}}data-action="rollAttribute" data-key="{{res.key}}" data-tooltip="C7TIDY.Resource.Roll"{{/if}}{{/unless}}>
+              <svg class="c7t-vital-ico" aria-hidden="true"><use href="#c7t-ico-{{res.key}}"></use></svg>
               <span class="c7t-vital-label">{{localize res.label}}</span>
               {{#if @root.isEditing}}
                 <span class="c7t-vital-val is-editing">

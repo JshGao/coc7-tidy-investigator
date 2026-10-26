@@ -1,17 +1,37 @@
 <div class="c7t-toolbar">
   <span class="c7t-toolbar-title">{{localize 'C7TIDY.Notes.Keeper'}}</span>
-  <span class="c7t-gm-badge">{{localize 'C7TIDY.Npc.GMOnly'}}</span>
+  <span class="c7t-gm-badge"><i class="fa-solid fa-lock"></i>{{localize 'C7TIDY.Npc.GMOnly'}}</span>
   <span class="c7t-toolbar-spacer"></span>
   <span class="c7t-toolbar-hint">{{localize 'C7TIDY.Npc.KeeperHint'}}</span>
 </div>
 
-<div class="c7t-section c7t-container-section is-keeper">
-  <div class="c7t-section-head">{{localize 'C7TIDY.Notes.Keeper'}}</div>
-  {{#if isEditing}}
-    <prose-mirror class="c7t-container-prose" name="system.description.keeper"
-      value="{{containerText.keeper}}" data-document-uuid="{{actor.uuid}}" toggled>{{{containerText.keeperHtml}}}</prose-mirror>
-  {{else}}
-    <div class="c7t-prose c7t-container-prose">{{{containerText.keeperHtml}}}</div>
-  {{/if}}
+<div class="c7t-container-dossier is-keeper">
+  <div class="c7t-section c7t-container-section c7t-container-paper is-keeper">
+    <div class="c7t-section-head">
+      <span class="c7t-section-mark" aria-hidden="true"></span>
+      <span class="c7t-section-title">{{localize 'C7TIDY.Notes.Keeper'}}</span>
+      <span class="c7t-section-rule" aria-hidden="true"></span>
+      <span class="c7t-keeper-stamp" aria-hidden="true">GM</span>
+    </div>
+    {{#if isEditing}}
+      <prose-mirror class="c7t-container-prose" name="system.description.keeper"
+        value="{{containerText.keeper}}" data-document-uuid="{{actor.uuid}}" toggled>{{{containerText.keeperHtml}}}</prose-mirror>
+    {{else}}
+      {{#if containerText.keeper}}
+        <div class="c7t-prose c7t-container-prose">{{{containerText.keeperHtml}}}</div>
+      {{else}}
+        <div class="c7t-container-blank is-keeper" aria-hidden="true"></div>
+      {{/if}}
+    {{/if}}
+    <svg class="c7t-paper-seal" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="32" cy="32" r="21" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4"/>
+      <path d="M32 17l4.6 9.6L46.5 32l-9.9 5.4L32 47l-4.6-9.6L17.5 32l9.9-5.4Z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="32" cy="32" r="2.2" fill="currentColor"/>
+    </svg>
+  </div>
+
+  <div class="c7t-table-foot c7t-container-foot">
+    <span class="c7t-foot-text">{{localize 'C7TIDY.Container.KeeperFoot'}}</span>
+  </div>
 </div>
-<div class="c7t-table-foot">{{localize 'C7TIDY.Container.KeeperFoot'}}</div>

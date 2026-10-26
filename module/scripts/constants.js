@@ -4,6 +4,7 @@ export const TEMPLATES = {
   // 调查员卡
   sheet: `modules/${MODULE_ID}/templates/investigator/sheet.hbs`,
   icons: `modules/${MODULE_ID}/templates/parts/icons.hbs`,
+  bannerArt: `modules/${MODULE_ID}/templates/parts/banner-art.hbs`,
   tabsNav: `modules/${MODULE_ID}/templates/parts/tabs-nav.hbs`,
   skillRow: `modules/${MODULE_ID}/templates/parts/skill-row.hbs`,
   skillRowEdit: `modules/${MODULE_ID}/templates/parts/skill-row-edit.hbs`,

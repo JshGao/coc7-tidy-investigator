@@ -1,8 +1,9 @@
-<div class="c7t-sheet{{#if isGM}} is-gm{{/if}}{{#if isCompact}} is-compact{{/if}}">
+<div class="c7t-sheet{{#if isGM}} is-gm{{/if}}{{#if isCompact}} is-compact{{/if}}{{#if isEditing}} is-editing{{else}} is-locked{{/if}}">
   {{> "modules/coc7-tidy-investigator/templates/parts/icons.hbs"}}
 
   <header class="c7t-banner c7t-container-header">
     <div class="c7t-banner-bg"></div>
+    {{> "modules/coc7-tidy-investigator/templates/parts/banner-art.hbs"}}
 
     <div class="c7t-banner-inner">
       <div class="c7t-portrait">
@@ -28,16 +29,19 @@
           </div>
         </div>
 
-        <div class="c7t-subtitle">
-          <span>{{localize 'C7TIDY.Container.Label'}}</span>
-          <i>·</i>
-          <span>{{container.total}} {{localize 'C7TIDY.Container.Unit'}}</span>
+        <div class="c7t-subtitle c7t-container-meta">
+          <span class="c7t-container-kind">{{localize 'C7TIDY.Container.Label'}}</span>
+          <i></i>
+          <span class="c7t-container-total"><b>{{container.total}}</b><span>{{localize 'C7TIDY.Container.Unit'}}</span></span>
         </div>
 
         {{#if container.counts.length}}
           <div class="c7t-vitals c7t-container-chips">
             {{#each container.counts as |row|}}
-              <span class="c7t-derived">{{localize row.label}} <b>{{row.count}}</b></span>
+              <span class="c7t-derived c7t-count-chip" data-type="{{row.type}}">
+                <span class="c7t-count-chip-label">{{localize row.label}}</span>
+                <b>{{row.count}}</b>
+              </span>
             {{/each}}
           </div>
         {{/if}}
@@ -64,7 +68,9 @@
       {{/if}}
 
       <section class="tab {{tabs.effects.cssClass}}" data-group="primary" data-tab="effects">
-        {{> "modules/coc7-tidy-investigator/templates/tabs/effects.hbs"}}
+        <div class="c7t-container-effects">
+          {{> "modules/coc7-tidy-investigator/templates/tabs/effects.hbs"}}
+        </div>
       </section>
     </div>
   </div>

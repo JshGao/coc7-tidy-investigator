@@ -3,6 +3,7 @@
 
   <header class="c7t-banner">
     <div class="c7t-banner-bg"></div>
+    {{> "modules/coc7-tidy-investigator/templates/parts/banner-art.hbs"}}
 
     <div class="c7t-banner-inner">
       <div class="c7t-portrait">
@@ -46,7 +47,8 @@
 
         <div class="c7t-vitals{{#if isEditing}} is-editing{{/if}}">
           {{#each resources as |res|}}
-            <div class="c7t-vital {{res.cls}}{{#if res.low}} is-low{{/if}}">
+            <div class="c7t-vital {{res.cls}}{{#if res.low}} is-low{{/if}}{{#if res.empty}} is-empty{{/if}}">
+              <svg class="c7t-vital-ico" aria-hidden="true"><use href="#c7t-ico-{{res.key}}"></use></svg>
               <span class="c7t-vital-label">{{localize res.label}}</span>
               {{#if @root.isEditing}}
                 <span class="c7t-vital-val is-editing">
@@ -156,10 +158,10 @@
       </div>
 
       <div class="c7t-combatbar">
-        <div class="c7t-combat-pill" data-tooltip="C7TIDY.Npc.AttacksPerRound">
+        <div class="c7t-combat-pill is-apr" data-tooltip="C7TIDY.Npc.AttacksPerRound">
           <span class="label">{{localize 'C7TIDY.Npc.AttacksPerRoundShort'}}</span>
           <span class="value">{{special.attacksPerRound}}</span>
-          <button type="button" class="c7t-icon-btn" data-action="rollAttacksPerRound"
+          <button type="button" class="c7t-icon-btn c7t-coin" data-action="rollAttacksPerRound"
             data-tooltip="C7TIDY.Npc.RollApr" {{#unless special.attacksRollable}}disabled{{/unless}}>
             <i class="fa-solid fa-burst"></i>
           </button>
@@ -167,14 +169,14 @@
         <div class="c7t-combat-pill is-san" data-tooltip="C7TIDY.Npc.SanLinkHint">
           <span class="label">{{localize 'C7TIDY.Npc.SanLoss'}}</span>
           <span class="value"><b>{{special.sanPassedDisplay}}</b><i>/</i><b>{{special.sanFailedDisplay}}</b></span>
-          <button type="button" class="c7t-icon-btn" data-action="sanLossLink" data-tooltip="C7TIDY.Npc.SanLink">
+          <button type="button" class="c7t-icon-btn c7t-coin" data-action="sanLossLink" data-tooltip="C7TIDY.Npc.SanLink">
             <i class="fa-solid fa-link"></i>
           </button>
         </div>
-        <div class="c7t-combat-pill">
+        <div class="c7t-combat-pill is-armor">
           <span class="label">{{localize 'C7TIDY.Npc.Armor'}}</span>
           <span class="value">{{special.armorValue}}</span>
-          <button type="button" class="c7t-icon-btn{{#if special.armorNotes}} is-on{{/if}}"
+          <button type="button" class="c7t-icon-btn c7t-coin{{#if special.armorNotes}} is-on{{/if}}"
             data-action="toggleArmorNotes" data-tooltip="C7TIDY.Npc.ArmorNotes">
             <i class="fa-solid fa-note-sticky"></i>
           </button>

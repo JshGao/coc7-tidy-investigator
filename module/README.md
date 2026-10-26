@@ -6,10 +6,14 @@ Tidy 5e Sheets-style character sheets for **Call of Cthulhu 7e** on **Foundry VT
 **Investigator** + **NPC / Creature** + **Container** sheets.
 Opt-in registration — the system's default sheets are never replaced. Pure Handlebars + CSS, no build dependencies.
 
-**Current version: 0.8.3**
+**Current version: 0.9.0**
 
 - Foundry VTT: `>= 14` (verified on 14.368)
 - CoC7: `>= 8.16`
+
+**Visual language (v0.9 "Investigator Dossier")**: dark lacquered banner, brass hairlines,
+aged paper, ink table headers and oxblood accents; hand-drawn SVG shields / icons and
+locally bundled OFL typefaces (Cinzel, EB Garamond, Roboto Condensed).
 
 ## Sheets
 
@@ -84,6 +88,9 @@ Notes:
 
 MIT
 
+Bundled fonts (Cinzel, EB Garamond, Roboto Condensed) are licensed under the SIL Open Font License 1.1;
+see `assets/fonts/licenses/`.
+
 ---
 
 [English](#coc7-tidy-sheets) | [中文](#coc7-tidy-角色卡)
@@ -92,10 +99,13 @@ MIT
 
 *Tidy-style investigator, NPC/creature and container sheets for Call of Cthulhu 7e on Foundry VTT 14.*
 
-**当前版本：0.8.3**
+**当前版本：0.9.0**
 
 仿 **Tidy 5e Sheets** 风格的 CoC7 角色卡：**调查员卡** + **生物 / NPC 卡** + **容器卡**，可选注册、不替换系统默认卡。
 纯 Handlebars + CSS，无构建依赖。
+
+**视觉语言（v0.9「调查员档案」）**：深色漆面横幅、黄铜饰线、做旧纸张、墨色表头、牛血红强调；
+盾徽 / 图标为自制 SVG；本地打包 Cinzel / EB Garamond / Roboto Condensed 三款 OFL 字体。
 
 - Foundry VTT：`>= 14`（14.368 验证）
 - CoC7：`>= 8.16`
@@ -171,3 +181,6 @@ MIT
 ## 许可
 
 MIT
+
+随包字体（Cinzel / EB Garamond / Roboto Condensed）采用 SIL Open Font License 1.1，
+授权文件见 `assets/fonts/licenses/`。

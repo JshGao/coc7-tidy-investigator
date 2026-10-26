@@ -1,38 +1,48 @@
 <div class="c7t-combat-strip">
-  <div class="c7t-strip-item">
-    <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.AttacksPerRound'}}</span>
-    {{#if isEditing}}
-      <input class="c7t-strip-input" type="text" name="system.special.attacksPerRound"
-        value="{{special.attacksPerRound}}" placeholder="1">
-    {{else}}
-      <span class="c7t-strip-value">{{special.attacksPerRound}}</span>
-    {{/if}}
-    <button type="button" class="c7t-icon-btn" data-action="rollAttacksPerRound"
+  <div class="c7t-strip-item is-apr">
+    <span class="c7t-strip-main">
+      <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.AttacksPerRound'}}</span>
+      {{#if isEditing}}
+        <span class="c7t-strip-figure is-edit">
+          <input class="c7t-strip-input" type="text" name="system.special.attacksPerRound"
+            value="{{special.attacksPerRound}}" placeholder="1">
+        </span>
+      {{else}}
+        <span class="c7t-strip-figure">{{special.attacksPerRound}}</span>
+      {{/if}}
+    </span>
+    <button type="button" class="c7t-icon-btn c7t-coin" data-action="rollAttacksPerRound"
       data-tooltip="C7TIDY.Npc.RollApr" {{#unless special.attacksRollable}}disabled{{/unless}}>
       <i class="fa-solid fa-burst"></i>
     </button>
   </div>
 
   <div class="c7t-strip-item is-san">
-    <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.SanLoss'}}</span>
-    {{#if isEditing}}
-      <input class="c7t-strip-input is-min" type="text" name="system.special.sanLoss.checkPassed"
-        value="{{special.sanPassed}}" placeholder="0" data-tooltip="C7TIDY.Npc.SanPassed">
-      <i>/</i>
-      <input class="c7t-strip-input" type="text" name="system.special.sanLoss.checkFailled"
-        value="{{special.sanFailed}}" placeholder="1D6" data-tooltip="C7TIDY.Npc.SanFailed">
-    {{else}}
-      <span class="c7t-strip-value"><b>{{special.sanPassedDisplay}}</b><i>/</i><b>{{special.sanFailedDisplay}}</b></span>
-    {{/if}}
-    <button type="button" class="c7t-icon-btn" data-action="sanLossLink" data-tooltip="C7TIDY.Npc.SanLinkHint">
+    <span class="c7t-strip-main">
+      <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.SanLoss'}}</span>
+      {{#if isEditing}}
+        <span class="c7t-strip-figure is-edit">
+          <input class="c7t-strip-input is-min" type="text" name="system.special.sanLoss.checkPassed"
+            value="{{special.sanPassed}}" placeholder="0" data-tooltip="C7TIDY.Npc.SanPassed">
+          <i>/</i>
+          <input class="c7t-strip-input" type="text" name="system.special.sanLoss.checkFailled"
+            value="{{special.sanFailed}}" placeholder="1D6" data-tooltip="C7TIDY.Npc.SanFailed">
+        </span>
+      {{else}}
+        <span class="c7t-strip-figure"><b>{{special.sanPassedDisplay}}</b><i>/</i><b>{{special.sanFailedDisplay}}</b></span>
+      {{/if}}
+    </span>
+    <button type="button" class="c7t-icon-btn c7t-coin" data-action="sanLossLink" data-tooltip="C7TIDY.Npc.SanLinkHint">
       <i class="fa-solid fa-link"></i>
     </button>
   </div>
 
-  <div class="c7t-strip-item">
-    <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.Armor'}}</span>
-    <span class="c7t-strip-value">{{special.armorValue}}</span>
-    <button type="button" class="c7t-icon-btn{{#if special.armorNotes}} is-on{{/if}}"
+  <div class="c7t-strip-item is-armor">
+    <span class="c7t-strip-main">
+      <span class="c7t-strip-label">{{localize 'C7TIDY.Npc.Armor'}}</span>
+      <span class="c7t-strip-figure">{{special.armorValue}}</span>
+    </span>
+    <button type="button" class="c7t-icon-btn c7t-coin{{#if special.armorNotes}} is-on{{/if}}"
       data-action="toggleArmorNotes" data-tooltip="C7TIDY.Npc.ArmorNotes">
       <i class="fa-solid fa-note-sticky"></i>
     </button>
@@ -71,8 +81,8 @@
           {{#if weapon.img}}<img class="c7t-row-ico" src="{{weapon.img}}" alt="">{{else}}<i class="c7t-row-ico"><i class="fa-solid fa-crosshairs"></i></i>{{/if}}
           <span class="c7t-row-name">{{weapon.name}}</span>
         </span>
-        <span class="col-skill">{{#if weapon.skillName}}{{weapon.skillName}} {{weapon.skillValue}}%{{else}}—{{/if}}</span>
-        <span class="col-alt">{{#if weapon.altSkillName}}{{weapon.altSkillName}} {{weapon.altSkillValue}}%{{else}}—{{/if}}</span>
+        <span class="col-skill">{{#if weapon.skillName}}<span class="c7t-wpn-skill">{{weapon.skillName}}</span> <b class="c7t-wpn-num">{{weapon.skillValue}}%</b>{{else}}—{{/if}}</span>
+        <span class="col-alt">{{#if weapon.altSkillName}}<span class="c7t-wpn-skill">{{weapon.altSkillName}}</span> <b class="c7t-wpn-num">{{weapon.altSkillValue}}%</b>{{else}}—{{/if}}</span>
         <span class="col-dmg">
           {{#if weapon.shotgun}}
             {{#each weapon.ranges as |range|}}
@@ -80,7 +90,7 @@
                 data-tooltip="{{localize 'C7TIDY.Weapon.DamageRoll'}}">{{range.damage}}</button>{{#unless @last}} {{/unless}}
             {{/each}}
           {{else}}
-            {{weapon.damage}}
+            <span class="c7t-wpn-dmg">{{weapon.damage}}</span>
           {{/if}}
         </span>
         <span class="col-range">{{weapon.range}}</span>
@@ -122,8 +132,14 @@
   <div class="c7t-talents">
     {{#each talents as |talent|}}
       <button type="button" class="c7t-talent" data-action="openItem" data-item-id="{{talent.id}}">
-        <span class="c7t-talent-name">{{talent.name}}</span>
-        <span class="c7t-talent-desc">{{#if talent.excerpt}}{{talent.excerpt}}{{else}}{{localize 'C7TIDY.Npc.NoExcerpt'}}{{/if}}</span>
+        <span class="c7t-talent-ico">
+          {{#if talent.img}}<img src="{{talent.img}}" alt="">{{else}}<i class="fa-solid fa-star"></i>{{/if}}
+        </span>
+        <span class="c7t-talent-body">
+          <span class="c7t-talent-name">{{talent.name}}</span>
+          <span class="c7t-talent-desc">{{#if talent.excerpt}}{{talent.excerpt}}{{else}}{{localize 'C7TIDY.Npc.NoExcerpt'}}{{/if}}</span>
+        </span>
+        <i class="fa-solid fa-chevron-right c7t-talent-caret" aria-hidden="true"></i>
       </button>
     {{else}}
       <div class="c7t-empty c7t-empty-slim"><b>{{localize 'C7TIDY.Npc.NoSpecialAbilities'}}</b></div>

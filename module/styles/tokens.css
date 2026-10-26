@@ -1,73 +1,232 @@
+/* ============================================================
+   CoC7 Tidy 角色卡 · 设计 token 与本地字体
+   ------------------------------------------------------------
+   1920 年代「调查员档案」视觉语言：
+   深色漆面横幅 + 黄铜饰线 + 做旧纸张 + 双色衬线标题。
+   所有字体均为 OFL 授权，见 assets/fonts/licenses/。
+   ============================================================ */
+
+/* ---------- 字体 ---------- */
 @font-face {
-  font-family: "Roboto Condensed";
-  src: url("../assets/fonts/RobotoCondensed-VariableFont_wght.ttf") format("truetype");
+  font-family: "C7T Cinzel";
+  src: url("../assets/fonts/Cinzel-latin.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "C7T Cinzel";
+  src: url("../assets/fonts/Cinzel-latin-ext.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "C7T Garamond";
+  src: url("../assets/fonts/EBGaramond-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "C7T Garamond";
+  src: url("../assets/fonts/EBGaramond-latin-ext.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "C7T Garamond";
+  src: url("../assets/fonts/EBGaramond-Italic-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "C7T Garamond";
+  src: url("../assets/fonts/EBGaramond-Italic-latin-ext.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "C7T Condensed";
+  src: url("../assets/fonts/RobotoCondensed-latin.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
-  font-family: "Signika Negative";
-  src: url("../assets/fonts/SignikaNegative-VariableFont_wght.ttf") format("truetype");
-  font-weight: 300 700;
+  font-family: "C7T Condensed";
+  src: url("../assets/fonts/RobotoCondensed-latin-ext.woff2") format("woff2");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* ============================================================
-   设计 token（亮色，默认）
+   亮色（默认）：做旧纸张 + 黄铜 + 牛血红
    ============================================================ */
 .coc7-tidy {
-  --c7t-bg: #f0f0e1;
-  --c7t-panel: #f8f4f1;
-  --c7t-panel-2: #f1ebe8;
-  --c7t-line: #e2d0a8;
-  --c7t-line-soft: #e9dfc4;
-  --c7t-line-strong: #c0ad81;
-  --c7t-gold: #9f9275;
-  --c7t-gold-strong: #73633f;
-  --c7t-accent: #741b2b;
-  --c7t-accent-soft: #8f2436;
-  --c7t-text: #16181d;
-  --c7t-text-dim: #4b4a44;
-  --c7t-text-mute: #7a6f5c;
-  --c7t-hp: #922d2e;
-  --c7t-mp: #101345;
-  --c7t-san: #2e4b1f;
-  --c7t-luck: #79501c;
-  --c7t-warn: #b36319;
+  /* --- 纸面 --- */
+  --c7t-bg: #ece1c8;
+  --c7t-bg-deep: #dfd2b4;
+  --c7t-panel: #f7f0e0;
+  --c7t-panel-2: #efe5d0;
+  --c7t-panel-3: #e6d9bf;
+  --c7t-line: #d2c09b;
+  --c7t-line-soft: #e2d5b9;
+  --c7t-line-strong: #b09665;
 
-  --c7t-radius: 3px;
-  --c7t-trans: .15s ease-in-out;
-  --c7t-shadow-card: 0 0 .375rem #00000029;
-  --c7t-shadow-field: 0 0 .1875rem #0000001a;
+  /* --- 金属 / 强调 --- */
+  --c7t-brass: #a9863f;
+  --c7t-brass-deep: #785b28;
+  --c7t-brass-light: #ddc68f;
+  --c7t-gold: #9d8049;
+  --c7t-gold-strong: #6f5628;
+  --c7t-accent: #6e1d26;
+  --c7t-accent-soft: #8d2c37;
+  --c7t-accent-deep: #4f131a;
 
-  --c7t-font-title: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Songti SC", "Noto Serif SC", serif;
-  --c7t-font-body: "Roboto Condensed", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  --c7t-font-long: "Signika Negative", "PingFang SC", sans-serif;
+  /* --- 文字 --- */
+  --c7t-ink: #201c15;
+  --c7t-text: #241f17;
+  --c7t-text-dim: #514734;
+  --c7t-text-mute: #6f624a;
+
+  /* --- 资源色 --- */
+  --c7t-hp: #8e2a26;
+  --c7t-mp: #253a66;
+  --c7t-san: #3f5b2e;
+  --c7t-luck: #8a5c1d;
+  --c7t-warn: #a4551a;
+
+  /* --- 横幅 --- */
+  --c7t-banner-text: #f3e9d2;
+  --c7t-banner-dim: #c2b596;
+  --c7t-banner-mute: #b1a383;
+  --c7t-banner-line: rgba(196, 175, 126, 0.34);
+  --c7t-banner-line-soft: rgba(196, 175, 126, 0.16);
+
+  /* --- 形状与动效 --- */
+  --c7t-radius: 4px;
+  --c7t-radius-sm: 3px;
+  --c7t-radius-lg: 7px;
+  --c7t-trans: 0.16s cubic-bezier(0.22, 0.8, 0.32, 1);
+  --c7t-trans-slow: 0.28s cubic-bezier(0.22, 0.8, 0.32, 1);
+
+  /* --- 阴影 --- */
+  --c7t-shadow-card: 0 1px 1px rgba(58, 44, 20, 0.08), 0 2px 6px -1px rgba(58, 44, 20, 0.14);
+  --c7t-shadow-field: inset 0 1px 2px rgba(58, 44, 20, 0.12), 0 1px 0 rgba(255, 255, 255, 0.5);
+  --c7t-shadow-float: 0 10px 26px -8px rgba(40, 30, 12, 0.4), 0 2px 5px rgba(40, 30, 12, 0.16);
+
+  /* --- 排版 --- */
+  --c7t-font-display: "C7T Cinzel", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Songti SC",
+    "Noto Serif SC", "Source Han Serif SC", serif;
+  --c7t-font-title: var(--c7t-font-display);
+  --c7t-font-body: "C7T Condensed", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --c7t-font-long: "C7T Garamond", "Iowan Old Style", "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia,
+    serif;
+
+  /* --- 纹理 --- */
+  --c7t-noise: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+  --c7t-noise-strong: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+
+  --c7t-paper:
+    radial-gradient(115% 80% at 8% 0%, rgba(255, 252, 242, 0.75), transparent 55%),
+    radial-gradient(95% 75% at 96% 100%, rgba(150, 118, 66, 0.14), transparent 62%),
+    radial-gradient(140% 120% at 50% 45%, transparent 55%, rgba(120, 92, 48, 0.1) 100%),
+    repeating-linear-gradient(0deg, rgba(122, 94, 48, 0.024) 0 1px, transparent 1px 3px),
+    linear-gradient(178deg, #efe5cf 0%, #ece0c6 46%, #e7dabd 100%);
+
+  --c7t-brass-foil: linear-gradient(180deg, #dcc48d 0%, #c3a86c 34%, #a9863f 62%, #c9b078 100%);
+  --c7t-brass-foil-dark: linear-gradient(180deg, #b99c60 0%, #9c7f45 40%, #7d6130 100%);
+  --c7t-ink-band: linear-gradient(180deg, #3b352a 0%, #2b261e 55%, #201c16 100%);
+  --c7t-on-ink: #dcc99c;
+  --c7t-on-brass: #33291a;
+  --c7t-banner-layers:
+    radial-gradient(120% 95% at 6% -25%, rgba(232, 210, 158, 0.18), transparent 58%),
+    radial-gradient(85% 80% at 105% 130%, rgba(110, 29, 38, 0.34), transparent 62%),
+    radial-gradient(70% 60% at 50% -40%, rgba(255, 250, 235, 0.07), transparent 68%),
+    linear-gradient(176deg, #353027 0%, #252019 48%, #17140f 100%);
 }
 
 /* ============================================================
-   暗色 token 覆盖（跟随 Foundry 颜色方案）
+   暗色：墨色皮革 + 黄铜反光
    ============================================================ */
 .coc7-tidy.theme-dark {
-  --c7t-bg: #16181d;
-  --c7t-panel: #252830;
-  --c7t-panel-2: #303236;
-  --c7t-line: #3c3f47;
-  --c7t-line-soft: #33363d;
-  --c7t-line-strong: #7f6e45;
-  --c7t-gold: #c0ad81;
-  --c7t-gold-strong: #c0ad81;
-  --c7t-accent: #c0ad81;
-  --c7t-accent-soft: #d8c49a;
-  --c7t-text: #dfe2eb;
-  --c7t-text-dim: #b2b2b2;
-  --c7t-text-mute: #8f8a7c;
-  --c7t-hp: #c0392b;
-  --c7t-mp: #4f66c4;
-  --c7t-san: #5b8c3e;
-  --c7t-luck: #c08a2e;
-  --c7t-warn: #e0873a;
-  --c7t-shadow-card: 0 0 .375rem #00000080;
+  --c7t-bg: #14151a;
+  --c7t-bg-deep: #0f1014;
+  --c7t-panel: #1d1f26;
+  --c7t-panel-2: #181a20;
+  --c7t-panel-3: #23252d;
+  --c7t-line: #35363f;
+  --c7t-line-soft: #292b33;
+  --c7t-line-strong: #856d3f;
+
+  --c7t-brass: #c3a76f;
+  --c7t-brass-deep: #8d7442;
+  --c7t-brass-light: #e6d3a7;
+  --c7t-gold: #c3a76f;
+  --c7t-gold-strong: #d9c9a3;
+  --c7t-accent: #b45a63;
+  --c7t-accent-soft: #cf7b84;
+  --c7t-accent-deep: #6f2b33;
+
+  --c7t-ink: #e9e2d2;
+  --c7t-text: #e6dfcf;
+  --c7t-text-dim: #bab09d;
+  --c7t-text-mute: #a59a84;
+
+  --c7t-hp: #cf5b58;
+  --c7t-mp: #7c8fd8;
+  --c7t-san: #8cae66;
+  --c7t-luck: #d0a252;
+  --c7t-warn: #e08a3c;
+
+  --c7t-banner-text: #f0e7d3;
+  --c7t-banner-dim: #c4b99e;
+  --c7t-banner-mute: #aa9e85;
+  --c7t-banner-line: rgba(196, 175, 126, 0.3);
+  --c7t-banner-line-soft: rgba(196, 175, 126, 0.14);
+
+  --c7t-shadow-card: 0 1px 1px rgba(0, 0, 0, 0.45), 0 2px 8px -2px rgba(0, 0, 0, 0.55);
+  --c7t-shadow-field: inset 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.04);
+  --c7t-shadow-float: 0 12px 30px -8px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.5);
+
+  --c7t-paper:
+    radial-gradient(115% 80% at 8% 0%, rgba(120, 104, 74, 0.16), transparent 55%),
+    radial-gradient(95% 75% at 96% 100%, rgba(0, 0, 0, 0.42), transparent 62%),
+    radial-gradient(140% 120% at 50% 45%, transparent 50%, rgba(0, 0, 0, 0.4) 100%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px),
+    linear-gradient(178deg, #17181e 0%, #131419 48%, #0f1013 100%);
+
+  --c7t-brass-foil: linear-gradient(180deg, #c7ac74 0%, #a98c52 36%, #8a6f3a 64%, #b89c60 100%);
+  --c7t-brass-foil-dark: linear-gradient(180deg, #8f7746 0%, #735d33 45%, #5d4a27 100%);
+  --c7t-ink-band: linear-gradient(180deg, #24262e 0%, #1b1d23 55%, #16171c 100%);
+  --c7t-on-ink: #e2d0a6;
+  --c7t-on-brass: #241e12;
+  --c7t-banner-layers:
+    radial-gradient(120% 95% at 6% -25%, rgba(196, 168, 112, 0.16), transparent 58%),
+    radial-gradient(85% 80% at 105% 130%, rgba(120, 40, 52, 0.3), transparent 62%),
+    radial-gradient(70% 60% at 50% -40%, rgba(220, 200, 160, 0.05), transparent 68%),
+    linear-gradient(176deg, #212228 0%, #1a1b20 48%, #101116 100%);
 }

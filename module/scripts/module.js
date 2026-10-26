@@ -126,6 +126,7 @@ async function preloadTemplates() {
     if (!loadTemplates) return;
     await loadTemplates([
       TEMPLATES.icons,
+      TEMPLATES.bannerArt,
       TEMPLATES.tabsNav,
       TEMPLATES.skillRow,
       TEMPLATES.skillRowEdit,

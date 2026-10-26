@@ -1,184 +1,676 @@
 /* ============================================================
    CoC7 Tidy 生物 / NPC 卡（c7t-npc）
-   只补充生物卡新增组件；横幅/表格/分组等基础样式沿用 sheet.css
+   ------------------------------------------------------------
+   在 tokens.css / sheet.css 的「1920 年代调查员档案」共享视觉之上做局部变体：
+   · 横幅战斗条：深色漆面小牌 + 黄铜圆形徽记（可掷 / 链接 / 备注）
+   · 战斗速览条：纸面档案卡（Docket）—— 墨字数值 + 铜色徽记，避免与横幅重复
+   · 武器表 / 天赋 / 移动：同一套表头、纸卡与黄铜饰线语言
+   · 所有选择器均以 .c7t-npc 前缀抵抗 Foundry 核心与 CoC7 系统默认样式
    ============================================================ */
 
-/* ---------- 横幅：公式按钮 ---------- */
+.c7t-npc {
+  /* 生物卡局部材质（由共享 token 派生，不引入新主色） */
+  --npc-brass-line: rgba(169, 134, 63, 0.45);
+  --npc-brass-line-soft: rgba(169, 134, 63, 0.22);
+  --npc-paper-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 46%);
+  --npc-inset-field:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 60%),
+    var(--c7t-panel);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) {
+  --npc-brass-line: rgba(195, 167, 111, 0.42);
+  --npc-brass-line-soft: rgba(195, 167, 111, 0.18);
+  --npc-paper-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0) 46%);
+  --npc-inset-field:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0) 60%),
+    var(--c7t-panel);
+}
+
+/* ============================================================
+   横幅：控制按钮 / 公式按钮 / 编辑态内联输入
+   ============================================================ */
 .c7t-npc .c7t-ctrl-fx {
-  font: italic 700 13px/1 Georgia, serif;
-  color: inherit;
+  font-family: var(--c7t-font-long);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  transform: translateY(-0.5px);
 }
-.c7t-npc .c7t-ctrl.is-on { color: #f7efdb; border-color: rgba(226, 208, 168, .65); box-shadow: 0 0 6px rgba(226, 208, 168, .3); }
-.c7t-npc .c7t-npc-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.c7t-npc .c7t-npc-cols.is-single { grid-template-columns: minmax(0, 1fr); }
+.c7t-npc .c7t-ctrl.is-on {
+  color: #fbf2dd;
+  border-color: rgba(226, 208, 168, 0.7);
+  background:
+    linear-gradient(180deg, rgba(226, 208, 168, 0.24), rgba(226, 208, 168, 0.04)),
+    rgba(12, 10, 7, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 228, 0.24),
+    0 0 10px rgba(226, 208, 168, 0.34);
+}
 
-/* ---------- 横幅：公式模式 / 特性工具 ---------- */
-.c7t-npc .c7t-ability-value-row.is-formula {
-  top: 34px;
-  width: 88px;
+/* 横幅内幽灵按钮（掷特性 / 取平均）：需压过下方纸面 .c7t-btn 变体 */
+.c7t-npc .c7t-btn.c7t-btn-ghost {
+  color: var(--bn-dim);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--bn-line);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 228, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
-.c7t-npc .c7t-ability-input.is-formula {
-  height: 20px;
-  padding: 1px 3px 0;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0;
+.c7t-npc .c7t-btn.c7t-btn-ghost i {
+  color: var(--c7t-brass);
+  font-size: 10px;
 }
-.c7t-npc .c7t-ability-fx {
-  position: absolute;
-  top: 8px;
-  right: 15px;
-  font: italic 700 11px/1 Georgia, serif;
-  color: #d8c49a;
+.c7t-npc .c7t-btn.c7t-btn-ghost:hover {
+  color: #f9f1dd;
+  border-color: rgba(226, 208, 168, 0.62);
+  background: linear-gradient(180deg, rgba(226, 208, 168, 0.2), rgba(226, 208, 168, 0.04));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 228, 0.18),
+    0 0 9px rgba(226, 208, 168, 0.24);
 }
-.c7t-npc .c7t-ability.is-empty .c7t-ability-value { color: #8d8164; }
-.c7t-npc .c7t-ability.is-empty .c7t-ability-shield { stroke: rgba(189, 168, 120, .5); }
-
 .c7t-npc .c7t-ability-tools {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: 3px;
 }
-.c7t-npc .c7t-btn-ghost {
-  color: #cbbf9e;
-  background: rgba(255, 255, 255, .04);
-  border: 1px solid var(--bn-line-soft);
-  box-shadow: none;
+.c7t-npc .c7t-ability-tools .c7t-btn {
+  padding: 2px 8px;
 }
-.c7t-npc .c7t-btn-ghost:hover { color: #f6eeda; background: rgba(192, 173, 129, .18); }
-.c7t-npc .c7t-btn-ghost i { color: #b6a883; }
+/* 编辑态徽记略收紧，给下方内容让出首屏空间 */
+.c7t-npc .c7t-sheet:has(.c7t-vitals.is-editing) .c7t-ability {
+  height: 84px;
+}
 
+/* 自动派生齿轮：小幅黄铜圆钮 */
 .c7t-npc .c7t-auto-gear {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
   flex: 0 0 auto;
-  color: #8d8164;
+  color: var(--bn-mute);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.16);
+  border: 1px solid transparent;
+  transition: all var(--c7t-trans);
 }
-.c7t-npc .c7t-auto-gear:hover { color: #f2e8d0; background: rgba(192, 173, 129, .22); }
-.c7t-npc .c7t-auto-gear.is-on { color: #d8c49a; }
-.c7t-npc .c7t-auto-gear i { font-size: 10px; }
+.c7t-npc .c7t-auto-gear:hover {
+  color: #f6eeda;
+  background: rgba(192, 173, 129, 0.22);
+  border-color: rgba(226, 208, 168, 0.4);
+}
+.c7t-npc .c7t-auto-gear.is-on {
+  color: #f0e3c4;
+  background: rgba(169, 134, 63, 0.26);
+  border-color: rgba(226, 208, 168, 0.42);
+  box-shadow: inset 0 0 6px rgba(226, 208, 168, 0.14);
+}
+.c7t-npc .c7t-auto-gear i {
+  font-size: 9.5px;
+}
 
-
-/* 编辑态：资源改为 2 列网格，给输入框 + auto 齿轮留足宽度 */
+/* 编辑态资源：2 列网格，给输入框 + 齿轮留足宽度 */
 .c7t-npc .c7t-vitals.is-editing {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
+  gap: 6px;
 }
-.c7t-npc .c7t-vitals.is-editing .c7t-vital { width: auto; }
-.c7t-npc .c7t-vitals.is-editing .c7t-vital-label { white-space: nowrap; }
-.c7t-npc .c7t-vitals.is-editing .c7t-deriveds { grid-column: 1 / -1; row-gap: 6px; }
+.c7t-npc .c7t-vitals.is-editing .c7t-vital {
+  width: auto;
+  padding: 4px 9px 6px;
+  row-gap: 5px;
+  column-gap: 6px;
+}
+.c7t-npc .c7t-vitals.is-editing .c7t-vital-label {
+  white-space: nowrap;
+}
+.c7t-npc .c7t-vitals.is-editing .c7t-deriveds {
+  grid-column: 1 / -1;
+  row-gap: 6px;
+}
+/* 自动派生的只读上限：共享样式用 opacity .6 压暗，横幅深底上对比不足 */
+.c7t-npc .c7t-vital-input[readonly] {
+  opacity: 1;
+  color: #d6cbae;
+  background: rgba(255, 255, 255, 0.06);
+}
+.c7t-npc .c7t-vital-input[readonly]:focus {
+  color: #f7efdb;
+}
+.c7t-npc .c7t-vital-input.is-max[readonly] {
+  color: #cfc3a5;
+}
+/* 空值资源（NPC 常见的 SAN / 幸运）：输入框不要显得像被禁用 */
+.c7t-npc .c7t-vital.is-empty .c7t-vital-bar {
+  background: rgba(0, 0, 0, 0.3);
+}
+.c7t-npc .c7t-derived.is-editing {
+  gap: 3px;
+  padding: 1px 6px;
+  color: #d8cba8;
+  border-color: var(--npc-brass-line-soft);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01));
+}
+.c7t-npc .c7t-derived-input {
+  height: 19px;
+  padding: 0 3px;
+}
+/* 编辑态下空资源（生物常见 SAN / 幸运为 null）：不要误报「低值告警」红框 */
+.c7t-npc .c7t-vital.is-empty,
+.c7t-npc .c7t-vital.is-empty.is-low {
+  border-color: var(--bn-line-soft);
+}
+.c7t-npc .c7t-vital.is-empty .c7t-vital-bar {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px 10%),
+    rgba(0, 0, 0, 0.28);
+}
+.c7t-npc .c7t-vital.is-empty .c7t-vital-bar i {
+  animation: none;
+  width: 0;
+  box-shadow: none;
+}
+.c7t-npc .c7t-vital.is-empty .c7t-vital-input {
+  font-weight: 400;
+  color: #cbbf9e;
+}
 
-/* ---------- 横幅底行：每轮攻击 / SAN 损失 / 护甲 ---------- */
-.c7t-npc .c7t-banner-foot { flex-wrap: wrap; row-gap: 6px; }
+/* ============================================================
+   横幅底行：每轮攻击 / SAN 损失 / 护甲
+   ============================================================ */
+/* 生物卡横幅层高整体收紧少许（编辑态控件多，避免首屏被横幅挤压） */
+.c7t-npc .c7t-banner {
+  padding-top: 14px;
+}
+.c7t-npc .c7t-abilities {
+  margin-top: 12px;
+}
+.c7t-npc .c7t-banner-foot {
+  margin-top: 11px;
+  padding-top: 11px;
+  padding-bottom: 10px;
+}
+.c7t-npc .c7t-banner-foot {
+  flex-wrap: wrap;
+  row-gap: 7px;
+  column-gap: 14px;
+}
 .c7t-npc .c7t-combatbar {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: flex-end;
+  gap: 7px;
   margin-left: auto;
   flex-wrap: wrap;
 }
-.c7t-npc .c7t-combat-pill {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 2px 8px;
-  color: #cbbf9e;
-  background: rgba(255, 255, 255, .045);
-  border: 1px solid var(--bn-line-soft);
-  border-radius: 3px;
-  transition: all var(--c7t-trans);
-}
-.c7t-npc .c7t-combat-pill:hover { border-color: rgba(226, 208, 168, .5); background: rgba(255, 255, 255, .075); }
-.c7t-npc .c7t-combat-pill .label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--bn-mute);
-  white-space: nowrap;
-}
-.c7t-npc .c7t-combat-pill .value {
-  font-size: 14px;
-  font-weight: 700;
-  color: #f6eeda;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.c7t-npc .c7t-combat-pill .value b { font-size: 15px; }
-.c7t-npc .c7t-combat-pill .value i { font-style: normal; color: #8d8164; margin: 0 1px; }
-.c7t-npc .c7t-combat-pill.is-san { border-color: rgba(146, 45, 46, .55); background: rgba(146, 45, 46, .18); }
-.c7t-npc .c7t-combat-pill.is-san:hover { background: rgba(146, 45, 46, .28); border-color: #c0504d; }
-.c7t-npc .c7t-combat-pill .c7t-icon-btn { width: 19px; height: 19px; color: #b6a883; }
-.c7t-npc .c7t-combat-pill .c7t-icon-btn:hover { color: #f6eeda; background: rgba(192, 173, 129, .22); }
-.c7t-npc .c7t-combat-pill .c7t-icon-btn.is-on { color: #d8c49a; }
 
-/* ---------- 战斗页：速览条 ---------- */
-.c7t-npc .c7t-combat-strip {
-  display: flex;
+/* 深色漆面小牌 */
+.c7t-npc .c7t-combat-pill {
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  gap: 7px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-  padding: 7px 9px;
-  background: var(--c7t-panel);
-  border: 1px solid var(--c7t-line);
-  border-radius: var(--c7t-radius);
-  box-shadow: var(--c7t-shadow-card);
-}
-.c7t-npc .c7t-strip-item {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 4px 9px;
-  background: var(--c7t-panel-2);
-  border: 1px solid var(--c7t-line);
+  gap: 8px;
+  min-height: 30px;
+  padding: 3px 3px 3px 10px;
+  color: var(--c7t-banner-text);
+  background:
+    linear-gradient(180deg, rgba(255, 246, 224, 0.09), rgba(255, 246, 224, 0.012) 46%, rgba(0, 0, 0, 0.16)),
+    linear-gradient(180deg, #3b342a 0%, #29231c 58%, #1c1813 100%);
+  border: 1px solid var(--bn-line);
   border-radius: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 214, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.26);
+  transition:
+    border-color var(--c7t-trans),
+    box-shadow var(--c7t-trans),
+    background var(--c7t-trans);
 }
-.c7t-npc .c7t-strip-item.is-san { border-color: rgba(146, 45, 46, .55); background: rgba(146, 45, 46, .1); }
-.c7t-npc .c7t-strip-label {
+/* 左侧黄铜菱形铆钉 */
+.c7t-npc .c7t-combat-pill::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  flex: 0 0 auto;
+  background: var(--c7t-brass-foil);
+  transform: rotate(45deg);
+  opacity: 0.78;
+  box-shadow: 0 0 4px rgba(226, 208, 168, 0.3);
+}
+.c7t-npc .c7t-combat-pill:hover {
+  border-color: rgba(226, 208, 168, 0.62);
+  background:
+    linear-gradient(180deg, rgba(255, 246, 224, 0.13), rgba(255, 246, 224, 0.02) 46%, rgba(0, 0, 0, 0.16)),
+    linear-gradient(180deg, #423a2e 0%, #2d261e 58%, #1e1a14 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 214, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 0 10px rgba(226, 208, 168, 0.14),
+    0 1px 2px rgba(0, 0, 0, 0.26);
+}
+.c7t-npc .c7t-combat-pill .label {
+  font-family: var(--c7t-font-body);
   font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: .11em;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--bn-dim);
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+.c7t-npc .c7t-combat-pill .value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-left: 1px;
+  padding-left: 8px;
+  border-left: 1px solid rgba(196, 175, 126, 0.24);
+  font-family: var(--c7t-font-body);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: #f9f1dd;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
+}
+.c7t-npc .c7t-combat-pill .value b {
+  font-size: 14px;
+  font-weight: 700;
+}
+.c7t-npc .c7t-combat-pill .value i {
+  font-style: normal;
+  font-size: 10.5px;
+  color: var(--bn-mute);
+  margin: 0 1px;
+}
+
+/* SAN 损失：暗红漆面 + 内蕴光 */
+.c7t-npc .c7t-combat-pill.is-san {
+  background:
+    radial-gradient(130% 150% at 0% 0%, rgba(214, 122, 120, 0.16), transparent 58%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(180deg, #4a2024 0%, #331418 60%, #241013 100%);
+  border-color: rgba(180, 90, 99, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 208, 196, 0.16),
+    inset 0 0 14px rgba(120, 30, 38, 0.26),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.c7t-npc .c7t-combat-pill.is-san::before {
+  background: linear-gradient(180deg, #e8b8b2, #b45a63 60%, #6f2b33);
+}
+.c7t-npc .c7t-combat-pill.is-san:hover {
+  border-color: rgba(207, 123, 132, 0.8);
+  background:
+    radial-gradient(130% 150% at 0% 0%, rgba(224, 140, 136, 0.2), transparent 58%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(180deg, #55252a 0%, #3c191d 60%, #2a1215 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 208, 196, 0.2),
+    inset 0 0 16px rgba(150, 50, 60, 0.4),
+    0 0 10px rgba(140, 44, 52, 0.3);
+}
+.c7t-npc .c7t-combat-pill.is-san .label {
+  color: #d5a9a1;
+}
+.c7t-npc .c7t-combat-pill.is-san .value {
+  color: #ffe8df;
+  border-left-color: rgba(214, 160, 150, 0.28);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+.c7t-npc .c7t-combat-pill.is-san .value b {
+  font-size: 14.5px;
+}
+.c7t-npc .c7t-combat-pill.is-san .value i {
+  color: rgba(226, 188, 180, 0.7);
+}
+
+/* 护甲备注开启时：小牌带一道铜色边光 */
+.c7t-npc .c7t-combat-pill.is-armor:has(.c7t-coin.is-on) {
+  border-color: rgba(226, 208, 168, 0.5);
+}
+
+/* ---------- 黄铜圆形徽记（横幅 / 速览条共用） ---------- */
+.c7t-npc .c7t-coin {
+  display: inline-grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #2b2112;
+  background: var(--c7t-brass-foil);
+  border: 1px solid rgba(38, 28, 12, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 251, 235, 0.62),
+    inset 0 -1px 1px rgba(50, 34, 10, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  transition:
+    transform var(--c7t-trans),
+    box-shadow var(--c7t-trans),
+    filter var(--c7t-trans);
+}
+.c7t-npc .c7t-coin i {
+  font-size: 9.5px;
+  line-height: 1;
+}
+.c7t-npc .c7t-coin:hover {
+  color: #1f1709;
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 251, 235, 0.7),
+    inset 0 -1px 1px rgba(50, 34, 10, 0.35),
+    0 0 9px rgba(226, 208, 168, 0.55),
+    0 2px 4px rgba(0, 0, 0, 0.36);
+}
+.c7t-npc .c7t-coin:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+.c7t-npc .c7t-coin:focus-visible {
+  outline: 2px solid var(--c7t-brass-light);
+  outline-offset: 1px;
+}
+.c7t-npc .c7t-coin[disabled] {
+  opacity: 0.34;
+  filter: grayscale(0.55);
+  cursor: default;
+  transform: none;
+  box-shadow: inset 0 1px 0 rgba(255, 251, 235, 0.2);
+}
+.c7t-npc .c7t-coin.is-on {
+  color: #ffe9d8;
+  background: linear-gradient(180deg, #b45a63 0%, #7d2a33 55%, #5d1820 100%);
+  border-color: rgba(220, 160, 150, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 205, 0.35),
+    inset 0 0 7px rgba(255, 180, 168, 0.14),
+    0 0 8px rgba(180, 90, 99, 0.45);
+}
+.c7t-npc .c7t-coin.is-on:hover {
+  filter: brightness(1.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 205, 0.4),
+    0 0 10px rgba(220, 120, 128, 0.6);
+}
+
+/* ============================================================
+   战斗页：战斗速览条（纸面档案 Docket）
+   ============================================================ */
+.c7t-npc .c7t-combat-strip {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding: 0;
+  background:
+    var(--npc-paper-sheen),
+    radial-gradient(120% 160% at 0% 0%, rgba(169, 134, 63, 0.1), transparent 56%),
+    var(--c7t-panel);
+  border: 1px solid var(--c7t-line-strong);
+  border-radius: var(--c7t-radius);
+  box-shadow:
+    var(--c7t-shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+/* 顶部黄铜细线（中央高光，两端淡出） */
+.c7t-npc .c7t-combat-strip::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--c7t-brass) 16%,
+    var(--c7t-brass-light) 50%,
+    var(--c7t-brass) 84%,
+    transparent
+  );
+  opacity: 0.55;
+}
+.c7t-npc .c7t-strip-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 190px;
+  min-width: 0;
+  padding: 8px 12px 9px 14px;
+}
+.c7t-npc .c7t-strip-item + .c7t-strip-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--c7t-line) 22%, var(--c7t-line) 78%, transparent);
+}
+.c7t-npc .c7t-strip-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.c7t-npc .c7t-strip-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--c7t-font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--c7t-gold-strong);
   white-space: nowrap;
 }
-.c7t-npc .c7t-strip-value {
-  font-size: 17px;
+.c7t-npc .c7t-strip-label::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  flex: 0 0 auto;
+  background: var(--c7t-brass);
+  transform: rotate(45deg);
+  opacity: 0.75;
+}
+.c7t-npc .c7t-strip-label::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 10px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--c7t-line), rgba(210, 192, 155, 0));
+}
+.c7t-npc .c7t-strip-figure {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: var(--c7t-font-body);
+  font-size: 21px;
   font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
   color: var(--c7t-text);
   font-variant-numeric: tabular-nums;
-  line-height: 1;
 }
-.c7t-npc .c7t-strip-value b { font-size: 18px; }
-.c7t-npc .c7t-strip-value i { font-style: normal; font-size: 13px; color: var(--c7t-text-mute); margin: 0 1px; }
-.c7t-npc .c7t-strip-item .c7t-icon-btn { width: 20px; height: 20px; color: var(--c7t-gold-strong); }
-.c7t-npc .c7t-strip-item .c7t-icon-btn:hover { color: var(--c7t-accent); background: rgba(192, 173, 129, .22); }
-.c7t-npc .c7t-strip-item .c7t-icon-btn.is-on { color: var(--c7t-accent); }
-.c7t-npc .c7t-strip-item .c7t-icon-btn[disabled] { opacity: .35; cursor: default; }
-.c7t-npc .c7t-strip-input {
-  width: 56px;
-  padding: 2px 3px;
-  font: inherit;
+.c7t-npc .c7t-strip-figure b {
+  font-weight: 700;
+}
+.c7t-npc .c7t-strip-figure i {
+  font-style: normal;
   font-size: 13px;
+  font-weight: 400;
+  color: var(--c7t-text-mute);
+  margin: 0 1px;
+  transform: translateY(-1px);
+}
+.c7t-npc .c7t-strip-figure.is-empty {
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-strip-item.is-san {
+  background: radial-gradient(120% 140% at 0% 0%, rgba(110, 29, 38, 0.07), transparent 62%);
+}
+.c7t-npc .c7t-strip-item.is-san .c7t-strip-label {
+  color: var(--c7t-accent);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-strip-item.is-san .c7t-strip-label {
+  color: #e2a8ac;
+}
+.c7t-npc .c7t-strip-item.is-san .c7t-strip-figure {
+  color: var(--c7t-accent);
+}
+.c7t-npc .c7t-strip-item.is-san .c7t-strip-figure i {
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-strip-figure.is-edit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
+}
+.c7t-npc .c7t-strip-input,
+.c7t-npc .c7t-strip-figure.is-edit .c7t-strip-input {
+  width: 68px;
+  height: 24px;
+  padding: 1px 5px 0;
+  font-family: var(--c7t-font-body);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22px;
   text-align: center;
   color: var(--c7t-text);
-  background: var(--c7t-panel);
+  background: var(--npc-inset-field);
   border: 1px solid var(--c7t-line-strong);
   border-radius: 2px;
+  box-shadow: var(--c7t-shadow-field);
   outline: 0;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--c7t-trans), box-shadow var(--c7t-trans);
 }
-.c7t-npc .c7t-strip-input.is-min { width: 38px; }
-.c7t-npc .c7t-strip-input:focus { border-color: var(--c7t-accent); }
-.c7t-npc .c7t-strip-spacer { flex: 1; }
-.c7t-npc .c7t-strip-meta { font-size: 10.5px; color: var(--c7t-text-mute); }
+.c7t-npc .c7t-strip-input.is-min {
+  width: 48px;
+}
+.c7t-npc .c7t-strip-input::placeholder {
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-strip-input:hover {
+  border-color: var(--c7t-brass);
+}
+.c7t-npc .c7t-strip-input:focus {
+  border-color: var(--c7t-accent);
+  box-shadow:
+    0 0 0 2px rgba(110, 29, 38, 0.14),
+    var(--c7t-shadow-field);
+}
+.c7t-npc .c7t-strip-item > .c7t-coin {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  align-self: center;
+}
+.c7t-npc .c7t-strip-item > .c7t-coin i {
+  font-size: 10.5px;
+}
+.c7t-npc .c7t-strip-item.is-san > .c7t-coin {
+  color: #3a1418;
+}
+.c7t-npc .c7t-strip-spacer {
+  display: none;
+}
+.c7t-npc .c7t-strip-meta {
+  flex: 1 1 100%;
+  padding: 5px 13px 6px;
+  font-family: var(--c7t-font-long);
+  font-size: 11px;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  color: var(--c7t-text-mute);
+  text-align: right;
+  background: linear-gradient(90deg, rgba(169, 134, 63, 0.09), rgba(169, 134, 63, 0.02) 60%, transparent);
+  border-top: 1px solid var(--c7t-line-soft);
+}
 
-/* ---------- 战斗页：武器表 ---------- */
+/* ============================================================
+   通用：编辑态「黄铜图章」按钮（新增 / 清除 / 操作）
+   ============================================================ */
+.c7t-npc .c7t-btn {
+  color: var(--c7t-brass-deep);
+  background: var(--npc-inset-field);
+  border: 1px solid var(--c7t-line-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 1px 1px rgba(58, 44, 20, 0.12);
+  font-weight: 700;
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.c7t-npc .c7t-btn i {
+  font-size: 10px;
+  color: var(--c7t-brass);
+}
+.c7t-npc .c7t-btn:hover {
+  color: var(--c7t-accent);
+  border-color: var(--c7t-accent);
+  background:
+    linear-gradient(180deg, rgba(141, 44, 55, 0.12), rgba(141, 44, 55, 0.03)),
+    var(--c7t-panel);
+  box-shadow:
+    0 0 0 1px rgba(110, 29, 38, 0.14),
+    0 2px 7px -2px rgba(110, 29, 38, 0.3);
+}
+.c7t-npc .c7t-btn:active {
+  transform: translateY(1px);
+}
+.c7t-npc .c7t-btn i.fa-plus {
+  color: inherit;
+}
+
+/* 暗色：纸面按钮反相为描金暗钮，避免亮色大块 */
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-btn {
+  color: var(--c7t-brass-light);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 60%),
+    var(--c7t-panel-2);
+  border-color: var(--c7t-line-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-btn:hover {
+  color: #f7ecd4;
+  border-color: var(--c7t-brass);
+  background:
+    linear-gradient(180deg, rgba(195, 167, 111, 0.16), rgba(195, 167, 111, 0.04)),
+    var(--c7t-panel-2);
+  box-shadow: 0 0 9px rgba(195, 167, 111, 0.2);
+}
+
+/* ============================================================
+   战斗页：武器表
+   ============================================================ */
 .c7t-npc .c7t-table.npc-weapons .c7t-thead,
 .c7t-npc .c7t-table.npc-weapons .c7t-row {
-  grid-template-columns: minmax(0, 1fr) 118px 96px 104px 58px 52px 52px 92px;
+  grid-template-columns: minmax(0, 1fr) 118px 88px 90px 54px 44px 46px 94px;
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-row {
+  height: 35px;
 }
 .c7t-npc .c7t-table.npc-weapons .col-skill,
 .c7t-npc .c7t-table.npc-weapons .col-alt,
@@ -193,246 +685,1423 @@
   text-overflow: ellipsis;
   font-variant-numeric: tabular-nums;
   color: var(--c7t-text-dim);
+  font-size: 11.5px;
 }
 .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-skill,
 .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-alt,
 .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-dmg,
 .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-range,
 .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-ammo,
-.c7t-npc .c7t-table.npc-weapons .c7t-thead .col-malf { text-align: right; padding-right: 8px; }
-.c7t-npc .c7t-table.npc-weapons .c7t-row .col-dmg { font-weight: 700; color: var(--c7t-text); }
-.c7t-npc .c7t-table.npc-weapons .c7t-row .col-skill { color: var(--c7t-text); }
-.c7t-npc .c7t-table.npc-weapons .col-act { display: flex; justify-content: flex-end; gap: 2px; }
-.c7t-npc .c7t-dmg-btn {
-  height: auto;
-  min-height: 0;
-  line-height: normal;
-  font: inherit;
-  font-size: 11.5px;
-  color: var(--c7t-accent);
-  background: transparent;
-  border: 0;
-  border-bottom: 1px dashed var(--c7t-line-strong);
-  padding: 0 1px;
-  cursor: pointer;
+.c7t-npc .c7t-table.npc-weapons .c7t-thead .col-malf {
+  text-align: right;
+  padding-right: 8px;
+  color: var(--c7t-on-ink);
 }
-.c7t-npc .c7t-dmg-btn:hover { color: var(--c7t-accent-soft); border-bottom-style: solid; }
+.c7t-npc .c7t-table.npc-weapons .c7t-thead .col-range,
+.c7t-npc .c7t-table.npc-weapons .c7t-thead .col-ammo,
+.c7t-npc .c7t-table.npc-weapons .c7t-thead .col-malf {
+  letter-spacing: 0.08em;
+}
+.c7t-npc .c7t-table.npc-weapons .col-name {
+  gap: 9px;
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-row .col-name .c7t-row-ico {
+  width: 21px;
+  height: 21px;
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-row .col-name .c7t-row-name {
+  font-weight: 600;
+  color: var(--c7t-text);
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-row:hover .col-name .c7t-row-name {
+  color: var(--c7t-accent);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-table.npc-weapons .c7t-row:hover .col-name .c7t-row-name {
+  color: var(--c7t-brass-light);
+}
+/* 技能 / 备选技能：名称常规 + 数值加粗 */
+.c7t-npc .c7t-wpn-skill {
+  color: var(--c7t-text-dim);
+}
+.c7t-npc .c7t-wpn-num {
+  font-weight: 700;
+  color: var(--c7t-text);
+  font-variant-numeric: tabular-nums;
+}
+.c7t-npc .c7t-table.npc-weapons .col-dmg .c7t-wpn-dmg {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c7t-text);
+  letter-spacing: 0.01em;
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-row .col-dmg {
+  color: var(--c7t-text);
+}
+/* 伤害掷骰：小铜框「骰子签」 */
+.c7t-npc .c7t-dmg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 46px;
+  height: 21px;
+  margin: 0 1px;
+  padding: 0 6px;
+  font-family: var(--c7t-font-body);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--c7t-accent);
+  background: var(--npc-inset-field);
+  border: 1px solid var(--c7t-line-strong);
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 1px 1px rgba(58, 44, 20, 0.1);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: all var(--c7t-trans);
+}
+.c7t-npc .c7t-dmg-btn::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  margin-left: 1px;
+  background: currentColor;
+  transform: rotate(45deg);
+  opacity: 0.6;
+}
+.c7t-npc .c7t-dmg-btn:hover {
+  color: #fdf3dd;
+  background: linear-gradient(180deg, var(--c7t-accent-soft), var(--c7t-accent) 60%, var(--c7t-accent-deep));
+  border-color: var(--c7t-accent-deep);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 190, 0.3),
+    0 0 8px rgba(110, 29, 38, 0.4);
+}
+.c7t-npc .c7t-dmg-btn:hover::after {
+  opacity: 0.9;
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-dmg-btn {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-dmg-btn:hover {
+  color: #fff3e4;
+}
+/* 行操作：默认半显，悬停全显；攻击按钮为牛血红徽章 */
+.c7t-npc .c7t-table.npc-weapons .col-act {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+  opacity: 1;
+  transition: opacity var(--c7t-trans);
+}
+.c7t-npc .c7t-table.npc-weapons .col-act .c7t-icon-btn {
+  width: 21px;
+  height: 21px;
+  color: var(--c7t-text-mute);
+  opacity: 0.55;
+  transition: all var(--c7t-trans);
+}
+.c7t-npc .c7t-table.npc-weapons .col-act .c7t-icon-btn.act {
+  opacity: 1;
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-row:hover .col-act .c7t-icon-btn:not(.act) {
+  opacity: 1;
+}
+.c7t-npc .c7t-table.npc-weapons .col-act .c7t-icon-btn i {
+  font-size: 10px;
+}
+.c7t-npc .c7t-table.npc-weapons .col-act .c7t-icon-btn:hover {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.2);
+}
+.c7t-npc .c7t-table.npc-weapons .col-act .c7t-icon-btn.act {
+  color: #fdf3dd;
+  background: linear-gradient(180deg, var(--c7t-accent-soft), var(--c7t-accent) 62%, var(--c7t-accent-deep));
+  border: 1px solid var(--c7t-accent-deep);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 190, 0.32),
+    0 1px 2px rgba(40, 10, 10, 0.32);
+  opacity: 1;
+}
+.c7t-npc .c7t-table.npc-weapons .col-act .c7t-icon-btn.act:hover {
+  color: #fff;
+  filter: brightness(1.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 190, 0.36),
+    0 0 9px rgba(110, 29, 38, 0.45);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-table.npc-weapons .col-act .c7t-icon-btn:hover {
+  color: var(--c7t-brass-light);
+}
 
-/* ---------- 战斗页：特殊能力 / 移动方式 ---------- */
-.c7t-npc .c7t-npc-section { margin-top: 10px; }
-.c7t-npc .c7t-section-meta { margin-left: 6px; font-size: 10px; font-weight: 400; letter-spacing: 0; color: var(--c7t-text-mute); }
-.c7t-npc .c7t-section-head { display: flex; align-items: center; gap: 6px; }
-.c7t-npc .c7t-section-head .c7t-section-meta { margin-left: 6px; }
-.c7t-npc .c7t-section-add-btn { margin-left: auto; padding: 3px 9px; font-size: 11px; }
-.c7t-npc .c7t-section-add-btn i { font-size: 10px; }
-.c7t-npc .c7t-talents { display: flex; flex-direction: column; }
-.c7t-npc .c7t-talent {
+/* ============================================================
+   战斗页：特殊能力 / 天赋 / 移动方式
+   ============================================================ */
+.c7t-npc .c7t-npc-section {
+  margin-top: 10px;
+}
+.c7t-npc .c7t-section-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+}
+.c7t-npc .c7t-section-meta {
+  margin-left: 7px;
+  padding-left: 9px;
+  border-left: 1px solid rgba(226, 208, 168, 0.28);
+  font-family: var(--c7t-font-body);
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(226, 208, 168, 0.72);
+  white-space: nowrap;
+  text-shadow: none;
+}
+.c7t-npc .c7t-section-head .c7t-btn {
+  margin-left: auto;
+  padding: 2px 8px;
+  font-size: 10.5px;
+  color: rgba(240, 228, 198, 0.82);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(196, 175, 126, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 244, 214, 0.1);
+  text-shadow: none;
+}
+.c7t-npc .c7t-section-head .c7t-btn i {
+  color: rgba(226, 208, 168, 0.8);
+}
+.c7t-npc .c7t-section-head .c7t-btn:hover {
+  color: #fff3df;
+  background: rgba(192, 173, 129, 0.22);
+  border-color: rgba(226, 208, 168, 0.7);
+  box-shadow: 0 0 8px rgba(226, 208, 168, 0.22);
+}
+.c7t-npc .c7t-section-add-btn {
+  padding: 2px 9px;
+}
+
+/* 天赋列表：档案条目 */
+.c7t-npc .c7t-talents {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  padding: 2px 0;
+}
+.c7t-npc .c7t-talent {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
   height: auto;
   min-height: 0;
   line-height: normal;
-  gap: 2px;
-  width: 100%;
-  padding: 7px 12px;
+  padding: 8px 12px 9px;
   cursor: pointer;
   text-align: left;
   font: inherit;
   color: var(--c7t-text);
   background: transparent;
   border: 0;
-  border-bottom: 1px solid var(--c7t-line-soft);
+  border-bottom: 1px dotted var(--c7t-line);
   border-left: 2px solid transparent;
+  transition: background var(--c7t-trans), border-color var(--c7t-trans);
+}
+.c7t-npc .c7t-talent:last-child {
+  border-bottom: 0;
+}
+.c7t-npc .c7t-talent:hover {
+  background: linear-gradient(90deg, rgba(169, 134, 63, 0.16), rgba(169, 134, 63, 0.03) 70%);
+  border-left-color: var(--c7t-brass);
+}
+.c7t-npc .c7t-talent-ico {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  margin-top: 1px;
+  overflow: hidden;
+  color: var(--c7t-gold-strong);
+  background: var(--npc-paper-sheen), var(--c7t-panel-2);
+  border: 1px solid var(--npc-brass-line);
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   transition: all var(--c7t-trans);
 }
-.c7t-npc .c7t-talent:last-child { border-bottom: 0; }
-.c7t-npc .c7t-talent:hover { background: rgba(192, 173, 129, .16); border-left-color: var(--c7t-accent); }
-.c7t-npc .c7t-talent-name { font-size: 12.5px; font-weight: 700; color: var(--c7t-text); }
-.c7t-npc .c7t-talent-desc { font-size: 11.5px; line-height: 1.5; color: var(--c7t-text-dim); }
-.c7t-npc .c7t-talent:hover .c7t-talent-name { color: var(--c7t-accent); }
-.coc7-tidy.theme-dark .c7t-npc .c7t-talent:hover .c7t-talent-name { color: var(--c7t-gold); }
+.c7t-npc .c7t-talent-ico img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.c7t-npc .c7t-talent-ico i {
+  font-size: 10px;
+}
+.c7t-npc .c7t-talent:hover .c7t-talent-ico {
+  color: #fdf3dd;
+  background: linear-gradient(180deg, var(--c7t-accent-soft), var(--c7t-accent));
+  border-color: var(--c7t-accent-deep);
+  box-shadow: 0 0 8px rgba(110, 29, 38, 0.35);
+}
+.c7t-npc .c7t-talent-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.c7t-npc .c7t-talent-name {
+  font-family: var(--c7t-font-body);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--c7t-text);
+  transition: color var(--c7t-trans);
+}
+.c7t-npc .c7t-talent:hover .c7t-talent-name {
+  color: var(--c7t-accent);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-talent:hover .c7t-talent-name {
+  color: var(--c7t-brass-light);
+}
+.c7t-npc .c7t-talent-desc {
+  font-family: var(--c7t-font-long);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--c7t-text-dim);
+}
+.c7t-npc .c7t-talent-caret {
+  align-self: center;
+  flex: 0 0 auto;
+  font-size: 9px;
+  color: var(--c7t-line-strong);
+  opacity: 0.5;
+  transition: all var(--c7t-trans);
+}
+.c7t-npc .c7t-talent:hover .c7t-talent-caret {
+  color: var(--c7t-accent);
+  opacity: 1;
+  transform: translateX(2px);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-talent:hover .c7t-talent-caret {
+  color: var(--c7t-brass-light);
+}
 
-.c7t-npc .c7t-movrows { display: flex; flex-direction: column; padding: 2px 10px 9px; }
+/* 移动方式：小型账目行 */
+.c7t-npc .c7t-movrows {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 12px 11px;
+}
 .c7t-npc .c7t-movrow {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  border-bottom: 1px dashed var(--c7t-line-soft);
+  gap: 10px;
+  padding: 6px 2px;
+  border-bottom: 1px dotted var(--c7t-line);
 }
-.c7t-npc .c7t-movrow:last-of-type { border-bottom: 0; }
+.c7t-npc .c7t-movrow:last-of-type {
+  border-bottom: 0;
+}
 .c7t-npc .c7t-movrow-label {
-  width: 64px;
+  width: 78px;
   flex: 0 0 auto;
-  font-size: 10px;
+  font-family: var(--c7t-font-body);
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: .1em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--c7t-gold-strong);
+  white-space: nowrap;
 }
 .c7t-npc .c7t-movrow-value {
-  width: 48px;
-  padding: 2px 3px;
+  width: 54px;
+  height: 25px;
+  padding: 1px 4px 0;
   text-align: center;
-  font: inherit;
+  font-family: var(--c7t-font-body);
   font-size: 13px;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
   color: var(--c7t-text);
-  background: var(--c7t-panel);
-  border: 1px solid var(--c7t-line);
-  border-radius: 2px;
-  outline: 0;
-}
-.c7t-npc .c7t-movrow-value:focus { border-color: var(--c7t-accent); }
-.c7t-npc .c7t-movrow-type {
-  padding: 2px 5px;
-  font: inherit;
-  font-size: 11.5px;
-  color: var(--c7t-text);
-  background: var(--c7t-panel);
-  border: 1px solid var(--c7t-line);
-  border-radius: 2px;
-  outline: 0;
-}
-.c7t-npc .c7t-movrow-type.view-only { border: 0; background: transparent; color: var(--c7t-text-dim); }
-.c7t-npc .c7t-movrow-value.view-only { border: 0; background: transparent; padding: 0 2px; font-weight: 700; text-align: left; }
-.c7t-npc .c7t-movrow-auto { font-size: 10px; color: var(--c7t-text-mute); }
-.c7t-npc .c7t-movrow-add { margin-top: 7px; align-self: flex-start; }
-
-/* ---------- 技能页 ---------- */
-.c7t-npc .c7t-table.npc-skills .c7t-thead,
-.c7t-npc .c7t-table.npc-skills .c7t-row {
-  grid-template-columns: minmax(0, 1fr) 74px 64px 64px 98px;
-}
-.c7t-npc .c7t-table.npc-skills .c7t-row .col-val { text-align: right; padding-right: 6px; }
-.c7t-npc .c7t-table.npc-skills .c7t-row .col-val.is-strong { font-size: 14px; font-weight: 700; color: var(--c7t-text); }
-.c7t-npc .c7t-skill-input {
-  width: 52px;
-  margin-left: auto;
-  padding: 2px 3px;
-  text-align: right;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--c7t-text);
-  background: var(--c7t-panel);
+  background: var(--npc-inset-field);
   border: 1px solid var(--c7t-line-strong);
   border-radius: 2px;
+  box-shadow: var(--c7t-shadow-field);
   outline: 0;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--c7t-trans), box-shadow var(--c7t-trans);
 }
-.c7t-npc .c7t-skill-input:focus { border-color: var(--c7t-accent); }
-.c7t-npc .c7t-table.npc-skills .col-act { display: flex; justify-content: flex-end; gap: 2px; }
+.c7t-npc .c7t-movrow-value:hover {
+  border-color: var(--c7t-brass);
+}
+.c7t-npc .c7t-movrow-value:focus {
+  border-color: var(--c7t-accent);
+  box-shadow:
+    0 0 0 2px rgba(110, 29, 38, 0.14),
+    var(--c7t-shadow-field);
+}
+.c7t-npc .c7t-movrow-type {
+  height: 25px;
+  max-width: 150px;
+  padding: 0 22px 0 6px;
+  font-family: var(--c7t-font-body);
+  font-size: 11.5px;
+  color: var(--c7t-text);
+  background-color: var(--c7t-panel);
+  background-image:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23785b28' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+    var(--npc-paper-sheen);
+  background-repeat: no-repeat, no-repeat;
+  background-position: right 7px center, center;
+  background-size: 10px 6px, 100% 100%;
+  border: 1px solid var(--c7t-line-strong);
+  border-radius: 2px;
+  box-shadow: var(--c7t-shadow-field);
+  outline: 0;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color var(--c7t-trans), box-shadow var(--c7t-trans);
+}
+.c7t-npc .c7t-movrow-type:hover {
+  border-color: var(--c7t-brass);
+}
+.c7t-npc .c7t-movrow-type:focus {
+  border-color: var(--c7t-accent);
+  box-shadow:
+    0 0 0 2px rgba(110, 29, 38, 0.14),
+    var(--c7t-shadow-field);
+}
+.c7t-npc .c7t-movrow-type.view-only {
+  display: inline-flex;
+  align-items: center;
+  height: auto;
+  max-width: none;
+  padding: 1px 8px;
+  font-size: 11px;
+  color: var(--c7t-brass-deep);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)), var(--c7t-panel-2);
+  border: 1px solid var(--c7t-line);
+  box-shadow: none;
+  border-radius: 2px;
+}
+.c7t-npc .c7t-movrow-value.view-only {
+  width: auto;
+  height: auto;
+  padding: 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left;
+  color: var(--c7t-text);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.c7t-npc .c7t-movrow-auto {
+  font-size: 10px;
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-movrow .c7t-auto-gear {
+  color: var(--c7t-gold-strong);
+  background: transparent;
+  border-color: transparent;
+}
+.c7t-npc .c7t-movrow .c7t-auto-gear:hover {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.18);
+  border-color: var(--c7t-line);
+}
+.c7t-npc .c7t-movrow .c7t-auto-gear.is-on {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.16);
+  border-color: var(--c7t-line-strong);
+  box-shadow: none;
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-movrow .c7t-auto-gear.is-on {
+  color: var(--c7t-brass-light);
+}
+.c7t-npc .c7t-movrow .c7t-icon-btn {
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-movrow .c7t-icon-btn:hover {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.2);
+}
+.c7t-npc .c7t-movrow-add {
+  align-self: flex-start;
+  margin-top: 9px;
+}
 
-/* ---------- 物品页 ---------- */
+/* ============================================================
+   公式模式：特性公式输入（横幅）
+   ============================================================ */
+.c7t-npc .c7t-ability-value-row.is-formula {
+  top: 33px;
+  width: 86px;
+}
+.c7t-npc .c7t-ability-value-row.is-formula::before,
+.c7t-npc .c7t-ability-value-row.is-formula::after {
+  display: none;
+}
+/* 公式输入：写成一道「题线」，而不是又一只输入框 */
+.c7t-npc .c7t-ability-input.is-formula {
+  height: 24px;
+  padding: 2px 4px 0;
+  text-align: center;
+  font-family: var(--c7t-font-long);
+  font-style: italic;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: #f0dfb4;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(226, 208, 168, 0.5);
+  border-radius: 0;
+  box-shadow: none;
+  outline: 0;
+  transition: background var(--c7t-trans), border-color var(--c7t-trans), box-shadow var(--c7t-trans);
+}
+.c7t-npc .c7t-ability-input.is-formula:hover {
+  background: rgba(0, 0, 0, 0.18);
+  border-bottom-color: rgba(226, 208, 168, 0.75);
+}
+.c7t-npc .c7t-ability-input.is-formula::placeholder {
+  color: rgba(226, 208, 168, 0.42);
+  font-style: italic;
+}
+.c7t-npc .c7t-ability-input.is-formula:focus {
+  background: rgba(0, 0, 0, 0.34);
+  border-bottom-color: #e2d0a8;
+  box-shadow:
+    0 2px 7px rgba(0, 0, 0, 0.32),
+    0 0 0 2px rgba(226, 208, 168, 0.12);
+}
+.c7t-npc .c7t-ability-fx {
+  position: absolute;
+  top: 9px;
+  right: 14px;
+  z-index: 3;
+  font-family: var(--c7t-font-long);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--c7t-brass-light);
+  text-shadow: 0 0 6px rgba(226, 208, 168, 0.35);
+  pointer-events: none;
+}
+.c7t-npc .c7t-ability.is-empty .c7t-ability-value {
+  color: var(--bn-mute);
+  text-shadow: none;
+}
+.c7t-npc .c7t-ability.is-empty .c7t-ability-shield {
+  opacity: 0.82;
+}
+
+/* ============================================================
+   技能页
+   ============================================================ */
+.c7t-npc .c7t-table.npc-skills .c7t-thead,
+.c7t-npc .c7t-table.npc-skills .c7t-row {
+  grid-template-columns: minmax(0, 1fr) 78px 62px 62px 64px;
+}
+.c7t-npc .c7t-table.npc-skills .c7t-thead .col-val,
+.c7t-npc .c7t-table.npc-skills .c7t-thead .col-half,
+.c7t-npc .c7t-table.npc-skills .c7t-thead .col-fifth {
+  color: var(--c7t-on-ink);
+}
+.c7t-npc .c7t-table.npc-skills .c7t-row .col-val.is-strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--c7t-text);
+}
+.c7t-npc .c7t-table.npc-skills .c7t-row .col-half,
+.c7t-npc .c7t-table.npc-skills .c7t-row .col-fifth {
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-skill-input {
+  width: 54px;
+  height: 24px;
+  margin-left: auto;
+  padding: 1px 5px 0;
+  text-align: right;
+  font-family: var(--c7t-font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c7t-text);
+  background: var(--npc-inset-field);
+  border: 1px solid var(--c7t-line-strong);
+  border-radius: 2px;
+  box-shadow: var(--c7t-shadow-field);
+  outline: 0;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--c7t-trans), box-shadow var(--c7t-trans);
+}
+.c7t-npc .c7t-skill-input:hover {
+  border-color: var(--c7t-brass);
+}
+.c7t-npc .c7t-skill-input:focus {
+  border-color: var(--c7t-accent);
+  box-shadow:
+    0 0 0 2px rgba(110, 29, 38, 0.14),
+    var(--c7t-shadow-field);
+}
+/* 搜索框内的放大镜（模板里是 <i>，不是 svg） */
+.c7t-npc .c7t-search {
+  width: 208px;
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-search i {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--c7t-gold-strong);
+}
+.c7t-npc .c7t-search:focus-within i {
+  color: var(--c7t-accent);
+}
+.c7t-npc .c7t-search input {
+  padding: 0;
+  background: transparent;
+}
+.c7t-npc .c7t-seg-btn {
+  border-color: var(--c7t-line);
+  background: var(--npc-inset-field);
+  box-shadow: var(--c7t-shadow-field);
+}
+.c7t-npc .c7t-seg-btn i {
+  color: var(--c7t-gold-strong);
+}
+.c7t-npc .c7t-seg-btn:hover {
+  border-color: var(--c7t-brass);
+  color: var(--c7t-text);
+}
+.c7t-npc .c7t-seg-btn.is-warn {
+  color: var(--c7t-accent);
+  border-color: var(--c7t-accent);
+}
+.c7t-npc .c7t-skill-group-head,
+.c7t-npc .c7t-table .c7t-thead {
+  /* 保持共享样式，不做覆盖 */
+}
+
+/* ============================================================
+   物品页
+   ============================================================ */
+.c7t-npc .c7t-group + .c7t-group {
+  margin-top: 8px;
+}
 .c7t-npc .c7t-group-title {
   flex: 1;
   min-width: 0;
-  font-size: 12px;
+  font-family: var(--c7t-font-display);
+  font-size: 11.5px;
   font-weight: 700;
-  color: var(--c7t-gold-strong);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c7t-brass-deep);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.c7t-npc .c7t-group-head .c7t-icon-btn { width: 20px; height: 20px; color: var(--c7t-gold-strong); }
-.c7t-npc .c7t-group-head .c7t-icon-btn:hover { color: var(--c7t-accent); background: rgba(192, 173, 129, .22); }
-.c7t-npc .c7t-items-list .c7t-row .col-act { opacity: 0; margin-left: 6px; }
-.c7t-npc .c7t-items-list .c7t-row:hover .col-act { opacity: 1; }
-.c7t-npc .c7t-qty-input {
-  width: 42px;
-  margin-left: auto;
-  padding: 1px 3px;
+.c7t-npc .c7t-group-meta {
+  padding: 0 2px;
+  min-width: 14px;
   text-align: center;
-  font: inherit;
+  font-family: var(--c7t-font-body);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 15px;
+  color: var(--c7t-brass-deep);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-variant-numeric: tabular-nums;
+}
+.c7t-npc .c7t-group-meta::before {
+  content: "· ";
+  opacity: 0.6;
+}
+.c7t-npc .c7t-group-head .c7t-icon-btn {
+  width: 20px;
+  height: 20px;
+  color: var(--c7t-gold-strong);
+  border: 1px solid var(--npc-brass-line-soft);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.c7t-npc .c7t-group-head .c7t-icon-btn:hover {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.2);
+}
+.c7t-npc .c7t-group-toggle {
+  color: var(--c7t-brass-deep);
+  opacity: 0.9;
+}
+.c7t-npc .c7t-group-toggle:hover {
+  color: var(--c7t-accent);
+}
+.c7t-npc .c7t-items-list .c7t-row {
+  gap: 8px;
+  padding-left: 4px;
+}
+.c7t-npc .c7t-items-list .c7t-row .col-act {
+  opacity: 0.35;
+}
+.c7t-npc .c7t-items-list .c7t-row:hover .col-act {
+  opacity: 1;
+}
+.c7t-npc .c7t-items-list .c7t-row .c7t-icon-btn {
+  width: 21px;
+  height: 21px;
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-items-list .c7t-row .c7t-icon-btn:hover {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.2);
+}
+.c7t-npc .c7t-items-list .c7t-row .c7t-row-note {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 1px 7px;
+  font-size: 10.5px;
+  color: var(--c7t-text-mute);
+  border: 1px solid var(--c7t-line);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.24);
+}
+/* 数量输入：×N */
+.c7t-npc .c7t-qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+.c7t-npc .c7t-qty-mark {
+  font-family: var(--c7t-font-body);
+  font-size: 10.5px;
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-qty-input {
+  width: 44px;
+  height: 22px;
+  margin-left: 0;
+  padding: 1px 3px 0;
+  text-align: center;
+  font-family: var(--c7t-font-body);
   font-size: 12px;
   color: var(--c7t-text);
-  background: var(--c7t-panel);
+  background: var(--npc-inset-field);
   border: 1px solid var(--c7t-line-strong);
   border-radius: 2px;
+  box-shadow: var(--c7t-shadow-field);
   outline: 0;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--c7t-trans), box-shadow var(--c7t-trans);
+}
+.c7t-npc .c7t-qty-input:focus {
+  border-color: var(--c7t-accent);
+  box-shadow:
+    0 0 0 2px rgba(110, 29, 38, 0.14),
+    var(--c7t-shadow-field);
+}
+/* 拖动排序：编辑态行首的三点握把 */
+.c7t-npc .c7t-items-list .c7t-row[draggable="true"]::before {
+  content: "";
+  width: 5px;
+  height: 13px;
+  flex: 0 0 5px;
+  opacity: 0.55;
+  background-image: radial-gradient(var(--c7t-line-strong) 1px, transparent 1.1px);
+  background-size: 3px 3px;
+  background-position: center;
+}
+.c7t-npc .c7t-row.is-dragging {
+  opacity: 0.45;
 }
 
-/* ---------- 描述页 ---------- */
+/* ============================================================
+   描述页
+   ============================================================ */
+.c7t-npc .c7t-npc-cols {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 12px;
+}
+.c7t-npc .c7t-npc-cols.is-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+.c7t-npc .c7t-field {
+  align-items: center;
+  gap: 9px;
+  padding: 7px 11px;
+  box-shadow:
+    var(--c7t-shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.c7t-npc .c7t-field span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--c7t-gold-strong);
+}
+.c7t-npc .c7t-field span::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  flex: 0 0 auto;
+  background: var(--c7t-brass);
+  transform: rotate(45deg);
+  opacity: 0.7;
+}
+.c7t-npc .c7t-field b {
+  font-family: var(--c7t-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c7t-text);
+}
 .c7t-npc .c7t-field-input {
   flex: 1;
   min-width: 0;
-  padding: 1px 4px;
-  font: inherit;
+  height: 25px;
+  padding: 1px 6px 0;
+  font-family: var(--c7t-font-body);
   font-size: 12.5px;
   color: var(--c7t-text);
-  background: var(--c7t-panel);
+  background: var(--npc-inset-field);
   border: 1px solid var(--c7t-line-strong);
   border-radius: 2px;
+  box-shadow: var(--c7t-shadow-field);
+  outline: 0;
+  transition: border-color var(--c7t-trans), box-shadow var(--c7t-trans);
+}
+.c7t-npc .c7t-field-input:hover {
+  border-color: var(--c7t-brass);
+}
+.c7t-npc .c7t-field-input:focus {
+  border-color: var(--c7t-accent);
+  box-shadow:
+    0 0 0 2px rgba(110, 29, 38, 0.14),
+    var(--c7t-shadow-field);
+}
+/* 传记正文：老式打字稿纸 */
+.c7t-npc .c7t-npc-prose {
+  font-family: var(--c7t-font-long);
+  font-size: 13.5px;
+  line-height: 1.72;
+  color: var(--c7t-text);
+}
+.c7t-npc .c7t-section > .c7t-prose.c7t-npc-prose {
+  padding: 13px 16px 15px;
+  background:
+    linear-gradient(90deg, rgba(169, 134, 63, 0.1) 0 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 40%);
+  background-position: 26px 0, 0 0;
+  background-repeat: no-repeat, no-repeat;
+}
+.c7t-npc .c7t-npc-prose p {
+  margin: 0 0 0.8em;
+}
+.c7t-npc .c7t-npc-prose p:last-child {
+  margin-bottom: 0;
+}
+.c7t-npc .c7t-npc-prose a {
+  color: var(--c7t-accent);
+  text-decoration-color: rgba(110, 29, 38, 0.4);
+}
+/* prose-mirror 编辑面：去掉 Foundry 默认编辑器外框 */
+.c7t-npc prose-mirror.c7t-npc-prose {
+  display: flex;
+  flex-direction: column;
+  min-height: 118px;
+  margin: 0;
+  font-family: var(--c7t-font-long);
+  font-size: 13.5px;
+  line-height: 1.72;
+  color: var(--c7t-text);
+}
+.c7t-npc prose-mirror.c7t-npc-prose .menu-container {
+  border-bottom: 1px solid var(--c7t-line-soft);
+  background: rgba(169, 134, 63, 0.06);
+}
+.c7t-npc prose-mirror.c7t-npc-prose menu button {
+  color: var(--c7t-text-dim);
+}
+.c7t-npc prose-mirror.c7t-npc-prose menu button:hover,
+.c7t-npc prose-mirror.c7t-npc-prose menu button.active {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.16);
+}
+.c7t-npc prose-mirror.c7t-npc-prose .editor-container {
+  min-height: 104px;
+  padding: 2px 0;
+}
+.c7t-npc prose-mirror.c7t-npc-prose .editor-content {
+  padding: 10px 16px 13px;
+}
+.c7t-npc prose-mirror.c7t-npc-prose .ProseMirror {
   outline: 0;
 }
-.c7t-npc .c7t-field-input:focus { border-color: var(--c7t-accent); }
-.c7t-npc prose-mirror.c7t-npc-prose { display: block; min-height: 110px; }
-.c7t-npc prose-mirror.c7t-npc-prose .editor-container { min-height: 96px; }
-.c7t-npc .c7t-npc-prose { font-family: var(--c7t-font-long); font-size: 13px; line-height: 1.65; color: var(--c7t-text-dim); }
+.c7t-npc prose-mirror.c7t-npc-prose .ProseMirror p {
+  margin: 0 0 0.8em;
+}
+.c7t-npc prose-mirror.c7t-npc-prose:focus-within .editor-content {
+  background: rgba(169, 134, 63, 0.05);
+}
 
-/* ---------- 守秘页 ---------- */
+/* ============================================================
+   守秘页
+   ============================================================ */
 .c7t-npc .c7t-gm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-left: 8px;
-  padding: 1px 7px;
-  font-size: 9.5px;
+  padding: 2px 8px;
+  font-family: var(--c7t-font-body);
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--c7t-accent);
-  border: 1px solid var(--c7t-accent);
-  border-radius: 999px;
-  background: rgba(116, 27, 43, .08);
+  border: 1px solid rgba(110, 29, 38, 0.6);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(110, 29, 38, 0.1), rgba(110, 29, 38, 0.04));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
-.coc7-tidy.theme-dark .c7t-npc .c7t-gm-badge { color: var(--c7t-gold); border-color: var(--c7t-gold); background: rgba(192, 173, 129, .08); }
-.c7t-npc .c7t-section.is-keeper { border-color: var(--c7t-accent); }
+.c7t-npc .c7t-gm-badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: var(--c7t-accent);
+  transform: rotate(45deg);
+  opacity: 0.8;
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-gm-badge {
+  color: var(--c7t-brass-light);
+  border-color: rgba(195, 167, 111, 0.5);
+  background: linear-gradient(180deg, rgba(195, 167, 111, 0.12), rgba(195, 167, 111, 0.03));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-gm-badge::before {
+  background: var(--c7t-brass);
+}
+/* 守秘区：牛血红「封蜡」表头 */
+.c7t-npc .c7t-section.is-keeper {
+  border-color: rgba(110, 29, 38, 0.55);
+  box-shadow:
+    var(--c7t-shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 0 0 1px rgba(110, 29, 38, 0.12);
+}
 .c7t-npc .c7t-section.is-keeper .c7t-section-head {
-  color: var(--c7t-accent);
-  background: linear-gradient(90deg, rgba(116, 27, 43, .18), rgba(192, 173, 129, .06));
+  position: relative;
+  padding-left: 14px;
+  color: #f4ded2;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, #6e1d26 0%, #4f131a 62%, #3a0d13 100%);
+  border-bottom-color: #2c0a0e;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 }
-.coc7-tidy.theme-dark .c7t-npc .c7t-section.is-keeper { border-color: var(--c7t-gold); }
-.coc7-tidy.theme-dark .c7t-npc .c7t-section.is-keeper .c7t-section-head { color: var(--c7t-gold); }
-.c7t-npc .c7t-macros { display: flex; flex-direction: column; padding: 4px 10px 9px; }
+.c7t-npc .c7t-section.is-keeper .c7t-section-head::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  background: var(--c7t-brass-light);
+  transform: rotate(45deg);
+  opacity: 0.8;
+  box-shadow: 0 0 5px rgba(226, 208, 168, 0.4);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-section.is-keeper {
+  border-color: rgba(180, 90, 99, 0.55);
+  box-shadow:
+    var(--c7t-shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(180, 90, 99, 0.16);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-section.is-keeper .c7t-section-head {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, #4a2026 0%, #341419 62%, #240e12 100%);
+  border-bottom-color: #1a090c;
+}
+.c7t-npc .c7t-section.is-keeper > .c7t-prose.c7t-npc-prose {
+  padding: 13px 16px 15px;
+}
+/* 骰子宏：可拖入的虚线投放区 + 铜框宏条 */
+.c7t-npc .c7t-macros {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 12px 11px;
+}
 .c7t-npc .c7t-macro-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  border-bottom: 1px dashed var(--c7t-line-soft);
+  gap: 9px;
+  padding: 6px 7px;
+  border-bottom: 1px dotted var(--c7t-line);
+  border-left: 2px solid transparent;
+  transition: background var(--c7t-trans), border-color var(--c7t-trans);
 }
-.c7t-npc .c7t-macro-row:last-of-type { border-bottom: 0; }
-.c7t-npc .c7t-macro-row.is-missing { opacity: .55; }
-.c7t-npc .c7t-macro-name { flex: 1; min-width: 0; font-size: 12.5px; color: var(--c7t-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.c7t-npc .c7t-macro-row .c7t-icon-btn { color: var(--c7t-gold-strong); }
-.c7t-npc .c7t-macro-row .c7t-icon-btn:hover { color: var(--c7t-accent); background: rgba(192, 173, 129, .22); }
-.c7t-npc .c7t-macro-drop-hint { margin-top: 8px; font-size: 10.5px; color: var(--c7t-text-mute); }
-.c7t-npc .c7t-keeper-actions { display: flex; align-items: center; gap: 10px; padding: 10px; }
+.c7t-npc .c7t-macro-row:last-of-type {
+  border-bottom: 0;
+}
+.c7t-npc .c7t-macro-row:hover {
+  background: rgba(169, 134, 63, 0.12);
+  border-left-color: var(--c7t-brass);
+}
+.c7t-npc .c7t-macro-row.is-missing {
+  opacity: 0.55;
+}
+.c7t-npc .c7t-macro-row .c7t-row-ico {
+  width: 21px;
+  height: 21px;
+}
+.c7t-npc .c7t-macro-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--c7t-font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--c7t-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.c7t-npc .c7t-macro-row .c7t-icon-btn {
+  width: 22px;
+  height: 22px;
+  color: var(--c7t-gold-strong);
+}
+.c7t-npc .c7t-macro-row .c7t-icon-btn:hover {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.2);
+}
+.c7t-npc .c7t-macro-row .c7t-icon-btn[data-action="executeMacro"] {
+  color: #fdf3dd;
+  background: linear-gradient(180deg, var(--c7t-accent-soft), var(--c7t-accent) 62%, var(--c7t-accent-deep));
+  border: 1px solid var(--c7t-accent-deep);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 190, 0.3),
+    0 1px 2px rgba(40, 10, 10, 0.3);
+}
+.c7t-npc .c7t-macro-row .c7t-icon-btn[data-action="executeMacro"]:hover {
+  color: #fff;
+  filter: brightness(1.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 214, 190, 0.36),
+    0 0 9px rgba(110, 29, 38, 0.45);
+}
+.c7t-npc .c7t-macro-row .c7t-icon-btn[data-action="executeMacro"] i {
+  font-size: 9.5px;
+}
+.c7t-npc .c7t-macro-drop-hint {
+  margin-top: 9px;
+  padding: 7px 10px;
+  font-family: var(--c7t-font-long);
+  font-size: 11px;
+  font-style: italic;
+  text-align: center;
+  color: var(--c7t-text-mute);
+  border: 1px dashed var(--c7t-line-strong);
+  border-radius: 3px;
+  background: rgba(169, 134, 63, 0.045);
+}
+.c7t-npc .c7t-keeper-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+}
+.c7t-npc .c7t-keeper-actions .c7t-btn:hover {
+  color: var(--c7t-accent);
+  border-color: var(--c7t-accent);
+  background:
+    linear-gradient(180deg, rgba(141, 44, 55, 0.12), rgba(141, 44, 55, 0.03)),
+    var(--c7t-panel);
+}
 
-/* ---------- 空状态 / 紧凑模式 ---------- */
-.c7t-npc .c7t-empty-slim { padding: 18px 12px; }
-.c7t-npc .c7t-empty-slim p { font-size: 11.5px; }
-.c7t-npc .c7t-sheet.is-compact .c7t-talent { padding: 5px 10px; }
-.c7t-npc .c7t-sheet.is-compact .c7t-movrow { padding: 3px 0; }
-.c7t-npc .c7t-sheet.is-compact .c7t-combat-strip { padding: 5px 7px; margin-bottom: 7px; }
+/* ============================================================
+   效果页（共享模板，仅做 NPC 局部材质）
+   ============================================================ */
+.c7t-npc .c7t-table.effects {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+.c7t-npc .c7t-table.effects::before {
+  display: none;
+}
+.c7t-npc .c7t-table.effects .c7t-row {
+  height: 36px;
+  gap: 10px;
+  background:
+    var(--npc-paper-sheen),
+    radial-gradient(140% 180% at 0% 0%, rgba(169, 134, 63, 0.09), transparent 58%),
+    var(--c7t-panel);
+  border: 1px solid var(--c7t-line);
+  border-left: 3px solid var(--c7t-brass);
+  border-radius: var(--c7t-radius-sm);
+  box-shadow:
+    var(--c7t-shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: background var(--c7t-trans), border-color var(--c7t-trans), box-shadow var(--c7t-trans);
+}
+.c7t-npc .c7t-table.effects .c7t-row:nth-child(even) {
+  background:
+    var(--npc-paper-sheen),
+    radial-gradient(140% 180% at 0% 0%, rgba(169, 134, 63, 0.09), transparent 58%),
+    var(--c7t-panel);
+}
+.c7t-npc .c7t-table.effects .c7t-row:hover {
+  border-color: var(--c7t-line-strong);
+  border-left-color: var(--c7t-accent);
+  box-shadow: var(--c7t-shadow-float);
+  transform: translateY(-1px);
+}
+.c7t-npc .c7t-table.effects .c7t-empty {
+  border: 1px dashed var(--c7t-line-strong);
+  border-radius: var(--c7t-radius);
+  background: rgba(255, 255, 255, 0.18);
+  padding: 36px 12px;
+}
+.c7t-npc .c7t-table.effects .c7t-row .c7t-row-ico {
+  width: 21px;
+  height: 21px;
+}
+.c7t-npc .c7t-table.effects .c7t-row .c7t-row-name {
+  font-family: var(--c7t-font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--c7t-text);
+}
+.c7t-npc .c7t-table.effects .c7t-row .c7t-row-name:hover {
+  color: var(--c7t-accent);
+}
+.c7t-npc .c7t-table.effects .c7t-row .c7t-icon-btn {
+  width: 22px;
+  height: 22px;
+  color: var(--c7t-gold-strong);
+}
+.c7t-npc .c7t-table.effects .c7t-row .c7t-icon-btn:hover {
+  color: var(--c7t-accent);
+  background: rgba(169, 134, 63, 0.2);
+}
+.c7t-npc .c7t-table.effects .c7t-row .c7t-icon-btn i {
+  font-size: 12px;
+}
+.c7t-npc .c7t-table.effects .c7t-row.is-disabled {
+  opacity: 0.6;
+}
+.c7t-npc .c7t-table.effects .c7t-row.is-disabled .c7t-row-name {
+  color: var(--c7t-text-mute);
+  text-decoration: line-through;
+  text-decoration-color: rgba(124, 109, 82, 0.55);
+  text-decoration-thickness: 1px;
+}
 
-/* ---------- 窄窗：隐藏次要武器列 ---------- */
+/* ============================================================
+   通用：工具条提示 / 表尾注记 / 空状态
+   ============================================================ */
+.c7t-npc .c7t-toolbar {
+  gap: 9px;
+  margin-bottom: 10px;
+}
+.c7t-npc .c7t-toolbar-hint {
+  font-family: var(--c7t-font-long);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--c7t-text-mute);
+}
+.c7t-npc .c7t-table-foot {
+  margin-top: 9px;
+  padding: 8px 4px 0;
+  font-family: var(--c7t-font-long);
+  font-size: 11px;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--c7t-text-mute);
+  border-top: 1px dashed var(--c7t-line);
+}
+.c7t-npc .c7t-empty-slim {
+  padding: 20px 12px 22px;
+}
+.c7t-npc .c7t-empty-slim b {
+  font-size: 12.5px;
+}
+.c7t-npc .c7t-empty-slim p {
+  font-size: 11.5px;
+}
+/* 表格里的空状态不叠虚线框 */
+.c7t-npc .c7t-table .c7t-empty {
+  border: 0;
+  background: none;
+  padding: 30px 12px;
+}
+
+/* ============================================================
+   紧凑模式
+   ============================================================ */
+.c7t-sheet.is-compact .c7t-npc .c7t-combat-strip {
+  margin-bottom: 9px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-strip-item {
+  padding: 6px 10px 7px 12px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-strip-figure {
+  font-size: 19px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-strip-meta {
+  padding-top: 4px;
+  padding-bottom: 5px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-talent {
+  padding: 6px 11px 7px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-talent-desc {
+  font-size: 11.5px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-movrow {
+  padding: 4px 2px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-combat-pill {
+  min-height: 27px;
+  padding: 2px 2px 2px 9px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-combat-pill .value {
+  font-size: 12px;
+}
+.c7t-sheet.is-compact .c7t-npc .c7t-coin {
+  width: 21px;
+  height: 21px;
+  flex-basis: 21px;
+}
+
+/* ============================================================
+   装饰：纸面右下角线角饰（与调查员卡背景卡同一语言）
+   ============================================================ */
+.c7t-npc .c7t-combat-strip::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid var(--npc-brass-line);
+  border-bottom: 1px solid var(--npc-brass-line);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.c7t-npc .c7t-strip-meta {
+  padding-right: 24px;
+}
+.c7t-npc .c7t-section:has(> .c7t-npc-prose) {
+  position: relative;
+}
+.c7t-npc .c7t-section:has(> .c7t-npc-prose)::after {
+  content: "";
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  width: 13px;
+  height: 13px;
+  border-right: 1px solid var(--npc-brass-line);
+  border-bottom: 1px solid var(--npc-brass-line);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 焦点可见性：键盘导航时黄铜描边 */
+.c7t-npc .c7t-btn:focus-visible,
+.c7t-npc .c7t-seg-btn:focus-visible {
+  outline: 2px solid var(--c7t-brass);
+  outline-offset: 1px;
+}
+.c7t-npc .c7t-talent:focus-visible {
+  outline: 2px solid var(--c7t-brass);
+  outline-offset: -2px;
+  background: linear-gradient(90deg, rgba(169, 134, 63, 0.16), rgba(169, 134, 63, 0.03) 70%);
+}
+.c7t-npc .c7t-dmg-btn:focus-visible {
+  outline: 2px solid var(--c7t-brass);
+  outline-offset: 1px;
+}
+.c7t-npc .c7t-icon-btn:focus-visible {
+  outline: 2px solid var(--c7t-brass);
+  outline-offset: 1px;
+}
+
+/* ============================================================
+   窄窗适配（内容容器）
+   ============================================================ */
 @container (max-width: 820px) {
-  .c7t-npc .c7t-strip-meta { display: none; }
+  .c7t-npc .c7t-strip-item {
+    flex: 1 1 150px;
+    padding-left: 12px;
+    padding-right: 10px;
+  }
+  .c7t-npc .c7t-strip-label::after {
+    min-width: 6px;
+  }
 }
 @container (max-width: 720px) {
+  .c7t-npc .c7t-strip-meta {
+    display: none;
+  }
+  /* 武器表：隐藏备选技能 / 弹药 / 故障；技能列加宽避免截断 */
   .c7t-npc .c7t-table.npc-weapons .c7t-thead,
   .c7t-npc .c7t-table.npc-weapons .c7t-row {
-    grid-template-columns: minmax(0, 1fr) 104px 96px 58px 84px;
+    grid-template-columns: minmax(0, 1fr) 120px 88px 52px 94px;
   }
   .c7t-npc .c7t-table.npc-weapons .col-alt,
   .c7t-npc .c7t-table.npc-weapons .col-ammo,
-  .c7t-npc .c7t-table.npc-weapons .col-malf { display: none; }
+  .c7t-npc .c7t-table.npc-weapons .col-malf {
+    display: none;
+  }
+  .c7t-npc .c7t-table.npc-weapons .col-skill,
+  .c7t-npc .c7t-table.npc-weapons .col-dmg,
+  .c7t-npc .c7t-table.npc-weapons .col-range {
+    font-size: 11px;
+    padding-right: 6px;
+  }
+  .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-skill,
+  .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-dmg,
+  .c7t-npc .c7t-table.npc-weapons .c7t-thead .col-range {
+    padding-right: 6px;
+  }
   .c7t-npc .c7t-strip-hint,
-  .c7t-npc .c7t-strip-meta { display: none; }
+  .c7t-npc .c7t-strip-meta {
+    display: none;
+  }
+  .c7t-npc .c7t-table.npc-skills .c7t-thead,
+  .c7t-npc .c7t-table.npc-skills .c7t-row {
+    grid-template-columns: minmax(0, 1fr) 70px 54px 54px 58px;
+  }
+  .c7t-npc .c7t-search {
+    width: 168px;
+  }
 }
 @container (max-width: 620px) {
-  .c7t-npc .c7t-toolbar-hint { display: none; }
-  .c7t-npc .c7t-movrow-label { width: 52px; font-size: 9px; }
+  .c7t-npc .c7t-toolbar-hint {
+    display: none;
+  }
+  .c7t-npc .c7t-movrow-label {
+    width: 58px;
+    font-size: 9px;
+  }
+  .c7t-npc .c7t-movrow-type {
+    max-width: 108px;
+  }
+  .c7t-npc .c7t-strip-item {
+    flex: 1 1 100%;
+    border-top: 1px solid var(--c7t-line-soft);
+  }
+  .c7t-npc .c7t-strip-item + .c7t-strip-item::before {
+    display: none;
+  }
+  .c7t-npc .c7t-strip-item:first-child {
+    border-top: 0;
+  }
+}
+/* 横幅容器：窄窗压缩战斗小牌，保证 SAN / 护甲不折行溢出 */
+@container c7t-banner (max-width: 730px) {
+  .c7t-npc .c7t-combatbar {
+    gap: 5px;
+  }
+  .c7t-npc .c7t-combat-pill {
+    gap: 6px;
+    padding-left: 9px;
+  }
+  .c7t-npc .c7t-combat-pill .label {
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+  }
+  .c7t-npc .c7t-combat-pill .value {
+    font-size: 12px;
+    padding-left: 6px;
+  }
+  .c7t-npc .c7t-combat-pill .value b {
+    font-size: 13px;
+  }
+  .c7t-npc .c7t-strip-figure {
+    font-size: 20px;
+  }
+}
+
+/* ============================================================
+   暗色主题局部修正
+   ============================================================ */
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-title,
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-meta,
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-toggle,
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-movrow-type.view-only {
+  color: var(--c7t-brass-light);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-toggle:hover {
+  color: var(--c7t-brass-light);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-combat-strip {
+  background:
+    var(--npc-paper-sheen),
+    radial-gradient(120% 160% at 0% 0%, rgba(195, 167, 111, 0.08), transparent 56%),
+    var(--c7t-panel);
+  box-shadow:
+    var(--c7t-shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-strip-label {
+  color: var(--c7t-gold-strong);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-strip-figure {
+  color: var(--c7t-text);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-strip-item.is-san .c7t-strip-figure {
+  color: var(--c7t-accent-soft);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-strip-meta {
+  background: linear-gradient(90deg, rgba(195, 167, 111, 0.08), transparent 60%);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-meta,
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-items-list .c7t-row .c7t-row-note {
+  background: rgba(255, 255, 255, 0.04);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-talent-ico {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-movrow-type {
+  background-image:
+    url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23c3a76f' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+    var(--npc-paper-sheen);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-section-meta {
+  color: rgba(226, 208, 168, 0.66);
+  border-left-color: rgba(226, 208, 168, 0.24);
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-empty::before {
+  opacity: 0.6;
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-gm-badge {
+  border-color: rgba(195, 167, 111, 0.5);
 }
