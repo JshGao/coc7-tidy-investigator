@@ -1,0 +1,13 @@
+{
+  "name": "c7t-design-tools",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only visual harness for the CoC7 Tidy sheets (not shipped in the module).",
+  "scripts": {
+    "render": "node render.mjs --all",
+    "shots": "node shot.mjs --all"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  }
+}
