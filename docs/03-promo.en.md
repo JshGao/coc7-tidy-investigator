@@ -2,7 +2,7 @@
 
 # The investigator's desktop can be Tidy, too
 
-**CoC7 Tidy Sheets · v0.8.3 release**
+**CoC7 Tidy Sheets · v0.9.0 "Investigator Dossier" release**
 Foundry VTT 14 · Call of Cthulhu 7e (CoC7 ≥ 8.16)
 
 ![Cover](screenshots/cover.png)
@@ -13,6 +13,20 @@ Foundry VTT 14 · Call of Cthulhu 7e (CoC7 ≥ 8.16)
 >
 > Three opt-in actor sheets: Investigator, NPC / Creature and Container.
 > The system's default sheets stay untouched — install, play, switch back anytime.
+
+---
+
+## v0.9: the visual pass
+
+This release brings all three sheets onto one **1920s investigator dossier** language. No feature or data changes:
+
+- **Dark lacquered banner** with brass hairlines and Art Deco corner ornaments; the portrait gets a brass gradient frame
+- **Aged paper content area**: ink table headers, brass section diamonds, card-stock panels — data stays high-contrast
+- **Hand-drawn SVG**: eight shield-shaped characteristic badges, HP / MP / SAN / Luck icons, empty-state star and dossier seal, with no external images
+- **Three locally bundled typefaces**: Cinzel (headings), EB Garamond (rich text), Roboto Condensed (data), with Chinese falling back to Songti / PingFang
+- **Light and dark themes** share one hierarchy; dark is "ink leather with brass reflections", not an inverted light theme
+
+All fonts are SIL Open Font License 1.1 and ship with the module.
 
 ---
 
@@ -77,6 +91,8 @@ Special skills such as Cthulhu Mythos can also be edited by hand.
 
 ![Notes](screenshots/notes.png)
 
+![Effects](screenshots/effects.png)
+
 - Keeper notes, book reading progress, SAN loss events, Mythos flags, clear all conditions in one click
 - Effects tab: create / open / toggle / delete
 - Favorites sidebar, context menus, eight-way window resizing with size memory
@@ -100,6 +116,8 @@ The same Tidy language, arranged the way a Keeper wants it:
 
 ![NPC / Creature · edit mode](screenshots/npc-combat-edit.png)
 
+![NPC / Creature · dark theme](screenshots/npc-dark.png)
+
 ### 9. Container sheet: even the chest deserves to be tidy
 
 A compact sheet for `container` actors: a 96px portrait, item count, chips summarized by type, and four tabs — Contents / Description / Keeper / Effects. Drag items in, edit quantities, reorder by dragging; fully data-compatible with the system's container sheet.
@@ -122,6 +140,7 @@ After installing, enable it under Module Management, then open an actor's Config
 - Data-compatible: uses CoC7's native data structures and adds no extra data
 - No dependencies: pure Handlebars + CSS, no build step
 - Open source: MIT licensed; issues and PRs welcome
+- Fonts: Cinzel / EB Garamond / Roboto Condensed are all OFL 1.1 and ship with the module
 
 Repository: <https://github.com/JshGao/coc7-tidy-investigator>
 
@@ -132,14 +151,16 @@ Repository: <https://github.com/JshGao/coc7-tidy-investigator>
 - CoC7 players who find the default sheet scattered and are always hunting for something mid-session
 - Keepers who want new players to get up to speed quickly
 - Anyone who likes the layout of Tidy 5e Sheets
+- Anyone who wants their character sheet to feel like an archive, not a game HUD
 
 ---
 
 ## Share copy
 
-> **CoC7 Tidy Sheets · v0.8.3**
+> **CoC7 Tidy Sheets · v0.9.0 "Investigator Dossier"**
 >
-> Character sheets that feel more like table tools for CoC7 on Foundry VTT:
+> CoC7 character sheets that feel more like table tools — and look the part:
+> dark lacquered banners / brass hairlines / aged paper / oxblood accents, with Cinzel + EB Garamond + Roboto Condensed bundled locally.
 > Investigator sheet (seven tabs / searchable skills / develop all), NPC / Creature sheet (attacks per round / SAN loss / characteristic formulas) and Container sheet.
 > Opt-in install, the system sheets stay untouched, no extra data.
 >
@@ -150,5 +171,5 @@ Repository: <https://github.com/JshGao/coc7-tidy-investigator>
 
 **One-liner**
 
-> CoC7 character sheets, given the Tidy treatment: Investigator, NPC / Creature and Container sheets, ready for Foundry VTT 14.
+> CoC7 character sheets, given the Tidy treatment and a 1920s dossier look: Investigator, NPC / Creature and Container sheets, ready for Foundry VTT 14.
 > https://github.com/JshGao/coc7-tidy-investigator

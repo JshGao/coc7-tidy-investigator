@@ -7,9 +7,26 @@ Tidy 5e Sheets-style character sheets for **Call of Cthulhu 7e**:
 an **Investigator** sheet, an **NPC / Creature** sheet and a **Container** sheet.
 Opt-in registration — the system's default sheets are **never replaced**; pure Handlebars + CSS, no build step, no dependencies.
 
-**Current version: 0.8.3** (2026-10-22) · [Release notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
+**Current version: 0.9.0** (2026-10-26) · [Release notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
 
 ![Cover](docs/screenshots/cover.png)
+
+v0.9 is a full visual overhaul: all three sheets now share a **1920s investigator dossier** language — dark lacquered banners, brass hairlines, aged paper, ink-black table headers and oxblood accents, typeset with locally bundled Cinzel / EB Garamond / Roboto Condensed. No feature or data changes.
+
+---
+
+## Visual language · "Investigator Dossier"
+
+![Skills tab](docs/screenshots/skills.png)
+
+- **Banner (the cover)**: dark lacquer, brass side-light and oxblood vignette, with Art Deco corner ornaments; the portrait gets a 3px brass gradient frame.
+- **Content area (the paper)**: aged paper base with fibre texture; tables use ink-black headers and brass hairlines, with a brass row tint on hover.
+- **Hand-drawn SVG**: eight shield-shaped characteristic badges, HP / MP / SAN / Luck icons, section diamonds, empty-state star, dossier seal — all drawn inside the project, no external image dependencies.
+- **Three bundled typefaces**: Cinzel (names / tabs / headings), EB Garamond (background and Keeper rich text), Roboto Condensed (data and tables); Chinese falls back to Songti / PingFang so mixed typesetting stays on the baseline.
+- **Light and dark themes**: dark is not an inverted light theme but "ink leather with brass reflections"; compact mode and edit mode keep the same hierarchy.
+- Tokens and component rules: [docs/05-美术风格设计.md](docs/05-美术风格设计.md) (Chinese).
+
+All three typefaces are SIL Open Font License 1.1; the license files ship inside the module at `module/assets/fonts/licenses/`.
 
 ---
 
@@ -43,6 +60,14 @@ Click **SAN** or **Luck** to roll the matching check directly.
 - Description and Keeper: `personalDescription` rich text, GM notes, dice macros (drag to add / execute / delete)
 - Static mock: [prototype/npc.html](prototype/npc.html) · design document (Chinese): [docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
 
+| NPC / Creature · Combat | Edit mode |
+|---|---|
+| ![NPC / Creature combat](docs/screenshots/npc-combat.png) | ![NPC / Creature edit mode](docs/screenshots/npc-combat-edit.png) |
+
+| Skills tab | Dark theme |
+|---|---|
+| ![NPC / Creature skills](docs/screenshots/npc-skills.png) | ![NPC / Creature dark theme](docs/screenshots/npc-dark.png) |
+
 ### Container sheet (`container`, new in v0.8)
 
 - Compact banner: 96px portrait / name / item count / per-type count chips
@@ -58,21 +83,21 @@ Click **SAN** or **Luck** to roll the matching check directly.
 
 *The screenshots show the Chinese UI. Every label switches to English automatically when Foundry's language is set to English.*
 
-| NPC / Creature · Combat | Edit mode |
+| Summary | Possessions |
 |---|---|
-| ![NPC / Creature combat](docs/screenshots/npc-combat.png) | ![NPC / Creature edit mode](docs/screenshots/npc-combat-edit.png) |
+| ![Summary](docs/screenshots/summary.png) | ![Possessions](docs/screenshots/possessions.png) |
 
-| Skills tab | Dark theme |
+| Background | Growth |
 |---|---|
-| ![NPC / Creature skills](docs/screenshots/npc-skills.png) | ![NPC / Creature dark theme](docs/screenshots/npc-dark.png) |
+| ![Background](docs/screenshots/background.png) | ![Growth](docs/screenshots/growth.png) |
 
-| Summary | Background |
+| Notes (GM) | Effects |
 |---|---|
-| ![Summary](docs/screenshots/summary.png) | ![Background](docs/screenshots/background.png) |
+| ![Notes](docs/screenshots/notes.png) | ![Effects](docs/screenshots/effects.png) |
 
-| Growth | Skills in edit mode |
+| Skills in edit mode | Compact mode |
 |---|---|
-| ![Growth](docs/screenshots/growth.png) | ![Skills in edit mode](docs/screenshots/skills-edit.png) |
+| ![Skills in edit mode](docs/screenshots/skills-edit.png) | ![Compact mode](docs/screenshots/compact.png) |
 
 ---
 
@@ -131,10 +156,12 @@ Dependencies: none. The module registers the `character`, `npc`, `creature` and 
 
 ## Version history
 
+- **0.9.0 (2026-10-26)**: "Investigator Dossier" visual overhaul. All three sheets now use dark lacquered banners / brass hairlines / aged paper / ink table headers / oxblood accents; Cinzel, EB Garamond and Roboto Condensed are bundled locally (OFL); shields, resource icons, corner ornaments and empty states redrawn; every promo screenshot and the cover regenerated. No feature or data changes.
+  - Visual spec (Chinese): [docs/05-美术风格设计.md](docs/05-美术风格设计.md)
+  - Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
 - **0.8.3 (2026-10-22)**: Tidy NPC / Creature sheet + Container sheet; draggable resource cards on the investigator sheet; unified tab styling across the three sheets; edit-mode resource layout fix and assorted detail fixes.
   - Design document (Chinese): [docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
   - Static preview: [prototype/npc.html](prototype/npc.html)
-  - Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
 - 0.7.2: stable investigator sheet.
 
 ---
@@ -151,9 +178,12 @@ module/                 module itself (contents of the release zip)
     sheets/             AppV2 base class, investigator, NPC / creature, container
   templates/            Handlebars (investigator / npc / container / tabs / parts)
   styles/               tokens.css + sheet.css + npc.css + container.css
+  assets/fonts/         three OFL typefaces (woff2) and licenses/
   lang/                 Chinese / English
-docs/                   research notes, design documents, screenshots
+docs/                   research notes, design documents, visual spec, screenshots
+docs/promo/             cover source files and build script (not shipped in the zip)
 prototype/              static visual mock-ups (open directly in a browser)
+tools/                  headless render / screenshot / visual audit pipeline (dev only)
 ```
 
 During development you can symlink the module into Foundry:
@@ -174,10 +204,13 @@ ln -s "$PWD/module" \
 - [Research report](docs/01-调研报告.md) (Chinese): CoC7 architecture, the Tidy design language, Foundry 14 API, compatibility red lines, including the NPC / creature data model appendix
 - [Design document](docs/02-设计文档.md) (Chinese): layout, design tokens, components, interactions, data mapping, skill categories
 - [NPC / Creature sheet design document](docs/04-生物卡设计文档.md) (Chinese): `npc` / `creature` / container sheet design (released in v0.8.3)
+- [Visual style spec](docs/05-美术风格设计.md) (Chinese): the v0.9 "Investigator Dossier" language, tokens, components and render pipeline
 - [宣传稿 / 功能导览](docs/03-宣传稿.md) (Chinese)
 
 ---
 
 ## License
 
-[MIT](LICENSE)
+- Code: [MIT](LICENSE)
+- Fonts: Cinzel, EB Garamond and Roboto Condensed are all [SIL Open Font License 1.1](https://openfontlicense.org/); license files are bundled at `module/assets/fonts/licenses/`
+- Shields / corner ornaments / icons: hand-drawn project SVG and CSS, no third-party artwork

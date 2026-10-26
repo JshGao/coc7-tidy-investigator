@@ -2,6 +2,46 @@
 
 # Changelog
 
+## 0.9.0 — 2026-10-26
+
+"Investigator Dossier" visual overhaul. All three sheets now share one 1920s dossier language; features and data structures are unchanged.
+
+### Visual language
+
+- New colour tokens: aged paper `#ece1c8`, brass `#a9863f`, oxblood `#6e1d26`; dark mode is ink leather with brass reflections (`#14151a` / `#c3a76f` / `#b45a63`) rather than an inverted light theme
+- Three OFL typefaces bundled locally as woff2: Cinzel (names / tabs / headings), EB Garamond (background and Keeper rich text), Roboto Condensed (data and tables), replacing the old variable TTF files; Chinese falls back to Songti / PingFang and numbers use `tabular-nums`
+- Dark lacquered banner: brass side-light, oxblood vignette, Art Deco corner ornaments and a dossier seal; the portrait gets a 3px brass gradient frame with a sepia grade
+- Resource cards redrawn: icon badges plus 5px progress bars (10% ticks, low-value pulse); edit mode uses a two-column grid
+- Eight hand-drawn SVG shield-shaped characteristic badges: brass outer frame, gilt inner field and diamond finials
+- Tables: ink headers, brass hairlines, alternating brass tint and a brass bar on row hover; row icons became brass-outlined mini badges
+- Panels / sections / groups: ink section headers, parchment group bands, line-cornered background cards and a ledger-style money strip
+- Buttons / chips / inputs: oxblood lacquer primary buttons, brass-outlined ghost buttons, letterpress inputs with a brass focus glow
+- Tabs: small-caps Cinzel, brass underglow and a 2px gradient underline, unified across all three sheets
+- Empty states / scrollbars: brass dashed frames with a hand-drawn star, brass gradient scrollbar thumbs; texture noise reduced in dark mode
+- All three sheets are checked at light / dark, locked / edit, compact mode and 700 / 780 / 1020 px widths
+
+### Investigator sheet
+
+- Banner and all seven tabs (Skills / Summary / Possessions / Background / Growth / Notes / Effects) rebuilt on the new materials
+- Skill table, summary chips, background cards, growth records, notes and effects updated together
+
+### NPC / Creature sheet
+
+- The Keeper's combat panel in the same language: combat overview strip, weapon table, special abilities, movement modes, formula mode and Keeper macros
+- Banner combat strip (attacks per round / SAN loss / armor) and condition chips redrawn
+
+### Container sheet
+
+- Compact banner (96px portrait / count chips) and contents sections refreshed; empty states and edit-mode buttons unified
+
+### Docs / release materials
+
+- New [docs/05-美术风格设计.md](docs/05-美术风格设计.md) (Chinese): visual tokens, typography, component specs and the render pipeline
+- New `docs/promo/`: cover HTML / CSS sources plus the `build-cover.mjs` (cover) and `build-screenshots.mjs` (full screenshot set) build scripts
+- Regenerated the cover `docs/screenshots/cover.png` (2400×1260) and the full promo screenshot set
+- README / README.en / promo guide updated with the visual selling points and new screenshots; `module.json` bumped to 0.9.0
+- Font licensing: Cinzel / EB Garamond / Roboto Condensed are all SIL OFL 1.1 and ship with the module at `module/assets/fonts/licenses/`
+
 ## 0.8.3 — 2026-10-22
 
 - Fixed the edit-mode resource area (HP / MP / SAN / Luck) on the NPC / Creature sheet at 780px: labels stacked vertically and progress bars overlapped. It is now a two-column grid, with room left for the input fields and the auto-calculation toggles

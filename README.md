@@ -7,9 +7,26 @@
 **调查员卡** + **生物 / NPC 卡** + **容器卡**。
 可选注册，**不替换**系统默认卡；纯 Handlebars + CSS，无构建依赖。
 
-**当前版本：0.8.3**（2026-10-22） · [Release Notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
+**当前版本：0.9.0**（2026-10-26） · [Release Notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
 
 ![封面](docs/screenshots/cover.png)
+
+0.9 版完成一次完整的美术升级：三张卡统一为 **1920 年代调查员档案** 视觉语言 —— 深色漆面横幅、黄铜饰线、做旧纸张、墨色表头、牛血红强调，配合本地打包的 Cinzel / EB Garamond / Roboto Condensed。功能与数据结构不变。
+
+---
+
+## 视觉语言 ·「调查员档案」
+
+![技能页](docs/screenshots/skills.png)
+
+- **横幅（封皮）**：深色漆面 + 黄铜侧光 + 牛血红暗角，四角 Art Deco 角饰；头像配 3px 黄铜渐变边框。
+- **内容区（纸张）**：做旧纸张底色与纤维纹理；表格用墨色表头 + 黄铜细线，行悬停有黄铜底纹。
+- **自制 SVG**：八枚盾形特性徽章、HP / MP / SAN / 幸运图标、章节菱形、空状态星芒、档案印记，全部项目内绘制，无外部图片依赖。
+- **三款本地字体**：Cinzel（姓名 / Tab / 标题）、EB Garamond（背景与守秘富文本）、Roboto Condensed（数据与表格）；中文回落宋体 / 苹方，中英混排不跳动。
+- **亮 / 暗双主题**：暗色不是简单反相，而是「墨色皮革 + 黄铜反光」；紧凑模式与编辑态使用同一套层级。
+- 设计细节与 token 见 [docs/05-美术风格设计.md](docs/05-美术风格设计.md)。
+
+字体均为 SIL Open Font License 1.1，授权文件随模组分发于 `module/assets/fonts/licenses/`。
 
 ---
 
@@ -49,13 +66,36 @@
 |---|---|
 | ![生物卡·技能](docs/screenshots/npc-skills.png) | ![生物卡·暗色](docs/screenshots/npc-dark.png) |
 
-| 简表 | 背景 |
-|---|---|
-| ![简表](docs/screenshots/summary.png) | ![背景](docs/screenshots/background.png) |
+**容器卡（`container`，v0.8 新增）**
 
-| 成长 | 编辑态技能 |
+- 紧凑横幅：96px 头像 / 名称 / 容器件数 / 分类计数芯片
+- 四个标签页：内容（默认）/ 描述 / 守秘（GM）/ 效果
+- 内容页：武器 / 护具 / 书籍 / 法术 / 天赋 / 道具 / 状态分节，折叠、数量编辑、编辑态拖拽排序、分组 `+`
+- 描述 / 守秘富文本（prose-mirror），内容与系统容器卡完全互通
+
+![容器卡](docs/screenshots/container.png)
+
+---
+
+## 截图
+
+*截图为中文界面；Foundry 语言切到 English 后所有文案自动切换。*
+
+| 简表 | 物品 |
 |---|---|
-| ![成长](docs/screenshots/growth.png) | ![编辑态技能](docs/screenshots/skills-edit.png) |
+| ![简表](docs/screenshots/summary.png) | ![物品](docs/screenshots/possessions.png) |
+
+| 背景 | 成长 |
+|---|---|
+| ![背景](docs/screenshots/background.png) | ![成长](docs/screenshots/growth.png) |
+
+| 笔记（GM） | 效果 |
+|---|---|
+| ![笔记](docs/screenshots/notes.png) | ![效果](docs/screenshots/effects.png) |
+
+| 编辑态技能 | 紧凑模式 |
+|---|---|
+| ![编辑态技能](docs/screenshots/skills-edit.png) | ![紧凑模式](docs/screenshots/compact.png) |
 
 ---
 
@@ -103,23 +143,14 @@ https://raw.githubusercontent.com/JshGao/coc7-tidy-investigator/main/module/modu
 
 ---
 
-**容器卡（`container`，v0.8 新增）**
-
-- 紧凑横幅：96px 头像 / 名称 / 容器件数 / 分类计数芯片
-- 四个标签页：内容（默认）/ 描述 / 守秘（GM）/ 效果
-- 内容页：武器 / 护具 / 书籍 / 法术 / 天赋 / 道具 / 状态分节，折叠、数量编辑、编辑态拖拽排序、分组 `+`
-- 描述 / 守秘富文本（prose-mirror），内容与系统容器卡完全互通
-
-![容器卡](docs/screenshots/container.png)
-
----
-
 ## 版本
 
+- **0.9.0（2026-10-26）**：「调查员档案」美术升级。三张卡换用深色漆面横幅 / 黄铜饰线 / 做旧纸张 / 墨色表头 / 牛血红强调；本地打包 Cinzel / EB Garamond / Roboto Condensed 三款 OFL 字体；重绘盾徽、资源图标、角饰与空状态；重出全部宣传截图与封面。功能与数据结构不变。
+  - 美术规范：[docs/05-美术风格设计.md](docs/05-美术风格设计.md)
+  - 更新日志：[CHANGELOG.md](CHANGELOG.md)
 - **0.8.3（2026-10-22）**：Tidy 生物 / NPC 卡 + 容器卡；调查员卡资源拖拽排序；三卡统一 Tab 样式；编辑态资源布局修复与若干细节修复。
   - 设计文档：[docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
   - 静态预览：[prototype/npc.html](prototype/npc.html)
-  - 更新日志：[CHANGELOG.md](CHANGELOG.md)
 - 0.7.2：调查员卡稳定版。
 
 ## 开发
@@ -134,9 +165,12 @@ module/                 模组本体（发布 zip 的内容）
     sheets/             AppV2 基类、调查员卡、生物 / NPC 卡、容器卡
   templates/            Handlebars（investigator / npc / container / tabs / parts）
   styles/               tokens.css + sheet.css + npc.css + container.css
+  assets/fonts/         三款 OFL 字体（woff2）与 licenses/
   lang/                 中 / 英
-docs/                   调研报告、设计文档、截图
+docs/                   调研报告、设计文档、美术规范、截图
+docs/promo/             封面源文件与构建脚本（不随模组发布）
 prototype/              静态视觉样稿（浏览器可直接打开）
+tools/                  无头渲染 / 截图 / 视觉审计管线（开发工具，不随模组发布）
 ```
 
 开发时可直接软链接到 Foundry：
@@ -156,6 +190,7 @@ ln -s "$PWD/module" \
 - [调研报告](docs/01-调研报告.md)：CoC7 架构、Tidy 设计语言、Foundry 14 API、兼容红线（含 NPC / 生物数据模型附录）
 - [设计文档](docs/02-设计文档.md)：布局方案、视觉 token、组件、交互、数据映射、技能分类
 - [生物卡设计文档](docs/04-生物卡设计文档.md)：`npc` / `creature` / 容器卡设计（v0.8.3 已发布）
+- [美术风格设计](docs/05-美术风格设计.md)：v0.9「调查员档案」视觉语言、token、组件与出图管线
 - [宣传稿 / 功能导览](docs/03-宣传稿.md)（[English](docs/03-promo.en.md)）
 - [更新日志](CHANGELOG.md)（[English](CHANGELOG.en.md)）
 
@@ -163,4 +198,6 @@ ln -s "$PWD/module" \
 
 ## 许可
 
-[MIT](LICENSE)
+- 代码：[MIT](LICENSE)
+- 字体：Cinzel、EB Garamond、Roboto Condensed 均为 [SIL Open Font License 1.1](https://openfontlicense.org/)，授权文件见 `module/assets/fonts/licenses/`
+- 纹章 / 角饰 / 图标：项目自制 SVG 与 CSS，无第三方图片素材

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>CoC7 Tidy 角色卡 · 调查员档案 · v0.9.0 — cover</title>
+  <link rel="stylesheet" href="cover.css">
+</head>
+<body>
+  <!-- 2400×1260 = 1200×630 @2x。装饰全部为 CSS / 内联 SVG / 项目内字体。 -->
+  <div class="poster">
+    <div class="leather" aria-hidden="true"></div>
+    <div class="rays" aria-hidden="true"></div>
+    <div class="rule-frame rule-frame--outer" aria-hidden="true"></div>
+    <div class="rule-frame rule-frame--inner" aria-hidden="true"></div>
+
+    <svg class="deco-corner deco-corner--tl" aria-hidden="true"><use href="#deco-corner"/></svg>
+    <svg class="deco-corner deco-corner--tr" aria-hidden="true"><use href="#deco-corner"/></svg>
+    <svg class="deco-corner deco-corner--bl" aria-hidden="true"><use href="#deco-corner"/></svg>
+    <svg class="deco-corner deco-corner--br" aria-hidden="true"><use href="#deco-corner"/></svg>
+
+    <main class="content">
+      <section class="copy">
+        <p class="eyebrow">Foundry VTT 14 · Call of Cthulhu 7e · Opt-in Module</p>
+
+        <h1 class="title">
+          <span class="title-latin">CoC7 Tidy</span>
+          <span class="title-cn">调查员档案</span>
+        </h1>
+
+        <p class="release">Investigator Dossier <span class="release-dot">·</span> <span class="release-ver">v0.9.0</span></p>
+
+        <div class="rule" aria-hidden="true">
+          <span class="rule-line"></span>
+          <span class="rule-diamond"></span>
+          <span class="rule-line rule-line--short"></span>
+        </div>
+
+        <p class="tagline">把跑团时要用的东西，<br>摆到最顺手的位置。</p>
+        <p class="tagline-en">Put what you need at the table exactly where your hands expect it.</p>
+
+        <ul class="points">
+          <li><span class="point-zh">七个标签页</span><span class="point-en">Seven Tabs</span></li>
+          <li><span class="point-zh">技能 · 简表 · 成长</span><span class="point-en">Skills · Summary · Growth</span></li>
+          <li><span class="point-zh">一键成长记录</span><span class="point-en">Develop All + Records</span></li>
+          <li><span class="point-zh">拖拽排序</span><span class="point-en">Drag to Reorder</span></li>
+          <li><span class="point-zh">紧凑模式</span><span class="point-en">Compact Mode</span></li>
+          <li><span class="point-zh">暗色主题</span><span class="point-en">Dark Theme</span></li>
+        </ul>
+
+        <p class="sheets">调查员 · 生物 / NPC · 容器　三张可选安装的角色卡，不替换系统默认卡。</p>
+      </section>
+
+      <aside class="hero">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="mat" aria-hidden="true"></div>
+
+        <figure class="photo-frame">
+          <div class="photo-corners" aria-hidden="true">
+            <span class="mount mount--tl"></span>
+            <span class="mount mount--tr"></span>
+            <span class="mount mount--bl"></span>
+            <span class="mount mount--br"></span>
+          </div>
+          <img src="assets/hero-investigator.png"
+               alt="CoC7 Tidy 调查员卡 · 技能页截图">
+        </figure>
+
+        <p class="photo-caption">
+          <span class="caption-diamond" aria-hidden="true"></span>
+          Investigator Sheet · 调查员卡 · Skills / 技能页
+        </p>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <span class="repo"><span class="repo-mark" aria-hidden="true"></span>github.com/JshGao/coc7-tidy-investigator</span>
+      <span class="meta">MIT · Foundry VTT 14 · CoC7 ≥ 8.16</span>
+      <span class="seal"><span class="seal-text">v0.9.0</span></span>
+    </footer>
+
+    <svg class="svg-defs" width="0" height="0" aria-hidden="true">
+      <defs>
+        <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f0dcaa"/>
+          <stop offset=".38" stop-color="#c9ad70"/>
+          <stop offset=".7" stop-color="#a9863f"/>
+          <stop offset="1" stop-color="#6f5628"/>
+        </linearGradient>
+        <symbol id="deco-corner" viewBox="0 0 88 88">
+          <!-- Art Deco corner: double L frame + 45° fan + stepped inner line + diamond -->
+          <path d="M2 88V20Q2 2 20 2H88" fill="none" stroke="url(#brass)" stroke-width="1.7"/>
+          <path d="M10 88V24Q10 10 24 10H88" fill="none" stroke="url(#brass)" stroke-width=".8" opacity=".65"/>
+          <path d="M2 33 33 2M2 43 43 2M2 53 53 2M2 63 63 2" fill="none" stroke="url(#brass)" stroke-width=".75" opacity=".42"/>
+          <path d="M19 88V31Q19 19 31 19H88" fill="none" stroke="url(#brass)" stroke-width=".7" opacity=".5"/>
+          <path d="M35 35 41 29 47 35 41 41Z" fill="url(#brass)"/>
+          <circle cx="6" cy="6" r="1.5" fill="url(#brass)"/>
+        </symbol>
+      </defs>
+    </svg>
+  </div>
+</body>
+</html>
