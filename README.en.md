@@ -47,12 +47,12 @@ eight shield-shaped characteristic badges (inline inputs in edit mode with formu
 
 | Tab | Contents |
 |---|---|
-| Skills | Search; sort by value / name / custom drag; specialization groups; growth marking; add to the favorites bar. In edit mode skill points split into Base / Occupation / Interest / Development / Value, all inline-editable. |
-| Summary | Weapon quick reference (skill %, damage, range, attacks per round, ammo, malfunction) plus attack / roll damage; plus other skills above their base value, grouped. |
+| Skills | Search; sort by value or name, or drag into a custom order; specialization groups; growth marking; add to the favorites sidebar. In edit mode, skill points are split into Base / Occupation / Interest / Development / Value, each inline-editable. |
+| Summary | Weapon quick reference (skill %, damage, range, attacks per round, ammo, malfunction) plus attack / roll damage; as well as other skills above their base value, grouped. |
 | Possessions | Asset information (derived from the Credit Rating skill); sections for weapons / armor / books / spells / talents / items / statuses; collapsible groups; inline item quantities; drag to reorder in edit mode. |
 | Background | Seven backstory cards (Personal Description / Ideology & Beliefs / Treasured Possessions / Meaningful Locations / Significant People / Traits / Injuries & Scars), key-connection checkboxes, backstory, encounters. |
 | Growth | "Skills ready to grow" + one-click growth + manual value editing; per-check growth records grouped by an editable **module name** — change the post-growth value, undo a single record, create a new module. |
-| Notes (GM) | Keeper notes (rich text), book reading progress, SAN-loss events, Mythos markers, clear all conditions. |
+| Notes (GM) | Keeper notes (rich text), book reading progress, SAN-loss events, Mythos flags, clear all conditions. |
 | Effects | Create, click to open configuration, enable / disable, delete. |
 
 **Also**: collapsible favorites sidebar (roll skills / attack with weapons / open items); context menus (open / add to or remove from favorites / delete); eight-way window resizing with size memory; compact mode; dark theme.
@@ -62,7 +62,7 @@ eight shield-shaped characteristic badges (inline inputs in edit mode with formu
 - Banner: type / occupation info, HP / MP / SAN / Luck (empty values hidden), DB / Build / MOV / Armor, eight shield-shaped characteristic badges (missing values show `—`), condition buttons, **attacks per round / SAN loss**
 - Six tabs: **Combat (default)** / Skills / Inventory / Description / Keeper (GM notes) / Effects
 - Combat: attacks per round (rollable), SAN loss (creates the system's native link card), weapon table (attack / roll damage / shotgun range bands), special abilities quick reference, add or remove movement modes
-- Edit mode: formula mode (characteristic formulas plus roll characteristics / average), auto gear (whether resources / derived values are edited inline); inline skill values, item quantities and drag reordering
+- Edit mode: formula mode (characteristic formulas plus roll characteristics / average), auto gear (toggles inline editing of resources / derived values); inline skill values, item quantities and drag reordering
 - Description and Keeper: rich-text description, GM notes, dice macros (drag to add / execute / delete)
 - Static mock: [prototype/npc.html](prototype/npc.html) · design document (Chinese): [docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
 
@@ -70,21 +70,21 @@ eight shield-shaped characteristic badges (inline inputs in edit mode with formu
 
 - Compact banner: 96px portrait / name / item count / per-type count buttons
 - Four tabs: Contents (default) / Description / Keeper (GM) / Effects
-- Contents: collapsible weapons / armor / books / spells / talents / items / statuses sections; quantity editing, drag reordering in edit mode, and a group `+` button
+- Contents: collapsible sections for weapons / armor / books / spells / talents / items / statuses; quantity editing, drag reordering in edit mode, and a group `+` button
 - Description / Keeper notes as rich text
 
 ---
 
 ## Visual language
 
-- **Banner (the cover)**: dark lacquer, brass side-light and oxblood vignette, with Art Deco corner ornaments; the portrait gets a 3px brass gradient frame.
+- **Banner (the cover)**: dark lacquer, brass side-light and oxblood vignette, with Art Deco ornaments on all four corners; the portrait gets a 3px brass gradient frame.
 - **Content area (the paper)**: aged paper base with fibre texture; tables use ink-black headers and brass hairlines, with a brass row tint on hover.
 - **Hand-drawn SVG**: eight shield-shaped characteristic badges, HP / MP / SAN / Luck icons, section diamonds, empty-state star, dossier seal — all drawn inside the project, no external image dependencies.
-- **Three bundled typefaces**: Cinzel (names / tabs / headings), EB Garamond (background and Keeper-notes rich text), Roboto Condensed (data and tables); Chinese falls back to Songti / PingFang so mixed typesetting stays on the baseline.
+- **Three bundled typefaces**: Cinzel (names / tabs / headings), EB Garamond (background and Keeper notes rich text), Roboto Condensed (data and tables); Chinese falls back to Songti / PingFang so mixed Chinese/English text doesn't jump.
 - **Light and dark themes**: "ink leather with brass reflections"; compact mode and edit mode keep the same hierarchy.
 - Design details and tokens: [docs/05-美术风格设计.md](docs/05-美术风格设计.md) (Chinese).
 
-All three typefaces are SIL Open Font License 1.1; the license files ship inside the module at `module/assets/fonts/licenses/`.
+All three typefaces are licensed under the SIL Open Font License 1.1; the license files ship inside the module at `module/assets/fonts/licenses/`.
 
 ---
 
@@ -117,10 +117,10 @@ All three typefaces are SIL Open Font License 1.1; the license files ship inside
 ## Usage tips
 
 - **Edit mode**: click the lock icon at the top-right of the banner to unlock before changing values; the locked state prevents accidental edits during play
-- **Drag to reorder**: on the Skills tab switch sorting to **Custom**, then drag rows in edit mode; on the Possessions tab just drag in edit mode
+- **Drag to reorder**: on the Skills tab, switch sorting to **Custom**, then drag rows in edit mode; on the Possessions tab just drag in edit mode
 - **Growth**: check **Mark** on the Skills tab → **Develop all** on the Growth tab; manual value edits (Cthulhu Mythos and the like) also happen in edit mode
 - **Favorites**: right-click a skill / weapon / item → **Add to favorites**, then click it in the favorites sidebar on the left
-- **Resource order**: after unlocking into edit mode, drag HP / MP / SAN / Luck to reorder them; the order is saved per actor
+- **Resource order**: once you unlock edit mode, drag HP / MP / SAN / Luck to reorder them; the order is saved per actor
 - **Settings**: Game Settings → Module Settings: Compact mode / Remember window size / Default skill sorting
 
 ---
@@ -132,7 +132,7 @@ All three typefaces are SIL Open Font License 1.1; the license files ship inside
 | Foundry VTT | 14 (verified on 14.368) |
 | Call of Cthulhu 7e | ≥ 8.16 |
 
-Dependencies: none. The module registers the `character`, `npc`, `creature` and `container` actor types, leaves the system's default sheets untouched and does not affect vehicles.
+Dependencies: none. The module registers sheet templates for the `character`, `npc`, `creature` and `container` actor types, leaves the system's default sheets untouched and does not affect vehicles.
 
 ---
 
@@ -146,7 +146,7 @@ Dependencies: none. The module registers the `character`, `npc`, `creature` and 
 
 ## Version history
 
-- **0.9.0 (2026-10-26)**: "Investigator Dossier" visual overhaul. All three sheets now use dark lacquered banners / brass hairlines / aged paper / ink table headers / oxblood accents; Cinzel, EB Garamond and Roboto Condensed are bundled locally (OFL); shields, resource icons, corner ornaments and empty states redrawn; every promo screenshot and the cover regenerated. No feature or data changes.
+- **0.9.0 (2026-10-26)**: "Investigator Dossier" visual overhaul. All three sheets now use dark lacquered banners / brass hairlines / aged paper / ink-black table headers / oxblood accents; Cinzel, EB Garamond and Roboto Condensed are bundled locally (OFL); shields, resource icons, corner ornaments and empty states redrawn; every promo screenshot and the cover regenerated. No feature or data changes.
   - Visual spec (Chinese): [docs/05-美术风格设计.md](docs/05-美术风格设计.md)
   - Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
 - **0.8.3 (2026-10-22)**: Tidy NPC / Creature sheet + Container sheet; draggable resource cards on the investigator sheet; unified tab styling across the three sheets; edit-mode resource layout fix and assorted detail fixes.
@@ -190,10 +190,10 @@ ln -s "$PWD/module" \
 ## Documentation
 
 - **Chinese**: [README](README.md) · [Feature guide](docs/03-宣传稿.md) · [Changelog](CHANGELOG.md)
-- [Research report](docs/01-调研报告.md) (Chinese): CoC7 architecture, the Tidy design language, Foundry 14 API, compatibility red lines, including the NPC / creature data model appendix
+- [Research report](docs/01-调研报告.md) (Chinese): CoC7 architecture, the Tidy design language, Foundry 14 API, hard compatibility limits, including the NPC / creature data model appendix
 - [Design document](docs/02-设计文档.md) (Chinese): layout, design tokens, components, interactions, data mapping, skill categories
 - [NPC / Creature sheet design document](docs/04-生物卡设计文档.md) (Chinese): `npc` / `creature` / container sheet design (released in v0.8.3)
-- [Visual style spec](docs/05-美术风格设计.md) (Chinese): the v0.9 "Investigator Dossier" language, tokens, components and render pipeline
+- [Visual style spec](docs/05-美术风格设计.md) (Chinese): the v0.9 "Investigator Dossier" visual language, tokens, components and render pipeline
 - [Feature guide / promo copy](docs/03-promo.en.md) (English)
 - [Changelog](CHANGELOG.en.md) (English)
 
@@ -202,5 +202,5 @@ ln -s "$PWD/module" \
 ## License
 
 - Code: [MIT](LICENSE)
-- Fonts: Cinzel, EB Garamond and Roboto Condensed are all [SIL Open Font License 1.1](https://openfontlicense.org/); license files are bundled at `module/assets/fonts/licenses/`
-- Shields / corner ornaments / icons: hand-drawn project SVG and CSS, no third-party artwork
+- Fonts: Cinzel, EB Garamond and Roboto Condensed are all licensed under the [SIL Open Font License 1.1](https://openfontlicense.org/); license files are bundled at `module/assets/fonts/licenses/`
+- Shields / corner ornaments / icons: in-house SVG and CSS, no third-party artwork
