@@ -2,6 +2,20 @@
 
 # Changelog
 
+## 0.9.1 — 2026-10-28
+
+Ammo column fix: the Investigator Summary and the NPC / Creature Combat weapon tables now share one "Bullets/Mag" design with a reload button.
+
+- The "Ammo" column is now "Bullets/Mag" and shows **loaded bullets / magazine capacity** (CoC7 `system.ammo` / `system.bullets`); the column previously displayed the magazine capacity as if it were the ammo count
+- A **reload button** now sits to the left of the count: click to fill the magazine, Shift+click to load one round. It only appears for ranged weapons (melee / no-magazine weapons still show "—"), is hidden without edit permission, and dims when the magazine is full
+- The reload button uses a **hand-drawn revolver-cylinder icon** (six chambers around a central axis, tinted by `currentColor`), and the icon-to-number gap is tightened
+- **Unloading**: double-click the ammo count to empty the magazine, Shift+double-click to unload one round; the count carries a hover tooltip, with identical behaviour on both sheets
+- The reload icon **loses its box**: just the cylinder glyph, with a round highlight on hover
+- The **NPC / Creature Combat weapon table** now uses the same design as the Investigator Summary (same data, button, tooltip and light/dark behaviour)
+- Narrow layouts: the Investigator Summary hides "Rate / Malf" at a content width ≤500px and "Range" below 420px; the NPC Combat table hides "Alternate skill / Malf" at ≤720px — both keep "Bullets/Mag" and the reload button
+- Rebalanced the weapon column widths so weapon names are no longer truncated (`.45 自动手枪`, `李-恩菲尔德步枪`, `韦伯利左轮手枪`, …)
+- Fixed the NPC / Creature "Movement" type labels in dark mode, where the select's chevron background tiled over the label and made the text illegible (now solid pills with body-text colour)
+
 ## 0.9.0 — 2026-10-26
 
 "Investigator Dossier" visual overhaul. All three sheets now share one 1920s dossier language; features and data structures are unchanged.

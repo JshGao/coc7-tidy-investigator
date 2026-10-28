@@ -1676,7 +1676,7 @@
    ============================================================ */
 .c7t-table.weapons.compact .c7t-thead,
 .c7t-table.weapons.compact .c7t-row {
-  grid-template-columns: minmax(0, 1fr) 48px 78px 52px 40px 44px 44px 72px;
+  grid-template-columns: minmax(0, 1fr) 44px 70px 50px 34px 78px 38px 72px;
 }
 .c7t-table.weapons.compact .c7t-row .col-dmg,
 .c7t-table.weapons.compact .c7t-row .col-range,
@@ -1709,6 +1709,55 @@
 .c7t-table.weapons.compact .c7t-thead .col-skill {
   text-align: right;
   padding-right: 8px;
+}
+
+/* 简表弹药列：「装填按钮 + 当前子弹/弹容量」右对齐 */
+.c7t-table.weapons.compact .c7t-row .col-ammo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  padding-right: 6px;
+  white-space: nowrap;
+}
+.c7t-ammo-count {
+  flex: 0 0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+.c7t-ammo-reload.c7t-icon-btn {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  color: var(--c7t-accent);
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+}
+.c7t-ammo-reload.c7t-icon-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+.c7t-ammo-reload.c7t-icon-btn:hover {
+  color: #fdf3dd;
+  background: linear-gradient(180deg, var(--c7t-accent-soft), var(--c7t-accent));
+}
+.coc7-tidy.theme-dark .c7t-ammo-reload.c7t-icon-btn {
+  color: var(--c7t-accent-soft);
+}
+.coc7-tidy.theme-dark .c7t-ammo-reload.c7t-icon-btn:hover {
+  color: #fff3e4;
+  background: linear-gradient(180deg, #a84953, #83313b 60%, #6b222b);
+}
+.c7t-ammo-reload.c7t-icon-btn.is-full {
+  color: var(--c7t-text-mute);
+  opacity: 0.55;
+}
+.c7t-ammo-reload.c7t-icon-btn.is-full:hover {
+  color: var(--c7t-text-mute);
+  background: transparent;
 }
 
 .c7t-quick-skills {
@@ -3235,13 +3284,12 @@ img.c7t-row-ico {
    窄内容区：简表武器列 / 背景字段列的降级布局
    ============================================================ */
 @container (max-width: 500px) {
-  /* 简表武器：隐藏「每轮 / 弹药 / 故障」，保住武器名称列 */
+  /* 简表武器：隐藏「每轮 / 故障」，保住武器名称列与「子弹/弹容量」（装填按钮不能丢） */
   .c7t-table.weapons.compact .c7t-thead,
   .c7t-table.weapons.compact .c7t-row {
-    grid-template-columns: minmax(0, 1fr) 48px 78px 52px 72px;
+    grid-template-columns: minmax(0, 1fr) 44px 70px 50px 78px 72px;
   }
   .c7t-table.weapons.compact .col-rate,
-  .c7t-table.weapons.compact .col-ammo,
   .c7t-table.weapons.compact .col-malf {
     display: none;
   }
@@ -3255,7 +3303,7 @@ img.c7t-row-ico {
 @container (max-width: 420px) {
   .c7t-table.weapons.compact .c7t-thead,
   .c7t-table.weapons.compact .c7t-row {
-    grid-template-columns: minmax(0, 1fr) 44px 72px 72px;
+    grid-template-columns: minmax(0, 1fr) 44px 70px 78px 72px;
   }
   .c7t-table.weapons.compact .col-range {
     display: none;

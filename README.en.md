@@ -48,7 +48,7 @@ eight shield-shaped characteristic badges (inline inputs in edit mode with formu
 | Tab | Contents |
 |---|---|
 | Skills | Search; sort by value or name, or drag into a custom order; specialization groups; growth marking; add to the favorites sidebar. In edit mode, skill points are split into Base / Occupation / Interest / Development / Value, each inline-editable. |
-| Summary | Weapon quick reference (skill %, damage, range, attacks per round, ammo, malfunction) plus attack / roll damage; as well as other skills above their base value, grouped. |
+| Summary | Weapon quick reference (skill %, damage, range, attacks per round, bullets / magazine, malfunction) plus attack / roll damage / reload; as well as other skills above their base value, grouped. |
 | Possessions | Asset information (derived from the Credit Rating skill); sections for weapons / armor / books / spells / talents / items / statuses; collapsible groups; inline item quantities; drag to reorder in edit mode. |
 | Background | Seven backstory cards (Personal Description / Ideology & Beliefs / Treasured Possessions / Meaningful Locations / Significant People / Traits / Injuries & Scars), key-connection checkboxes, backstory, encounters. |
 | Growth | "Skills ready to grow" + one-click growth + manual value editing; per-check growth records grouped by an editable **module name** — change the post-growth value, undo a single record, create a new module. |
@@ -61,7 +61,7 @@ eight shield-shaped characteristic badges (inline inputs in edit mode with formu
 
 - Banner: type / occupation info, HP / MP / SAN / Luck (empty values hidden), DB / Build / MOV / Armor, eight shield-shaped characteristic badges (missing values show `—`), condition buttons, **attacks per round / SAN loss**
 - Six tabs: **Combat (default)** / Skills / Inventory / Description / Keeper (GM notes) / Effects
-- Combat: attacks per round (rollable), SAN loss (creates the system's native link card), weapon table (attack / roll damage / shotgun range bands), special abilities quick reference, add or remove movement modes
+- Combat: attacks per round (rollable), SAN loss (creates the system's native link card), weapon table (attack / roll damage / reload / shotgun range bands, with bullets / magazine in the ammo column), special abilities quick reference, add or remove movement modes
 - Edit mode: formula mode (characteristic formulas plus roll characteristics / average), auto gear (toggles inline editing of resources / derived values); inline skill values, item quantities and drag reordering
 - Description and Keeper: rich-text description, GM notes, dice macros (drag to add / execute / delete)
 - Static mock: [prototype/npc.html](prototype/npc.html) · design document (Chinese): [docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)

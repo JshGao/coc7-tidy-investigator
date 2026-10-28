@@ -62,7 +62,7 @@ Seven tabs run across the top: Skills / Summary / Possessions / Background / Gro
 
 ![Summary](screenshots/summary.png)
 
-The weapon quick-reference table lists skill %, damage, range, rate, ammo and malfunction; click once to attack, then again to roll damage directly (Damage Bonus and half Damage Bonus handled for you).
+The weapon quick-reference table lists skill %, damage, range, rate, bullets / magazine and malfunction; click once to attack, then again to roll damage directly (Damage Bonus and half Damage Bonus handled for you). A revolver-cylinder button next to the count refills the magazine with one click; double-click the count to empty the magazine (Shift+double-click unloads a single round).
 Below it are chips for the six categories of skills with points invested; combat skills stay visible, so you no longer flip back to the Skills tab mid-session.
 
 ### 4. Possessions: sort your own pack
@@ -107,7 +107,7 @@ Special skills such as Cthulhu Mythos can also be edited by hand.
 The same Tidy language, arranged the way a Keeper wants it:
 
 - The banner puts **attacks per round, SAN loss and armor** up front, and the Combat tab opens by default
-- Weapon table: click to attack, click again to roll damage (Damage Bonus and shotgun range bands handled for you)
+- Weapon table: click to attack, click again to roll damage (Damage Bonus and shotgun range bands handled for you); the ammo column shows bullets / magazine and a revolver-cylinder button reloads with one click (double-click the count to unload)
 - Special abilities (talents) quick reference, add or remove movement modes, drop in a dice macro and use it
 - Edit mode has **formula mode**: write `3D6*5` for a monster, then roll the characteristics or take the average with one click
 - The Skills / Inventory / Description / Keeper tabs behave just like the investigator sheet

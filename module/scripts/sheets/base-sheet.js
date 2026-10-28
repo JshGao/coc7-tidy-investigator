@@ -42,6 +42,7 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     createItem: Coc7TidyBaseSheet._onCreateItem,
     weaponAttack: Coc7TidyBaseSheet._onWeaponAttack,
     weaponDamage: Coc7TidyBaseSheet._onWeaponDamage,
+    weaponReload: Coc7TidyBaseSheet._onWeaponReload,
     toggleEffect: Coc7TidyBaseSheet._onToggleEffect,
     createEffect: Coc7TidyBaseSheet._onCreateEffect,
     openEffect: Coc7TidyBaseSheet._onOpenEffect,
@@ -112,6 +113,7 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     this.#installResizeHandles();
     this.#installSkillSearch();
     this.#installItemContextMenu();
+    this.#installAmmoUnload();
     this.#installDragSorting();
     this.#installItemQuantityEditing();
   }
@@ -346,6 +348,58 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     await this.document.weaponCheck({ uuid: item.uuid }, event.shiftKey);
   }
 
+  /** 装填武器：单击装满弹匣，Shift + 单击装填 1 发 */
+  static async _onWeaponReload(event, target) {
+    event.preventDefault();
+    if (!this.isEditable) return;
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+    const item = itemId ? this.document.items.get(itemId) : null;
+    if (!item || item.type !== "weapon") return;
+    const system = item.system ?? {};
+    const capacity = Number(system.bullets);
+    if (!Number.isFinite(capacity) || capacity <= 0) return;
+    const loaded = Number(system.ammo) || 0;
+    try {
+      if (event.shiftKey) {
+        if (typeof system.addAmmunition === "function") await system.addAmmunition();
+        else await item.update({ "system.ammo": Math.min(loaded + 1, capacity) });
+      } else if (typeof system.reload === "function") {
+        await system.reload();
+      } else {
+        await item.update({ "system.ammo": capacity });
+      }
+    } catch (err) {
+      console.error(`${MODULE_ID} | 装填失败：${item.name}`, err);
+      ui.notifications.error(game.i18n.localize("C7TIDY.Weapon.ReloadError"));
+    }
+  }
+
+  /** 卸弹：双击卸空弹匣，Shift + 双击卸下 1 发 */
+  static async _onWeaponUnload(event, target) {
+    event.preventDefault();
+    if (!this.isEditable) return;
+    const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+    const item = itemId ? this.document.items.get(itemId) : null;
+    if (!item || item.type !== "weapon") return;
+    const system = item.system ?? {};
+    const capacity = Number(system.bullets);
+    if (!Number.isFinite(capacity) || capacity <= 0) return;
+    const loaded = Number(system.ammo) || 0;
+    try {
+      if (event.shiftKey) {
+        if (typeof system.shootAmmunition === "function") await system.shootAmmunition(1);
+        else await item.update({ "system.ammo": Math.max(0, loaded - 1) });
+      } else if (typeof system.setBullets === "function") {
+        await system.setBullets(0);
+      } else {
+        await item.update({ "system.ammo": 0 });
+      }
+    } catch (err) {
+      console.error(`${MODULE_ID} | 卸弹失败：${item.name}`, err);
+      ui.notifications.error(game.i18n.localize("C7TIDY.Weapon.UnloadError"));
+    }
+  }
+
   /** 直接掷武器伤害（含伤害加值处理；支持霰弹枪指定射程档） */
   static async _onWeaponDamage(event, target) {
     event.preventDefault();
@@ -432,6 +486,18 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         const rows = [...group.querySelectorAll(".c7t-row")];
         group.hidden = query.length > 0 && rows.every((row) => row.hidden);
       }
+    });
+  }
+
+  /** 弹药列双击：卸空弹匣 / Shift + 双击卸下 1 发 */
+  #installAmmoUnload() {
+    if (!this.element || this.element.dataset.ammoUnloadBound) return;
+    this.element.dataset.ammoUnloadBound = "1";
+    this.element.addEventListener("dblclick", (event) => {
+      if (event.target.closest?.(".c7t-ammo-reload")) return;
+      const cell = event.target.closest?.(".col-ammo");
+      if (!cell) return;
+      Coc7TidyBaseSheet._onWeaponUnload.call(this, event, cell);
     });
   }
 

@@ -33,7 +33,7 @@ locally bundled OFL typefaces (Cinzel, EB Garamond, Roboto Condensed).
 
 - Banner: type / occupation info, HP/MP/SAN/Luck (empty values hidden), DB / Build / MOV / Armor, eight shield badges (missing values show `—`), condition chips
 - Six tabs: Combat (default) / Skills / Inventory / Description / Keeper (GM) / Effects
-- Combat: attacks per round (rollable), SAN loss (native system link card), armor notes, weapon table (attack / roll damage / shotgun range bands), special abilities quick reference, movement modes (primary MOV plus extra movement add/remove)
+- Combat: attacks per round (rollable), SAN loss (native system link card), armor notes, weapon table (attack / roll damage / reload / shotgun range bands, with bullets / magazine in the ammo column), special abilities quick reference, movement modes (primary MOV plus extra movement add/remove)
 - Skills: search, three-way sorting, specialization groups, inline current value; no growth / occupation / interest split
 - Inventory: armor / books / spells / talents / items / statuses sections, collapsing, drag reordering, quantity editing; no money strip
 - Description: type / occupation / age / organization + `personalDescription` rich text
@@ -128,7 +128,7 @@ see `assets/fonts/licenses/`.
 
 - 横幅：类型 / 职业信息、HP/MP/SAN/幸运（空值自动隐藏）、DB/体格/MOV/护甲、八枚盾形特性徽章（缺值显示 `—`）
 - 六个标签页：战斗（默认）/ 技能 / 物品 / 描述 / 守秘（GM）/ 效果
-- 战斗：每轮攻击次数（可掷）、SAN 损失（生成系统原生链接卡）、护甲备注、武器表（攻击/掷伤害/霰弹枪分档）、特殊能力速查、移动方式（主 MOV + 额外移动增删）
+- 战斗：每轮攻击次数（可掷）、SAN 损失（生成系统原生链接卡）、护甲备注、武器表（攻击/掷伤害/装填/霰弹枪分档，弹药列显示当前子弹/弹容量）、特殊能力速查、移动方式（主 MOV + 额外移动增删）
 - 技能：搜索、三态排序、专长分组、当前值内联编辑；无成长/职业/兴趣拆分
 - 物品：护甲/书籍/法术/天赋/道具/状态分节，折叠、拖拽、数量编辑；无货币条
 - 描述：类型/职业/年龄/组织 + personalDescription 富文本

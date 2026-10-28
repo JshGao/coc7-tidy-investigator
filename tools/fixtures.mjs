@@ -220,11 +220,26 @@ export function investigatorActor() {
         skillAlternative: null,
         range: { normal: { value: "15 码", damage: "1D10+2" } },
         usesPerRound: { normal: 2 },
-        bullets: "7",
-        malfunction: "100",
-        properties: {},
+        bullets: 7,
+        ammo: 3,
+        malfunction: 100,
+        properties: { rngd: true },
       },
       { id: "w-pistol", img: ICON.coC("skills.svg"), sort: 10 },
+    ),
+    item(
+      "weapon",
+      "李-恩菲尔德步枪",
+      {
+        skillMain: { name: "射击（步枪）", system: { value: 30 } },
+        range: { normal: { value: "110 码", damage: "1D10+4" } },
+        usesPerRound: { normal: 1 },
+        bullets: 10,
+        ammo: 10,
+        malfunction: 100,
+        properties: { rngd: true },
+      },
+      { id: "w-rifle", img: ICON.coC("skills.svg"), sort: 15 },
     ),
     item(
       "weapon",
@@ -233,8 +248,9 @@ export function investigatorActor() {
         skillMain: { name: "格斗（斗殴）", system: { value: 45 } },
         range: { normal: { value: "接触", damage: "1D4+DB" } },
         usesPerRound: { normal: 1 },
-        bullets: "—",
-        malfunction: "—",
+        bullets: null,
+        ammo: 0,
+        malfunction: null,
         properties: {},
       },
       { id: "w-knife", img: ICON.coC("secret-book.svg"), sort: 20 },
@@ -401,6 +417,20 @@ export function npcActor({ type = "creature", locked = true } = {}) {
       },
       { id: "nw-rock", img: ICON.foundry("stone-path.svg") },
     ),
+    item(
+      "weapon",
+      "鱼叉枪",
+      {
+        skillMain: { name: "射击（鱼叉枪）", system: { value: 35 } },
+        range: { normal: { value: "30 码", damage: "1D10+2" } },
+        usesPerRound: { normal: 1 },
+        bullets: 1,
+        ammo: 0,
+        malfunction: 95,
+        properties: { rngd: true },
+      },
+      { id: "nw-harpoon", img: ICON.coC("skills.svg") },
+    ),
     item("talent", "两栖", { description: { value: "<p>可在水中自由行动；水下移动力等同于游泳移动力，无需呼吸。</p>" } }, { id: "nt-amph", img: ICON.skill("diving.svg") }),
     item("talent", "深渊凝视", { description: { value: "<p>与深潜者对视的调查员须进行 POW 检定；失败者损失 1/1D4 点 SAN。</p>" } }, { id: "nt-gaze", img: ICON.coC("eye-shield.svg") }),
     item("talent", "再生", { description: { value: "<p>每轮恢复 1 点 HP；火焰或魔法造成的伤害无法以此方式恢复。</p>" } }, { id: "nt-regen", img: ICON.coC("heart-beats.svg") }),
@@ -485,6 +515,22 @@ function applyNpcHumanVariant(actor) {
   system.biography.personalDescription.value =
     "<p>一个在码头区传教的男人，西装总是过于整洁。他的右手掌心有一枚螺旋状烙印。</p>";
   system.description.keeper = "<p>他并非自愿入教；若被逼问，会透露集会地点在旧海关仓库的地下室。</p>";
+  actor.items.push(
+    item(
+      "weapon",
+      "韦伯利左轮手枪",
+      {
+        skillMain: { name: "射击（手枪）", system: { value: 40 } },
+        range: { normal: { value: "15 码", damage: "1D10+2" } },
+        usesPerRound: { normal: 2 },
+        bullets: 6,
+        ammo: 4,
+        malfunction: 100,
+        properties: { rngd: true },
+      },
+      { id: "nw-revolver", img: ICON.coC("skills.svg") },
+    ),
+  );
 }
 
 /* ============================================================

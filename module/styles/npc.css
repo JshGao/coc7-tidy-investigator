@@ -667,7 +667,7 @@
    ============================================================ */
 .c7t-npc .c7t-table.npc-weapons .c7t-thead,
 .c7t-npc .c7t-table.npc-weapons .c7t-row {
-  grid-template-columns: minmax(0, 1fr) 118px 88px 90px 54px 44px 46px 94px;
+  grid-template-columns: minmax(0, 1fr) 118px 78px 82px 46px 78px 36px 94px;
 }
 .c7t-npc .c7t-table.npc-weapons .c7t-row {
   height: 35px;
@@ -712,6 +712,25 @@
 .c7t-npc .c7t-table.npc-weapons .c7t-row .col-name .c7t-row-name {
   font-weight: 600;
   color: var(--c7t-text);
+}
+
+/* 弹药列：「装填按钮（左轮弹巢）+ 当前子弹/弹容量」 */
+.c7t-npc .c7t-table.npc-weapons .c7t-row .col-ammo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  padding-right: 6px;
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-ammo-count {
+  flex: 0 0 auto;
+}
+.c7t-npc .c7t-table.npc-weapons .c7t-ammo-reload.c7t-icon-btn {
+  width: 18px;
+  height: 18px;
+}
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-table.npc-weapons .c7t-ammo-reload.c7t-icon-btn {
+  color: var(--c7t-accent-soft);
 }
 .c7t-npc .c7t-table.npc-weapons .c7t-row:hover .col-name .c7t-row-name {
   color: var(--c7t-accent);
@@ -1085,8 +1104,8 @@
   max-width: none;
   padding: 1px 8px;
   font-size: 11px;
-  color: var(--c7t-brass-deep);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)), var(--c7t-panel-2);
+  color: var(--c7t-text);
+  background: var(--c7t-panel-2);
   border: 1px solid var(--c7t-line);
   box-shadow: none;
   border-radius: 2px;
@@ -1969,13 +1988,12 @@
   .c7t-npc .c7t-strip-meta {
     display: none;
   }
-  /* 武器表：隐藏备选技能 / 弹药 / 故障；技能列加宽避免截断 */
+  /* 武器表：隐藏备选技能 / 故障；保留「子弹/弹容量」（装填按钮不能丢） */
   .c7t-npc .c7t-table.npc-weapons .c7t-thead,
   .c7t-npc .c7t-table.npc-weapons .c7t-row {
-    grid-template-columns: minmax(0, 1fr) 120px 88px 52px 94px;
+    grid-template-columns: minmax(0, 1fr) 114px 84px 48px 78px 94px;
   }
   .c7t-npc .c7t-table.npc-weapons .col-alt,
-  .c7t-npc .c7t-table.npc-weapons .col-ammo,
   .c7t-npc .c7t-table.npc-weapons .col-malf {
     display: none;
   }
@@ -2054,8 +2072,7 @@
    ============================================================ */
 :is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-title,
 :is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-meta,
-:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-toggle,
-:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-movrow-type.view-only {
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-toggle {
   color: var(--c7t-brass-light);
 }
 :is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-group-toggle:hover {
@@ -2090,7 +2107,7 @@
 :is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-talent-ico {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
-:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-movrow-type {
+:is(.c7t-npc.theme-dark, .theme-dark .c7t-npc) .c7t-movrow-type:not(.view-only) {
   background-image:
     url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23c3a76f' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
     var(--npc-paper-sheen);

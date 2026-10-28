@@ -16,7 +16,7 @@
     <span class="col-dmg">{{localize 'C7TIDY.Weapon.Damage'}}</span>
     <span class="col-range">{{localize 'C7TIDY.Weapon.Range'}}</span>
     <span class="col-rate">{{localize 'C7TIDY.Weapon.Rate'}}</span>
-    <span class="col-ammo">{{localize 'C7TIDY.Weapon.Ammo'}}</span>
+    <span class="col-ammo">{{localize 'C7TIDY.Weapon.AmmoMag'}}</span>
     <span class="col-malf">{{localize 'C7TIDY.Weapon.Malfunction'}}</span>
     <span class="col-act"></span>
   </div>
@@ -31,7 +31,15 @@
         <span class="col-dmg">{{weapon.damage}}</span>
         <span class="col-range">{{weapon.range}}</span>
         <span class="col-rate">{{weapon.rate}}</span>
-        <span class="col-ammo">{{weapon.bullets}}</span>
+        <span class="col-ammo">
+          {{#if @root.canEdit}}{{#if weapon.canReload}}
+            <button type="button" class="c7t-icon-btn c7t-ammo-reload{{#if weapon.ammoFull}} is-full{{/if}}"
+              data-action="weaponReload" data-tooltip="C7TIDY.Weapon.ReloadHint">
+              <svg class="c7t-ammo-reload-ico" aria-hidden="true"><use href="#c7t-ico-revolver"></use></svg>
+            </button>
+          {{/if}}{{/if}}
+          <span class="c7t-ammo-count"{{#if @root.canEdit}} data-tooltip="C7TIDY.Weapon.UnloadHint"{{/if}}>{{weapon.ammoDisplay}}</span>
+        </span>
         <span class="col-malf">{{weapon.malfunction}}</span>
         <span class="col-act">
           <button type="button" class="c7t-icon-btn act" data-action="weaponAttack" data-tooltip="C7TIDY.Weapon.Attack">

@@ -11,6 +11,13 @@ function num(value) {
   return Number.isFinite(n) ? n : 0;
 }
 
+/** 可空计数：null / 空串 / 非法数字 → null（用于区分「没有弹匣」与「弹匣为 0」） */
+function count(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? Math.max(0, Math.trunc(n)) : null;
+}
+
 function text(value, fallback = "0") {
   if (value === null || value === undefined || value === "") return fallback;
   return String(value);
@@ -131,6 +138,13 @@ export function prepareWeapons(actor) {
         }))
         .filter((row) => row.damage || row.value);
       const normal = system.range?.normal ?? {};
+      // 枪械：system.bullets 是弹容量（弹匣容量），system.ammo 是当前已装子弹数。
+      // 只有射击武器（rngd / shotgun）才展示「子弹/弹容量」并允许装填。
+      const ranged = Boolean(system.properties?.rngd || system.properties?.shotgun);
+      const capacity = count(system.bullets);
+      const loaded = count(system.ammo) ?? 0;
+      const hasMagazine = ranged && capacity !== null && capacity > 0;
+      const ammoDisplay = hasMagazine ? `${loaded}/${capacity}` : ranged && loaded > 0 ? String(loaded) : "—";
       return {
         id: item.id,
         name: item.name,
@@ -144,6 +158,10 @@ export function prepareWeapons(actor) {
         rate: text(system.usesPerRound?.normal, "—"),
         bullets: text(system.bullets, "—"),
         ammo: text(system.ammo, "—"),
+        // 简表专用：当前子弹 / 弹容量文本 + 装填按钮状态
+        canReload: hasMagazine,
+        ammoDisplay,
+        ammoFull: hasMagazine && loaded >= capacity,
         malfunction: text(system.malfunction, "—"),
         shotgun: Boolean(system.properties?.shotgun),
         ranges,
