@@ -6,10 +6,12 @@ Tidy 5e Sheets-style character sheets for **Call of Cthulhu 7e** on **Foundry VT
 **Investigator** + **NPC / Creature** + **Container** sheets.
 Opt-in registration — the system's default sheets are never replaced. Pure Handlebars + CSS, no build dependencies.
 
-**Current version: 0.9.0**
+**Current version: 0.9.1**
 
 - Foundry VTT: `>= 14` (verified on 14.368)
 - CoC7: `>= 8.16`
+
+**What's new in 0.9.1**: weapon tables show bullets / magazine with reload (click to fill, Shift+click for one round) and unload (double-click to empty, Shift+double-click for one round) on the Investigator Summary and NPC / Creature Combat tabs; fixes NPC Movement type labels in dark mode.
 
 **Visual language (v0.9 "Investigator Dossier")**: dark lacquered banner, brass hairlines,
 aged paper, ink table headers and oxblood accents; hand-drawn SVG shields / icons and
@@ -22,7 +24,7 @@ locally bundled OFL typefaces (Cinzel, EB Garamond, Roboto Condensed).
 - Banner: portrait, identity, resource bars (drag to reorder once unlocked), eight shield-shaped characteristic badges, condition chips, Daily SAN
 - Seven tabs: Skills / Summary / Possessions / Background / Growth / Notes (GM) / Effects
 - Skills: search, three-way sorting, specialization groups, favorites, inline occupation / interest / development points in edit mode, drag reordering
-- Summary: weapon quick reference + attack / roll damage + six categories of invested skill chips
+- Summary: weapon quick reference + attack / roll damage / reload / unload + six categories of invested skill chips
 - Possessions: collapsible sections, drag reordering, item quantity editing, context menu
 - Background: seven backstory cards + multi-select key connections + backstory + encounters
 - Growth: Develop all, per-check records, editable module-name groups, manual value editing, undo
@@ -33,7 +35,7 @@ locally bundled OFL typefaces (Cinzel, EB Garamond, Roboto Condensed).
 
 - Banner: type / occupation info, HP/MP/SAN/Luck (empty values hidden), DB / Build / MOV / Armor, eight shield badges (missing values show `—`), condition chips
 - Six tabs: Combat (default) / Skills / Inventory / Description / Keeper (GM) / Effects
-- Combat: attacks per round (rollable), SAN loss (native system link card), armor notes, weapon table (attack / roll damage / reload / shotgun range bands, with bullets / magazine in the ammo column), special abilities quick reference, movement modes (primary MOV plus extra movement add/remove)
+- Combat: attacks per round (rollable), SAN loss (native system link card), armor notes, weapon table (attack / roll damage / reload / unload / shotgun range bands, with bullets / magazine in the ammo column), special abilities quick reference, movement modes (primary MOV plus extra movement add/remove)
 - Skills: search, three-way sorting, specialization groups, inline current value; no growth / occupation / interest split
 - Inventory: armor / books / spells / talents / items / statuses sections, collapsing, drag reordering, quantity editing; no money strip
 - Description: type / occupation / age / organization + `personalDescription` rich text
@@ -99,7 +101,7 @@ see `assets/fonts/licenses/`.
 
 *Tidy-style investigator, NPC/creature and container sheets for Call of Cthulhu 7e on Foundry VTT 14.*
 
-**当前版本：0.9.0**
+**当前版本：0.9.1**
 
 仿 **Tidy 5e Sheets** 风格的 CoC7 角色卡：**调查员卡** + **生物 / NPC 卡** + **容器卡**，可选注册、不替换系统默认卡。
 纯 Handlebars + CSS，无构建依赖。
@@ -110,6 +112,8 @@ see `assets/fonts/licenses/`.
 - Foundry VTT：`>= 14`（14.368 验证）
 - CoC7：`>= 8.16`
 
+**0.9.1 更新**：调查员简表与生物 / NPC 战斗页的武器表显示「子弹 / 弹容量」，并加入装填（单击装满 / Shift+单击装 1 发）与卸弹（双击卸空 / Shift+双击卸 1 发）；修复生物 / NPC 卡「移动方式」暗色下类型标签被底纹盖住的问题。
+
 ## 功能
 
 ### 调查员卡（`character`）
@@ -117,7 +121,7 @@ see `assets/fonts/licenses/`.
 - 横幅：头像、身份、资源条（解锁后可拖拽排序）、八枚盾形特性徽章、状态芯片、今日 SAN
 - 七个标签页：技能 / 简表 / 物品 / 背景 / 成长 / 笔记（GM）/ 效果
 - 技能：搜索、三态排序、专长分组、收藏、编辑态职业/兴趣/成长点内联编辑、拖拽排序
-- 简表：武器速查 + 攻击/掷伤害 + 六类已投入技能芯片
+- 简表：武器速查 + 攻击/掷伤害/装填/卸弹 + 六类已投入技能芯片
 - 物品：分节折叠、拖拽排序、道具数量编辑、右键菜单
 - 背景：七要素卡片 + 关键链接多选 + 背景故事 + 遭遇记录
 - 成长：一键成长、逐条记录、可编辑模组名分组、手动改值、撤销
@@ -128,7 +132,7 @@ see `assets/fonts/licenses/`.
 
 - 横幅：类型 / 职业信息、HP/MP/SAN/幸运（空值自动隐藏）、DB/体格/MOV/护甲、八枚盾形特性徽章（缺值显示 `—`）
 - 六个标签页：战斗（默认）/ 技能 / 物品 / 描述 / 守秘（GM）/ 效果
-- 战斗：每轮攻击次数（可掷）、SAN 损失（生成系统原生链接卡）、护甲备注、武器表（攻击/掷伤害/装填/霰弹枪分档，弹药列显示当前子弹/弹容量）、特殊能力速查、移动方式（主 MOV + 额外移动增删）
+- 战斗：每轮攻击次数（可掷）、SAN 损失（生成系统原生链接卡）、护甲备注、武器表（攻击/掷伤害/装填/卸弹/霰弹枪分档，弹药列显示当前子弹/弹容量）、特殊能力速查、移动方式（主 MOV + 额外移动增删）
 - 技能：搜索、三态排序、专长分组、当前值内联编辑；无成长/职业/兴趣拆分
 - 物品：护甲/书籍/法术/天赋/道具/状态分节，折叠、拖拽、数量编辑；无货币条
 - 描述：类型/职业/年龄/组织 + personalDescription 富文本

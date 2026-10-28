@@ -5,9 +5,11 @@
 
 A custom character sheet for CoC7. Its look borrows heavily from **Tidy 5e Sheets** and it ships an **Investigator** sheet, an **NPC / Creature** sheet and a **Container** sheet. It only registers new optional sheet templates inside the system and replaces none of the existing actor-sheet templates; implemented in pure Handlebars + CSS with no build step, it is lightweight and ships with English and Chinese localization.
 
-**Current version: 0.9.0** (2026-10-26) · [Release notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
+**Current version: 0.9.1** (2026-10-28) · [Release notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
 
-The latest 0.9 release is a complete visual overhaul: all three sheets now share a **1920s vintage dossier** visual language — dark lacquered banners, brass hairlines, aged paper, ink-black table headers and oxblood accents, typeset with locally bundled Cinzel / EB Garamond / Roboto Condensed. Features and data structures are unchanged.
+The 0.9 release was a complete visual overhaul: all three sheets now share a **1920s vintage dossier** visual language — dark lacquered banners, brass hairlines, aged paper, ink-black table headers and oxblood accents, typeset with locally bundled Cinzel / EB Garamond / Roboto Condensed.
+
+0.9.1 fixes the weapon tables' ammo column: the Investigator Summary and the NPC / Creature Combat tab now show **bullets / magazine**, with a revolver-cylinder **reload** button (click to fill, Shift+click for one round) and **unload** controls (double-click to empty, Shift+double-click for one round).
 
 ![Cover](docs/screenshots/cover.png)
 
@@ -48,7 +50,7 @@ eight shield-shaped characteristic badges (inline inputs in edit mode with formu
 | Tab | Contents |
 |---|---|
 | Skills | Search; sort by value or name, or drag into a custom order; specialization groups; growth marking; add to the favorites sidebar. In edit mode, skill points are split into Base / Occupation / Interest / Development / Value, each inline-editable. |
-| Summary | Weapon quick reference (skill %, damage, range, attacks per round, bullets / magazine, malfunction) plus attack / roll damage / reload; as well as other skills above their base value, grouped. |
+| Summary | Weapon quick reference (skill %, damage, range, attacks per round, bullets / magazine, malfunction) plus attack / roll damage / reload / unload; as well as other skills above their base value, grouped. |
 | Possessions | Asset information (derived from the Credit Rating skill); sections for weapons / armor / books / spells / talents / items / statuses; collapsible groups; inline item quantities; drag to reorder in edit mode. |
 | Background | Seven backstory cards (Personal Description / Ideology & Beliefs / Treasured Possessions / Meaningful Locations / Significant People / Traits / Injuries & Scars), key-connection checkboxes, backstory, encounters. |
 | Growth | "Skills ready to grow" + one-click growth + manual value editing; per-check growth records grouped by an editable **module name** — change the post-growth value, undo a single record, create a new module. |
@@ -61,7 +63,7 @@ eight shield-shaped characteristic badges (inline inputs in edit mode with formu
 
 - Banner: type / occupation info, HP / MP / SAN / Luck (empty values hidden), DB / Build / MOV / Armor, eight shield-shaped characteristic badges (missing values show `—`), condition buttons, **attacks per round / SAN loss**
 - Six tabs: **Combat (default)** / Skills / Inventory / Description / Keeper (GM notes) / Effects
-- Combat: attacks per round (rollable), SAN loss (creates the system's native link card), weapon table (attack / roll damage / reload / shotgun range bands, with bullets / magazine in the ammo column), special abilities quick reference, add or remove movement modes
+- Combat: attacks per round (rollable), SAN loss (creates the system's native link card), weapon table (attack / roll damage / reload / unload / shotgun range bands, with bullets / magazine in the ammo column), special abilities quick reference, add or remove movement modes
 - Edit mode: formula mode (characteristic formulas plus roll characteristics / average), auto gear (toggles inline editing of resources / derived values); inline skill values, item quantities and drag reordering
 - Description and Keeper: rich-text description, GM notes, dice macros (drag to add / execute / delete)
 - Static mock: [prototype/npc.html](prototype/npc.html) · design document (Chinese): [docs/04-生物卡设计文档.md](docs/04-生物卡设计文档.md)
@@ -146,6 +148,8 @@ Dependencies: none. The module registers sheet templates for the `character`, `n
 
 ## Version history
 
+- **0.9.1 (2026-10-28)**: Ammo column fix. The Investigator Summary and the NPC / Creature Combat weapon tables now show "bullets / magazine", with a revolver-cylinder reload button (click to fill, Shift+click for one round) and unload controls (double-click to empty, Shift+double-click for one round); fixes the NPC Movement type labels that were covered by the select's chevron texture in dark mode.
+  - Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
 - **0.9.0 (2026-10-26)**: "Investigator Dossier" visual overhaul. All three sheets now use dark lacquered banners / brass hairlines / aged paper / ink-black table headers / oxblood accents; Cinzel, EB Garamond and Roboto Condensed are bundled locally (OFL); shields, resource icons, corner ornaments and empty states redrawn; every promo screenshot and the cover regenerated. No feature or data changes.
   - Visual spec (Chinese): [docs/05-美术风格设计.md](docs/05-美术风格设计.md)
   - Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
