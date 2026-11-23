@@ -239,5 +239,14 @@
   "C7TIDY.Container.InventoryFoot": "与系统容器卡一致：可收纳武器 / 护具 / 书籍 / 法术 / 天赋 / 道具 / 状态。",
   "C7TIDY.Container.Description": "容器描述",
   "C7TIDY.Container.DescriptionFoot": "容器只有 description.value 一个描述字段；玩家可见。",
-  "C7TIDY.Container.KeeperFoot": "守秘笔记仅 GM 可见；锁定态只读。"
+  "C7TIDY.Container.KeeperFoot": "守秘笔记仅 GM 可见；锁定态只读。",
+  "C7TIDY.Settings.LegacyMigration": "旧技能迁移：优先职业/兴趣点",
+  "C7TIDY.Settings.LegacyMigrationHint": "勾选后，旧版只有总值的技能会先用剩余职业点（职业技能）、再用剩余兴趣点分配，剩余部分计入成长；不勾选时沿用系统做法，全部计入成长。预算来自角色的职业点/兴趣点设置；只对尚未迁移的旧技能生效。",
+  "C7TIDY.Import.StButton": "导入 .st",
+  "C7TIDY.Import.StTitle": "导入海豹骰数据",
+  "C7TIDY.Import.StHint": "粘贴海豹骰 .st 指令（例如 .st 力量60 敏捷70 侦查80）。支持特性、HP/MP/SAN/幸运和技能；缺失技能会自动创建；骰点表达式会跳过。",
+  "C7TIDY.Import.Import": "导入",
+  "C7TIDY.Import.Done": "已导入：特性 {characteristics} 项、资源 {attributes} 项、技能 {skills} 项（新建 {created} 项）。",
+  "C7TIDY.Import.Partial": "部分条目导入失败：{errors}",
+  "C7TIDY.Import.Error": "导入失败，请查看控制台。"
 }

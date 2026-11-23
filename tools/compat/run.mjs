@@ -745,6 +745,185 @@ async function testSanLink(page, lane, errors) {
   return { before, after };
 }
 
+async function testImportSt(page, lane, errors) {
+  await clearActors(page);
+  const actorId = await createActor(page, { name: "E2E 海豹导入", type: "character" });
+  await openTidy(page, actorId);
+  await page.locator('[data-action="importSt"]').first().click();
+  await page.waitForSelector('textarea[name="st"]', { timeout: 10000 });
+  await page.fill(
+    'textarea[name="st"]',
+    ".st 力量:60敏捷50+20体质50 体型60 外貌50 智力70 意志60 教育80 幸运50 侦查80 图书馆使用60射击(手枪)70 san55",
+  );
+  const submitted = await page.evaluate(() => {
+    const button = [...document.querySelectorAll('button')].find((entry) =>
+      entry.dataset.action === "ok" || /^(导入|Import|OK|确定)$/i.test(entry.textContent.trim()),
+    );
+    button?.click();
+    return Boolean(button);
+  });
+  assert(submitted, "未找到导入对话框的确认按钮");
+  await page.waitForTimeout(2200);
+  const state = await page.evaluate((id) => {
+    const actor = game.actors.get(id);
+    const char = (key) => actor.system.characteristics?.[key]?.value;
+    const skill = (name) => {
+      const item = actor.items.find((entry) => entry.type === "skill" && entry.name.replace(/\s+/g, "").includes(name.replace(/\s+/g, "")));
+      return item ? { name: item.name, value: item.value, base: item.base ?? item.system?.adjustments?.base, spec: item.system?.specialization, skillName: item.system?.skillName } : null;
+    };
+    return {
+      str: char("str"),
+      dex: char("dex"),
+      int: char("int"),
+      edu: char("edu"),
+      luck: actor.system.attribs?.lck?.value,
+      san: actor.system.attribs?.san?.value,
+      skills: {
+        侦查: skill("侦查"),
+        图书馆使用: skill("图书馆使用"),
+        射击: skill("射击(手枪)"),
+      },
+      warnings: game.notifications?.queue?.()?.map?.((n) => n.message ?? n.text) ?? [],
+    };
+  }, actorId);
+  assert(state.str === 60 && state.dex === 70, `特性导入失败：${JSON.stringify(state)}`);
+  assert(state.int === 70 && state.edu === 80, `智力/教育导入失败：${JSON.stringify(state)}`);
+  assert(state.luck === 50, `幸运导入失败：${state.luck}`);
+  assert(state.san === 55, `SAN 导入失败：${state.san}`);
+  assert(state.skills.侦查?.value === 80, `侦查导入失败：${JSON.stringify(state.skills.侦查)}`);
+  assert(Number(state.skills.侦查?.base) > 0, `侦查基础值应从系统技能包带入：${JSON.stringify(state.skills.侦查)}`);
+  assert(state.skills.图书馆使用?.value === 60, `图书馆使用导入失败：${JSON.stringify(state.skills.图书馆使用)}`);
+  assert(state.skills.射击?.value === 70, `射击(手枪)导入失败：${JSON.stringify(state.skills.射击)}`);
+  assert(state.skills.射击?.spec === "射击" && state.skills.射击?.skillName === "手枪", `射击专长拆分错误：${JSON.stringify(state.skills.射击)}`);
+  assert(Number(state.skills.射击?.base) > 0, `射击(手枪)基础值应从系统技能包带入：${JSON.stringify(state.skills.射击)}`);
+
+  // 第二次导入：+ 增量
+  await page.locator('[data-action="importSt"]').first().click();
+  await page.waitForSelector('textarea[name="st"]', { timeout: 10000 });
+  await page.fill('textarea[name="st"]', ".st 力量+5 侦查+5");
+  const submitted2 = await page.evaluate(() => {
+    const button = [...document.querySelectorAll('button')].find((entry) =>
+      entry.dataset.action === "ok" || /^(导入|Import|OK|确定)$/i.test(entry.textContent.trim()),
+    );
+    button?.click();
+    return Boolean(button);
+  });
+  assert(submitted2, "未找到第二次导入的确认按钮");
+  await page.waitForTimeout(1500);
+  const added = await page.evaluate((id) => {
+    const actor = game.actors.get(id);
+    const skill = actor.items.find((entry) => entry.type === "skill" && entry.name.includes("侦查"));
+    return { str: actor.system.characteristics?.str?.value, skill: skill?.value };
+  }, actorId);
+  assert(added.str === 65, `+5 力量导入失败：${added.str}`);
+  assert(added.skill === 85, `+5 侦查导入失败：${added.skill}`);
+  return { ...state, added };
+}
+
+async function testLegacyMigrationPrefer(page, lane, errors) {
+  if (lane.id !== "v13") return null;
+  await page.evaluate(() => game.settings.set("coc7-tidy-investigator", "legacySkillMigration", true));
+  try {
+    await clearActors(page);
+    const actorId = await page.evaluate(async () => {
+      const actor = await Actor.create({ name: "E2E 职业优先迁移", type: "character" });
+      await actor.createEmbeddedDocuments("Item", [
+        {
+          name: "侦查", type: "skill",
+          system: { base: "25", value: 55, adjustments: { personal: 0, occupation: 0, archetype: 0, experiencePackage: 0, experience: 0 }, skillName: "侦查", specialization: "", properties: {}, flags: { occupation: true, developement: false } },
+        },
+        {
+          name: "聆听", type: "skill",
+          system: { base: "20", value: 40, adjustments: { personal: 0, occupation: 0, archetype: 0, experiencePackage: 0, experience: 0 }, skillName: "聆听", specialization: "", properties: {}, flags: { occupation: false, developement: false } },
+        },
+        {
+          name: "图书馆使用", type: "skill",
+          system: { base: "20", value: 30, adjustments: { personal: 0, occupation: 0, archetype: 0, experiencePackage: 0, experience: 0 }, skillName: "图书馆使用", specialization: "", properties: {}, flags: { occupation: true, developement: false } },
+        },
+      ]);
+      await actor.update({ "system.development.occupation": 100, "system.development.personal": 120 });
+      for (const item of actor.items.filter((entry) => entry.type === "skill")) {
+        await item.update({ "system.value": item.name === "侦查" ? 55 : item.name === "聆听" ? 40 : 30 });
+      }
+      await actor.update({ "system.flags.locked": false });
+      return actor.id;
+    });
+    await openTidy(page, actorId);
+    // 用一次 0 值编辑触发批量迁移（不会额外加点）
+    await page.evaluate(() => {
+      const row = [...document.querySelectorAll('section.tab[data-tab="skills"] .c7t-row')]
+        .find((entry) => entry.textContent.includes("侦查"));
+      const input = row.querySelector('input[data-field="experience"]');
+      input.value = "0";
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await page.waitForTimeout(1200);
+    const result = await page.evaluate((id) => {
+      const actor = game.actors.get(id);
+      const rows = {};
+      for (const item of actor.items.filter((entry) => entry.type === "skill")) {
+        rows[item.name] = {
+          value: item.value,
+          systemValue: item.system?.value,
+          adjustments: JSON.parse(JSON.stringify(item.system?.adjustments ?? {})),
+        };
+      }
+      return rows;
+    }, actorId);
+    assert(result.侦查?.adjustments?.occupation === 30, `侦查应优先使用职业点 30：${JSON.stringify(result.侦查)}`);
+    assert(result.侦查?.adjustments?.personal === 0, `侦查不应使用兴趣点：${JSON.stringify(result.侦查)}`);
+    assert(result.图书馆使用?.adjustments?.occupation === 10, `图书馆使用应使用职业点 10：${JSON.stringify(result.图书馆使用)}`);
+    assert(result.聆听?.adjustments?.personal === 20, `聆听应使用兴趣点 20：${JSON.stringify(result.聆听)}`);
+    assert(result.聆听?.adjustments?.occupation === 0, `聆听不应使用职业点：${JSON.stringify(result.聆听)}`);
+    assert(Object.values(result).every((row) => row.adjustments?.experience === 0), `预算足够时不应有 experience 兜底：${JSON.stringify(result)}`);
+
+    // 预算不足：职业点 → 兴趣点 → experience 兜底
+    await clearActors(page);
+    const fallbackId = await page.evaluate(async () => {
+      const actor = await Actor.create({ name: "E2E 迁移兜底", type: "character" });
+      await actor.createEmbeddedDocuments("Item", [
+        {
+          name: "侦查", type: "skill",
+          system: { base: "25", value: 55, adjustments: { personal: 0, occupation: 0, archetype: 0, experiencePackage: 0, experience: 0 }, skillName: "侦查", specialization: "", properties: {}, flags: { occupation: true } },
+        },
+        {
+          name: "聆听", type: "skill",
+          system: { base: "20", value: 40, adjustments: { personal: 0, occupation: 0, archetype: 0, experiencePackage: 0, experience: 0 }, skillName: "聆听", specialization: "", properties: {}, flags: { occupation: false } },
+        },
+      ]);
+      await actor.update({ "system.development.occupation": 10, "system.development.personal": 5, "system.flags.locked": false });
+      for (const item of actor.items.filter((entry) => entry.type === "skill")) {
+        await item.update({ "system.value": item.name === "侦查" ? 55 : 40 });
+      }
+      return actor.id;
+    });
+    await openTidy(page, fallbackId);
+    await page.evaluate(() => {
+      const row = [...document.querySelectorAll('section.tab[data-tab="skills"] .c7t-row')]
+        .find((entry) => entry.textContent.includes("侦查"));
+      const input = row.querySelector('input[data-field="experience"]');
+      input.value = "0";
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await page.waitForTimeout(1200);
+    const fallback = await page.evaluate((id) => {
+      const actor = game.actors.get(id);
+      const rows = {};
+      for (const item of actor.items.filter((entry) => entry.type === "skill")) {
+        rows[item.name] = JSON.parse(JSON.stringify(item.system?.adjustments ?? {}));
+      }
+      return rows;
+    }, fallbackId);
+    assert(fallback.侦查?.occupation === 10, `兜底：侦查应先消耗职业点 10：${JSON.stringify(fallback.侦查)}`);
+    assert(fallback.侦查?.personal === 5, `兜底：侦查应再消耗兴趣点 5：${JSON.stringify(fallback.侦查)}`);
+    assert(fallback.侦查?.experience === 15, `兜底：侦查剩余 15 应进 experience：${JSON.stringify(fallback.侦查)}`);
+    assert(fallback.聆听?.experience === 20, `兜底：聆听剩余 20 应进 experience：${JSON.stringify(fallback.聆听)}`);
+    return { exact: result, fallback };
+  } finally {
+    await page.evaluate(() => game.settings.set("coc7-tidy-investigator", "legacySkillMigration", false));
+  }
+}
+
 async function testMythosFlags(page, lane, errors) {
   await clearActors(page);
   const actorId = await createActor(page, { name: "E2E 秘法", type: "character" });
@@ -892,6 +1071,7 @@ async function runLane(laneId) {
       ["settings", () => testSettings(page, lane, errors)],
       ["npc-rolls", () => testNpcRolls(page, lane, errors)],
       ["san-link", () => testSanLink(page, lane, errors)],
+      ["import-st", () => testImportSt(page, lane, errors)],
     ];
 
     for (const [name, run] of scenarios) {
@@ -920,6 +1100,19 @@ async function runLane(laneId) {
         results.push({ lane: laneId, scenario: name, ok: false, error: error.message });
         log(`  ❌ ${name}: ${error.message}`);
         await page.screenshot({ path: path.join(CACHE, "artifacts", `${laneId}-${name}.png`) }).catch(() => {});
+      }
+    }
+
+    if (laneId === "v13" && (!only || only === "legacy-prefer")) {
+      try {
+        const data = await testLegacyMigrationPrefer(page, lane, errors);
+        results.push({ lane: laneId, scenario: "legacy-prefer", ok: true, data });
+        log("  ✅ legacy-prefer");
+      } catch (error) {
+        laneFailed = true;
+        failures++;
+        results.push({ lane: laneId, scenario: "legacy-prefer", ok: false, error: error.message });
+        log(`  ❌ legacy-prefer: ${error.message}`);
       }
     }
 

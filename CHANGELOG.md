@@ -8,7 +8,7 @@
 
 - 清单：`compatibility.minimum` 改为 `13.351`、`verified` 14.369；CoC7 最低版本 7.24
 - 技能值：7.24 角色技能的 `system.value` 为 `null` / `-1` 占位，真实值在 `item.value` / `rawValue` / `adjustments`；8.16 才把 getter 放进 `system.value`。新增 `scripts/compat.js` 统一读取，修复技能页、简表、收藏、信用评级全部显示 0 的问题
-- 旧数据：7.24 角色把旧 `system.value` 迁进 `adjustments.experience` 后再编辑，避免“显示旧值、编辑写新字段”的割裂
+- 旧数据：未启用优先职业/兴趣设置时，7.24 角色把旧 `system.value` 迁进 `adjustments.experience` 后再编辑，避免“显示旧值、编辑写新字段”的割裂
 - 技能基础值：7.24 没有 `adjustments.base`，回退 `system.base` / `item.base` 公式解析
 - 武器：7.24 没有 `system.skillMain` / `getSkillByName`，改为按 `skill.main.id` / 名字 / CoC-ID 解析；武器技能值走统一 helper
 - 成长：7.24 `developSkill` 只接受 item id，8.16 的 `developSkills` 只接受 uuid，按能力探测传参；成长前先迁移旧技能值
@@ -21,6 +21,9 @@
 - 清除状态：7.24 只有单数 `unsetCondition`，保留 AE 清理后再写字段
 - ApplicationV2：`_onRender` 改为 async/await；`foundry.applications.instances` 与 `loadTemplates` 加防御性回退；缩放 / 右键菜单改用 `ownerDocument` 以适配 v14 弹出窗口
 - 新增 `tools/compat/run.mjs`：Foundry 13.351 + CoC7 7.24、14.369 + 8.16 双环境 Playwright E2E（技能保留 / 编辑 / 武器 / NPC / 容器 / 状态 / 金钱 / 书籍 / 成长 / 秘法 flag / 设置 / 每轮攻击 / SAN 链接 / 旧角色迁移）
+
+- 新增模块设置「旧技能迁移：优先职业/兴趣点」：勾选后，旧版只有总值的职业技能先扣剩余职业点、再扣兴趣点，非职业技能先扣兴趣点，最后剩余进 experience；不勾选仍沿用系统做法全部进 experience
+- 新增「导入 .st」按钮（调查员 / NPC 横幅）：粘贴海豹骰 `.st` 数据，支持特性、HP/MP/SAN/幸运、技能（含专长、`+`/`-` 增量）；缺失技能自动创建
 
 ## 0.9.1 — 2026-10-28
 

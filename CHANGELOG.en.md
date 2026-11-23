@@ -8,7 +8,7 @@ Compatibility with Foundry VTT **13.351 + CoC7 7.24**, while keeping 14.369 + 8.
 
 - Manifest: `compatibility.minimum` is now `13.351`, `verified` 14.369; CoC7 minimum is 7.24
 - Skill values: on 7.24 a character's `system.value` is a `null` / `-1` placeholder; the real value lives on `item.value` / `rawValue` / `adjustments`. 8.16 is where the getter moved into `system.value`. A new `scripts/compat.js` reads the right one, fixing skills, summary, favorites and Credit Rating all showing 0
-- Legacy data: old 7.24 `system.value` is migrated into `adjustments.experience` before editing, so the displayed value and edited value cannot diverge
+- Legacy data: with the occupation/interest option disabled, old 7.24 `system.value` is migrated into `adjustments.experience` before editing, so the displayed value and edited value cannot diverge
 - Skill base: 7.24 has no `adjustments.base`; fall back to `system.base` / the `item.base` formula getter
 - Weapons: 7.24 has no `system.skillMain` / `getSkillByName`; resolve by `skill.main.id`, name or CoC-ID, and read the skill value through the shared helper
 - Growth: 7.24 `developSkill` takes an item id, 8.16 `developSkills` takes a uuid; feature-detect and migrate legacy values first
@@ -21,6 +21,9 @@ Compatibility with Foundry VTT **13.351 + CoC7 7.24**, while keeping 14.369 + 8.
 - Clear conditions: 7.24 only has singular `unsetCondition`; remove the status AE first and then write the fields
 - ApplicationV2: `_onRender` is now async/await; defensive fallbacks for `foundry.applications.instances` and `loadTemplates`; resize handles / context menu use `ownerDocument` for v14 pop-out windows
 - Added `tools/compat/run.mjs`: a two-lane Playwright E2E matrix for 13.351 + 7.24 and 14.369 + 8.16 covering skill retention, editing, weapons, NPC, container, conditions, money, books, growth, mythos flags, settings, attacks per round, SAN links and legacy migration
+
+- New module setting "Legacy skill migration: prefer occupation/interest points": occupation skills draw from remaining occupation points, then interest points; non-occupation skills draw from interest points; leftovers go to experience. Unchecked keeps the system behaviour (all to experience)
+- New "Import .st" button on the Investigator / NPC banner: paste SealDice `.st` data for characteristics, HP/MP/SAN/Luck and skills (including specializations and `+`/`-` deltas); missing skills are created automatically
 
 ## 0.9.1 — 2026-10-28
 

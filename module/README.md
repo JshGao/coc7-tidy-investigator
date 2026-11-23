@@ -24,6 +24,7 @@ locally bundled OFL typefaces (Cinzel, EB Garamond, Roboto Condensed).
 - Banner: portrait, identity, resource bars (drag to reorder once unlocked), eight shield-shaped characteristic badges, condition chips, Daily SAN
 - Seven tabs: Skills / Summary / Possessions / Background / Growth / Notes (GM) / Effects
 - Skills: search, three-way sorting, specialization groups, favorites, inline occupation / interest / development points in edit mode, drag reordering
+- Import: paste SealDice `.st` data (characteristics, HP/MP/SAN/Luck and skills; missing skills are created) from the banner import button
 - Summary: weapon quick reference + attack / roll damage / reload / unload + six categories of invested skill chips
 - Possessions: collapsible sections, drag reordering, item quantity editing, context menu
 - Background: seven backstory cards + multi-select key connections + backstory + encounters
@@ -51,7 +52,7 @@ locally bundled OFL typefaces (Cinzel, EB Garamond, Roboto Condensed).
 
 ### Common
 
-- Settings: compact mode, remember window size, default skill sorting
+- Settings: compact mode, remember window size, default skill sorting, legacy skill migration policy
 - Eight-way window resizing, dark theme follows Foundry
 - English / Chinese UI (follows Foundry's language setting)
 
@@ -121,6 +122,7 @@ see `assets/fonts/licenses/`.
 - 横幅：头像、身份、资源条（解锁后可拖拽排序）、八枚盾形特性徽章、状态芯片、今日 SAN
 - 七个标签页：技能 / 简表 / 物品 / 背景 / 成长 / 笔记（GM）/ 效果
 - 技能：搜索、三态排序、专长分组、收藏、编辑态职业/兴趣/成长点内联编辑、拖拽排序
+- 导入：横幅「导入 .st」按钮，粘贴海豹骰 `.st` 数据（特性、HP/MP/SAN/幸运、技能；缺失技能会自动创建）
 - 简表：武器速查 + 攻击/掷伤害/装填/卸弹 + 六类已投入技能芯片
 - 物品：分节折叠、拖拽排序、道具数量编辑、右键菜单
 - 背景：七要素卡片 + 关键链接多选 + 背景故事 + 遭遇记录
@@ -148,7 +150,7 @@ see `assets/fonts/licenses/`.
 
 ### 通用
 
-- 设置：紧凑模式、记住窗口尺寸、技能默认排序
+- 设置：紧凑模式、记住窗口尺寸、技能默认排序、旧技能迁移策略
 - 窗口八向缩放、暗色主题跟随 Foundry
 - 英文 / 中文界面
 

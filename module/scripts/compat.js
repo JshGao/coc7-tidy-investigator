@@ -138,6 +138,96 @@ export async function migrateLegacySkillValue(item) {
   return true;
 }
 
+/** 统计所有技能的 adjustments.occupation / personal 已花点数。 */
+export function skillPointTotals(actor) {
+  let occupation = 0;
+  let personal = 0;
+  for (const item of actor?.items ?? []) {
+    if (item.type !== "skill") continue;
+    const adjustments = item.system?.adjustments ?? {};
+    occupation += finiteNumber(adjustments.occupation) ?? 0;
+    personal += finiteNumber(adjustments.personal) ?? 0;
+  }
+  return { occupation, personal };
+}
+
+function pointBudget(actor, key, spent) {
+  const development = actor?.system?.development ?? {};
+  let total = finiteNumber(development[key]) ?? 0;
+  if (!total) {
+    // 7.24 的 total 可能在 Actor getter 上（occupationPoints / personalPoints）
+    total = finiteNumber(actor?.[`${key}Points`]) ?? 0;
+  }
+  return Math.max(0, total - spent);
+}
+
+/**
+ * 批量迁移 7.24 旧角色技能值。
+ *
+ * - preferOccupation=false：与系统 v3 卡一致，旧值差额全部进 experience；
+ * - preferOccupation=true：职业技能先用剩余职业点，再用剩余兴趣点；
+ *   非职业技能先用剩余兴趣点；最后剩余全部进 experience 兜底。
+ *
+ * 预算来自 system.development.occupation / personal（缺失时回退 Actor getter），
+ * 并扣除现有 adjustments 里已经花掉的职业/兴趣点。
+ */
+export async function migrateLegacySkills(actor, { preferOccupation = false } = {}) {
+  if (!actor || actor.type !== "character") return [];
+  const legacy = (actor.items ?? []).filter((item) => {
+    if (item.type !== "skill") return false;
+    if (item.system?.valueUnmodified !== undefined) return false;
+    const value = finiteNumber(item.system?.value);
+    return value !== null && value > 0;
+  });
+  if (!legacy.length) return [];
+
+  if (!preferOccupation) {
+    for (const item of legacy) await migrateLegacySkillValue(item);
+    return legacy.map((item) => item.id);
+  }
+
+  const totals = skillPointTotals(actor);
+  let occupationLeft = pointBudget(actor, "occupation", totals.occupation);
+  let personalLeft = pointBudget(actor, "personal", totals.personal);
+
+  const ordered = [...legacy].sort((a, b) => {
+    const occupationRank = Number(Boolean(b.system?.flags?.occupation)) - Number(Boolean(a.system?.flags?.occupation));
+    if (occupationRank) return occupationRank;
+    const sortRank = Number(a.sort ?? 0) - Number(b.sort ?? 0);
+    if (sortRank) return sortRank;
+    return String(a.name ?? "").localeCompare(String(b.name ?? ""));
+  });
+
+  const updates = [];
+  for (const item of ordered) {
+    const target = finiteNumber(item.system?.value);
+    const current = readNumber(item, "rawValue") ?? readNumber(item, "value") ?? skillAdjustmentSum(item);
+    let remaining = target !== null ? Math.max(0, target - current) : 0;
+    const adjustments = { ...(item.system?.adjustments ?? {}) };
+    let occupation = 0;
+    let personal = 0;
+
+    if (remaining > 0 && item.system?.flags?.occupation) {
+      occupation = Math.min(remaining, occupationLeft);
+      occupationLeft -= occupation;
+      remaining -= occupation;
+    }
+    if (remaining > 0) {
+      personal = Math.min(remaining, personalLeft);
+      personalLeft -= personal;
+      remaining -= personal;
+    }
+    if (occupation) adjustments.occupation = (finiteNumber(adjustments.occupation) ?? 0) + occupation;
+    if (personal) adjustments.personal = (finiteNumber(adjustments.personal) ?? 0) + personal;
+    if (remaining) adjustments.experience = (finiteNumber(adjustments.experience) ?? 0) + remaining;
+
+    updates.push({ _id: item.id, "system.adjustments": adjustments, "system.value": null });
+  }
+
+  await actor.updateEmbeddedDocuments("Item", updates);
+  return updates.map((update) => update._id);
+}
+
 /** 按 id / name 找技能（7.24 没有 getSkillByName，只有 getSkillsByName）。 */export function findSkillByName(actor, name) {
   if (!actor || !name) return null;
   if (typeof actor.getSkillByName === "function") {

@@ -13,6 +13,7 @@ import {
 import {
   developSkill as developSkillCompat,
   migrateLegacySkillValue,
+  migrateLegacySkills as migrateLegacySkillsCompat,
   skillValue,
   toggleActorFlag,
 } from "../compat.js";
@@ -245,9 +246,7 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
         const value = Number(input.value);
         if (!Number.isFinite(value)) return;
         const previous = Number(item.system?.adjustments?.[field] ?? 0) || 0;
-        const migrated = await migrateLegacySkillValue(item)
-          ? this.document.items.get(item.id) ?? item
-          : item;
+        const migrated = await this.#migrateLegacySkill(item);
         if (field === "experience") {
           // 迁移会把旧 system.value 折算进 experience；按“用户输入的增量”写回
           const currentExperience = Number(migrated.system?.adjustments?.experience ?? 0) || 0;
@@ -330,12 +329,26 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
     await this.document.setFlag(MODULE_ID, "growthLabels", labels);
   }
 
+  /**
+   * 按世界设置迁移旧技能值。
+   * - 默认：只迁移当前技能，差额进 experience（CoC7 v3 卡行为）；
+   * - legacySkillMigration=true：批量迁移，先职业点、再兴趣点、最后 experience 兜底。
+   */
+  async #migrateLegacySkill(item) {
+    if (game.settings.get(MODULE_ID, "legacySkillMigration")) {
+      const ids = await migrateLegacySkillsCompat(this.document, { preferOccupation: true });
+      if (ids.length) return this.document.items.get(item.id) ?? item;
+      return item;
+    }
+    const migrated = await migrateLegacySkillValue(item);
+    return migrated ? this.document.items.get(item.id) ?? item : item;
+  }
+
   /** 对单个技能执行系统成长检定，返回一条记录数据 */
   async #developOne(item, fastForward = true) {
     const before = skillValue(item);
     // 7.24 旧角色：先把 system.value 迁进 adjustments，否则系统 developSkill 会按错误值成长
-    await migrateLegacySkillValue(item);
-    const migrated = this.document.items.get(item.id) ?? item;
+    const migrated = await this.#migrateLegacySkill(item);
     const adjustmentsBefore = foundry.utils.duplicate(migrated.system?.adjustments ?? {});
     const sanBefore = Number(this.document.system?.attribs?.san?.value ?? 0);
     try {
@@ -519,8 +532,7 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
           input.value = String(before);
           return;
         }
-        await migrateLegacySkillValue(item);
-        const migrated = this.document.items.get(item.id) ?? item;
+        const migrated = await this.#migrateLegacySkill(item);
         const adjustments = foundry.utils.duplicate(migrated.system.adjustments ?? {});
         const adjustmentsBefore = foundry.utils.duplicate(adjustments);
         adjustments.experience = Number(adjustments.experience ?? 0) + (after - before);

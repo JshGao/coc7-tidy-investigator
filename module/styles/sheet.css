@@ -3309,3 +3309,12 @@ img.c7t-row-ico {
     display: none;
   }
 }
+
+/* .st 导入对话框 */
+.c7t-import-st textarea {
+  width: 100%;
+  min-height: 10rem;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-size: 13px;
+  line-height: 1.5;
+}

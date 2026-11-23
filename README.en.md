@@ -123,7 +123,7 @@ All three typefaces are licensed under the SIL Open Font License 1.1; the licens
 - **Growth**: check **Mark** on the Skills tab → **Develop all** on the Growth tab; manual value edits (Cthulhu Mythos and the like) also happen in edit mode
 - **Favorites**: right-click a skill / weapon / item → **Add to favorites**, then click it in the favorites sidebar on the left
 - **Resource order**: once you unlock edit mode, drag HP / MP / SAN / Luck to reorder them; the order is saved per actor
-- **Settings**: Game Settings → Module Settings: Compact mode / Remember window size / Default skill sorting
+- **Settings**: Game Settings → Module Settings: Compact mode / Remember window size / Default skill sorting / Legacy skill migration prefers occupation & interest points
 
 ---
 

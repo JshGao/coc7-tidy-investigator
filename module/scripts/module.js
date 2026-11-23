@@ -51,6 +51,15 @@ function registerSettings() {
     default: {},
   });
 
+  game.settings.register(MODULE_ID, "legacySkillMigration", {
+    name: "C7TIDY.Settings.LegacyMigration",
+    hint: "C7TIDY.Settings.LegacyMigrationHint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+  });
+
   game.settings.register(MODULE_ID, "defaultSkillSort", {
     name: "C7TIDY.Settings.DefaultSort",
     hint: "C7TIDY.Settings.DefaultSortHint",

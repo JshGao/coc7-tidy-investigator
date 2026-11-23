@@ -239,5 +239,14 @@
   "C7TIDY.Container.InventoryFoot": "Same item types as the system container sheet: weapons / armor / books / spells / talents / items / statuses.",
   "C7TIDY.Container.Description": "Description",
   "C7TIDY.Container.DescriptionFoot": "Containers only have description.value; visible to players.",
-  "C7TIDY.Container.KeeperFoot": "Keeper notes are GM-only and read-only while the sheet is locked."
+  "C7TIDY.Container.KeeperFoot": "Keeper notes are GM-only and read-only while the sheet is locked.",
+  "C7TIDY.Settings.LegacyMigration": "Legacy skill migration: prefer occupation/interest points",
+  "C7TIDY.Settings.LegacyMigrationHint": "When checked, legacy skills that only have a total value are allocated from remaining occupation points (occupation skills), then interest points, with the rest going to experience. Unchecked keeps the system behaviour (all to experience). Budgets come from the actor occupation/interest point settings; only legacy skills that have not been migrated yet are affected.",
+  "C7TIDY.Import.StButton": "Import .st",
+  "C7TIDY.Import.StTitle": "Import SealDice data",
+  "C7TIDY.Import.StHint": "Paste a SealDice .st command (e.g. .st STR60 DEX70 SpotHidden80). Supports characteristics, HP/MP/SAN/Luck and skills; missing skills are created; dice expressions are skipped.",
+  "C7TIDY.Import.Import": "Import",
+  "C7TIDY.Import.Done": "Imported {characteristics} characteristics, {attributes} resources, {skills} skills ({created} created).",
+  "C7TIDY.Import.Partial": "Some entries failed: {errors}",
+  "C7TIDY.Import.Error": "Import failed; see the console."
 }

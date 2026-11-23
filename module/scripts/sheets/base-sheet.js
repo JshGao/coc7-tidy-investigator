@@ -9,6 +9,7 @@ import {
   prepareResources,
 } from "../services/view-data.js";
 import { reloadWeapon, unloadWeapon } from "../compat.js";
+import { importSealDiceSt } from "../services/sealdice-import.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -50,6 +51,7 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     deleteEffect: Coc7TidyBaseSheet._onDeleteEffect,
     toggleSkillSort: Coc7TidyBaseSheet._onToggleSkillSort,
     toggleGroup: Coc7TidyBaseSheet._onToggleGroup,
+    importSt: Coc7TidyBaseSheet._onImportSt,
   };
 
   /** @returns {Actor} */
@@ -387,6 +389,46 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     } catch (err) {
       console.error(`${MODULE_ID} | 卸弹失败：${item.name}`, err);
       ui.notifications.error(game.i18n.localize("C7TIDY.Weapon.UnloadError"));
+    }
+  }
+
+  /** 导入海豹骰 `.st` 文本（特性 / HP/MP/SAN/幸运 / 技能） */
+  static async _onImportSt(event) {
+    event.preventDefault();
+    if (!this.isEditable) return;
+    let text = "";
+    try {
+      text = await foundry.applications.api.DialogV2.prompt({
+        window: { title: game.i18n.localize("C7TIDY.Import.StTitle") },
+        content: `<div class="c7t-import-st"><p>${game.i18n.localize("C7TIDY.Import.StHint")}</p><textarea name="st" rows="8" placeholder=".st 力量60 敏捷70 侦查80 图书馆使用60"></textarea></div>`,
+        ok: {
+          label: game.i18n.localize("C7TIDY.Import.Import"),
+          callback: (dialogEvent, button, dialog) =>
+            dialog?.element?.querySelector('textarea[name="st"]')?.value ?? "",
+        },
+      });
+    } catch {
+      return;
+    }
+    if (!text?.trim()) return;
+    try {
+      const result = await importSealDiceSt(this.document, text);
+      if (result.warnings.length) {
+        console.warn(`${MODULE_ID} | .st 跳过的条目：`, result.warnings);
+      }
+      if (result.errors.length) {
+        ui.notifications.warn(game.i18n.format("C7TIDY.Import.Partial", { errors: result.errors.join("、") }));
+      }
+      ui.notifications.info(game.i18n.format("C7TIDY.Import.Done", {
+        characteristics: result.characteristics,
+        attributes: result.attributes,
+        skills: result.skills,
+        created: result.created,
+      }));
+      await this.render();
+    } catch (err) {
+      console.error(`${MODULE_ID} | .st 导入失败`, err);
+      ui.notifications.error(game.i18n.localize("C7TIDY.Import.Error"));
     }
   }
 
