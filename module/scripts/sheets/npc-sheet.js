@@ -14,6 +14,7 @@ import {
   prepareWeapons,
 } from "../services/tabs-data.js";
 import { orderResources, prepareNpcDerived } from "../services/view-data.js";
+import { actorParsedValues, skillValue } from "../compat.js";
 import { Coc7TidyBaseSheet } from "./base-sheet.js";
 
 /**
@@ -105,8 +106,8 @@ export class Coc7TidyNpcSheet extends Coc7TidyBaseSheet {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     this.#installSkillValueEditing();
     this.#installMovementEditing();
     this.#installNumericInputGuard();
@@ -136,7 +137,7 @@ export class Coc7TidyNpcSheet extends Coc7TidyBaseSheet {
     return result;
   }
 
-  /** 技能当前值内联编辑：写 adjustments.experience 差量（system.value 不是字段）。 */
+  /** 技能当前值内联编辑：8.16 写 adjustments 差量；7.24 用 Item#updateValue（NPC 直接写 system.value）。 */
   #installSkillValueEditing() {
     for (const input of this.element?.querySelectorAll(".c7t-skill-input") ?? []) {
       if (input.dataset.bound) continue;
@@ -147,14 +148,18 @@ export class Coc7TidyNpcSheet extends Coc7TidyBaseSheet {
         const item = row ? this.document.items.get(row.dataset.itemId) : null;
         if (!item) return;
         const next = Number(input.value);
+        const current = skillValue(item);
         if (!Number.isFinite(next)) {
-          input.value = String(item.system?.value ?? 0);
+          input.value = String(current);
           return;
         }
-        const delta = next - Number(item.system?.value ?? 0);
-        if (delta === 0) return;
+        if (next === current) return;
+        if (item.system?.valueUnmodified === undefined && typeof item.updateValue === "function") {
+          await item.updateValue(next);
+          return;
+        }
         const adjustments = foundry.utils.duplicate(item.system?.adjustments ?? {});
-        adjustments.experience = Number(adjustments.experience ?? 0) + delta;
+        adjustments.experience = Number(adjustments.experience ?? 0) + (next - current);
         await item.update({ "system.adjustments": adjustments });
       });
     }
@@ -233,7 +238,7 @@ export class Coc7TidyNpcSheet extends Coc7TidyBaseSheet {
     const formula = String(this.document.system?.special?.attacksPerRound ?? "").trim();
     if (!formula) return;
     try {
-      const roll = await new Roll(formula, this.document.parsedValues()).evaluate();
+      const roll = await new Roll(formula, actorParsedValues(this.document)).evaluate();
       await roll.toMessage({
         flavor: game.i18n.localize("CoC7.AttacksPerRound"),
         speaker: ChatMessage.getSpeaker({ actor: this.document }),
@@ -259,8 +264,15 @@ export class Coc7TidyNpcSheet extends Coc7TidyBaseSheet {
       const LinkClass = CONFIG.CoC7Link?.documentClass;
       if (LinkClass?.fromDropData) {
         const link = await LinkClass.fromDropData(data);
-        await link.toChatMessage();
-        return;
+        // 8.16：实例方法；7.24：静态 LinkClass.toChatMessage(options)
+        if (typeof link?.toChatMessage === "function") {
+          await link.toChatMessage();
+          return;
+        }
+        if (typeof LinkClass.toChatMessage === "function") {
+          await LinkClass.toChatMessage(data);
+          return;
+        }
       }
     } catch (err) {
       console.warn(`${MODULE_ID} | 生成 SAN 损失链接卡失败，回退为提示消息`, err);

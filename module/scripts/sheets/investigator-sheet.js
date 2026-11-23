@@ -10,6 +10,12 @@ import {
   prepareSummary,
   prepareWeapons,
 } from "../services/tabs-data.js";
+import {
+  developSkill as developSkillCompat,
+  migrateLegacySkillValue,
+  skillValue,
+  toggleActorFlag,
+} from "../compat.js";
 import { Coc7TidyBaseSheet, warnMissingApi } from "./base-sheet.js";
 
 /**
@@ -93,8 +99,8 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     this.#installBiographyEditing();
     this.#installDevelopmentToggles();
     this.#installGrowthLabelEditing();
@@ -200,18 +206,25 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
     });
   }
 
-  /** 书籍阅读进度（数组字段，显式写回） */
+  /** 书籍阅读进度：8.16 写 system.books 数组；7.24 写 book Item 的 system.study.progress */
   #installBookProgressEditing() {
     for (const input of this.element?.querySelectorAll(".c7t-book-progress") ?? []) {
       if (input.dataset.bound) continue;
       input.dataset.bound = "1";
       input.addEventListener("change", async (event) => {
         event.stopPropagation();
+        const progress = Number(input.value);
+        if (!Number.isFinite(progress)) return;
+        const itemId = input.dataset.itemId;
+        if (itemId) {
+          const book = this.document.items.get(itemId);
+          if (!book) return;
+          await book.update({ "system.study.progress": Math.max(0, Math.trunc(progress)) });
+          return;
+        }
         const index = Number(input.dataset.index);
         const books = foundry.utils.duplicate(this.document.system?.books ?? []);
         if (!Number.isInteger(index) || !books[index]) return;
-        const progress = Number(input.value);
-        if (!Number.isFinite(progress)) return;
         books[index].progress = Math.max(0, Math.trunc(progress));
         await this.document.update({ "system.books": books });
       });
@@ -231,7 +244,19 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
         if (!item || !field) return;
         const value = Number(input.value);
         if (!Number.isFinite(value)) return;
-        await item.update({ [`system.adjustments.${field}`]: value });
+        const previous = Number(item.system?.adjustments?.[field] ?? 0) || 0;
+        const migrated = await migrateLegacySkillValue(item)
+          ? this.document.items.get(item.id) ?? item
+          : item;
+        if (field === "experience") {
+          // 迁移会把旧 system.value 折算进 experience；按“用户输入的增量”写回
+          const currentExperience = Number(migrated.system?.adjustments?.experience ?? 0) || 0;
+          await migrated.update({
+            "system.adjustments.experience": currentExperience + (value - previous),
+          });
+          return;
+        }
+        await migrated.update({ [`system.adjustments.${field}`]: value });
       });
     }
   }
@@ -307,20 +332,23 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
 
   /** 对单个技能执行系统成长检定，返回一条记录数据 */
   async #developOne(item, fastForward = true) {
-    const before = Number(item.system?.value ?? 0);
-    const adjustmentsBefore = foundry.utils.duplicate(item.system?.adjustments ?? {});
+    const before = skillValue(item);
+    // 7.24 旧角色：先把 system.value 迁进 adjustments，否则系统 developSkill 会按错误值成长
+    await migrateLegacySkillValue(item);
+    const migrated = this.document.items.get(item.id) ?? item;
+    const adjustmentsBefore = foundry.utils.duplicate(migrated.system?.adjustments ?? {});
     const sanBefore = Number(this.document.system?.attribs?.san?.value ?? 0);
     try {
-      await this.document.developSkill?.(item.uuid, fastForward);
+      await developSkillCompat(this.document, migrated, fastForward);
     } catch (err) {
       console.warn(`${MODULE_ID} | 成长检定失败：${item.name}`, err);
     }
-    const updated = this.document.items.get(item.id) ?? item;
+    const updated = this.document.items.get(item.id) ?? migrated;
     return {
       skillId: item.id,
       name: item.name,
       before,
-      after: Number(updated.system?.value ?? before),
+      after: skillValue(updated),
       adjustmentsBefore,
       sanBefore,
       sanAfter: Number(this.document.system?.attribs?.san?.value ?? sanBefore),
@@ -485,16 +513,18 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
         event.stopPropagation();
         const item = this.document.items.get(input.dataset.itemId);
         if (!item) return;
-        const before = Number(input.dataset.current ?? item.system?.value ?? 0);
+        const before = Number(input.dataset.current ?? skillValue(item));
         const after = Number(input.value);
         if (!Number.isFinite(after) || after === before) {
           input.value = String(before);
           return;
         }
-        const adjustments = foundry.utils.duplicate(item.system.adjustments ?? {});
+        await migrateLegacySkillValue(item);
+        const migrated = this.document.items.get(item.id) ?? item;
+        const adjustments = foundry.utils.duplicate(migrated.system.adjustments ?? {});
         const adjustmentsBefore = foundry.utils.duplicate(adjustments);
         adjustments.experience = Number(adjustments.experience ?? 0) + (after - before);
-        await item.update({ "system.adjustments": adjustments });
+        await migrated.update({ "system.adjustments": adjustments });
         await this.#appendGrowthChecks([
           { skillId: item.id, name: item.name, before, after, adjustmentsBefore },
         ]);
@@ -603,7 +633,7 @@ export class Coc7TidyInvestigatorSheet extends Coc7TidyBaseSheet {
     event.preventDefault();
     const flag = target.dataset.flag;
     if (!flag) return;
-    await this.document.update({ [`system.flags.${flag}`]: !this.document.system?.flags?.[flag] });
+    await toggleActorFlag(this.document, flag);
   }
 
   static async _onDevelopSkill(event, target) {

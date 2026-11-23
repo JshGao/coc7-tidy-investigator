@@ -2,6 +2,26 @@
 
 # 更新日志
 
+## 0.9.2 — 2026-11-23
+
+兼容 Foundry VTT **13.351 + CoC7 7.24**，同时保留 14.369 + 8.16。
+
+- 清单：`compatibility.minimum` 改为 `13.351`、`verified` 14.369；CoC7 最低版本 7.24
+- 技能值：7.24 角色技能的 `system.value` 为 `null` / `-1` 占位，真实值在 `item.value` / `rawValue` / `adjustments`；8.16 才把 getter 放进 `system.value`。新增 `scripts/compat.js` 统一读取，修复技能页、简表、收藏、信用评级全部显示 0 的问题
+- 旧数据：7.24 角色把旧 `system.value` 迁进 `adjustments.experience` 后再编辑，避免“显示旧值、编辑写新字段”的割裂
+- 技能基础值：7.24 没有 `adjustments.base`，回退 `system.base` / `item.base` 公式解析
+- 武器：7.24 没有 `system.skillMain` / `getSkillByName`，改为按 `skill.main.id` / 名字 / CoC-ID 解析；武器技能值走统一 helper
+- 成长：7.24 `developSkill` 只接受 item id，8.16 的 `developSkills` 只接受 uuid，按能力探测传参；成长前先迁移旧技能值
+- NPC 技能编辑：7.24 非角色技能忽略 adjustments，改用 `item.updateValue()` 直接写 `system.value`
+- 每轮攻击公式：7.24 没有 `parsedValues()`，回退 `parseCharacteristics()`
+- 书籍：7.24 没有 `system.books`，笔记页改读 `book` Item 的 `system.study.progress` 并写回
+- 金钱：8.16 `formattedMonetaryValue("spending")`，7.24 回退 `actor.cash / assets / spendingLevel`；成长点 `ExperiencePackagePointsSpent` 大小写兼容
+- 秘法硬化 / 疯狂经历：7.24 是 Actor flag，8.16 是 `system.flags.*`，读写双向兼容
+- 装填 / 卸弹：7.24 方法在 Item 上（`reload` / `addBullet` / `shootBullets` / `setBullets`），8.16 在 `system` 上
+- 清除状态：7.24 只有单数 `unsetCondition`，保留 AE 清理后再写字段
+- ApplicationV2：`_onRender` 改为 async/await；`foundry.applications.instances` 与 `loadTemplates` 加防御性回退；缩放 / 右键菜单改用 `ownerDocument` 以适配 v14 弹出窗口
+- 新增 `tools/compat/run.mjs`：Foundry 13.351 + CoC7 7.24、14.369 + 8.16 双环境 Playwright E2E（技能保留 / 编辑 / 武器 / NPC / 容器 / 状态 / 金钱 / 书籍 / 成长 / 秘法 flag / 设置 / 每轮攻击 / SAN 链接 / 旧角色迁移）
+
 ## 0.9.1 — 2026-10-28
 
 武器表「弹药」列修正：调查员简表与生物 / NPC 战斗页统一为「子弹/弹容量」+ 装填按钮。

@@ -1,15 +1,15 @@
 [English](README.en.md) | **中文**
 
 # CoC7 Tidy 角色卡
-### coc7-tidy-investigator · Foundry VTT 14 · Call of Cthulhu 7e
+### coc7-tidy-investigator · Foundry VTT 13 / 14 · Call of Cthulhu 7e
 
 一款 CoC7 的自定义角色卡。其风格大量借鉴了 **Tidy 5e Sheets**，包含了**调查员卡** 、**生物 / NPC 卡** 、**容器卡**。仅在系统内注册为新的可选模版，不替换任何现有角色卡模版；纯 Handlebars + CSS实现，无构建依赖，体积轻量，支持中英双语。
 
-**当前版本：0.9.1**（2026-10-28） · [Release Notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
+**当前版本：0.9.2**（2026-11-23） · [Release Notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
 
 0.9 版完成了一次完整的美术升级：三张卡统一为 **1920 年代复古档案** 的视觉语言 —— 深色漆面横幅、黄铜饰线、做旧纸张、墨色表头、牛血红强调，配合本地打包的 Cinzel / EB Garamond / Roboto Condensed 字体。
 
-0.9.1 修正了武器表「弹药」列：调查员简表与生物 / NPC 战斗页统一显示 **子弹 / 弹容量**，并加入左轮弹巢**装填**（单击装满 / Shift+单击装 1 发）与**卸弹**（双击卸空 / Shift+双击卸 1 发）操作。
+0.9.2 兼容 **Foundry VTT 13.351 + CoC7 7.24**，同时保留 14.369 + 8.16：修复旧角色技能值显示为 0 / `-1`、成长检定、武器关联技能、信用评级、书籍、金钱、秘法 flag、弹药与状态清除等 7.24 差异；并加入双环境 Playwright 兼容测试。
 
 ![封面](docs/screenshots/cover.png)
 
@@ -131,15 +131,19 @@ HP / MP / SAN / 幸运资源条（解锁后可拖拽调整顺序），点击「�
 
 | 项目 | 版本 |
 |---|---|
-| Foundry VTT | 14（在 14.368 验证） |
-| Call of Cthulhu 7e | ≥ 8.16 |
+| Foundry VTT | ≥ 13.351（13.351 / 14.369 验证） |
+| Call of Cthulhu 7e | ≥ 7.24（7.24 / 8.16 验证） |
 
 依赖：无。注册 `character`、`npc`、`creature`、`container` 四种类型，不改变系统默认卡，不影响载具。
+
+兼容性 E2E（Foundry 13.351 + CoC7 7.24 / 14.369 + 8.16）见 [tools/compat](tools/compat/README.md)。
 
 ---
 
 ## 版本
 
+- **0.9.2（2026-11-23）**：兼容 Foundry VTT 13.351 + CoC7 7.24（保留 14.369 + 8.16）。修复 7.24 旧角色技能值显示 0 / `-1`、成长检定 id/uuid、武器关联技能、信用评级、书籍进度、金钱格式、秘法 flag、装填/卸弹与清除状态；新增 `tools/compat` 双环境 E2E。
+  - 更新日志：[CHANGELOG.md](CHANGELOG.md)
 - **0.9.1（2026-10-28）**：武器表弹药修正。调查员简表与生物 / NPC 战斗页的「弹药」列改为「子弹/弹容量」，新增左轮弹巢装填（单击装满 / Shift+单击装 1 发）与卸弹（双击卸空 / Shift+双击卸 1 发）；修复生物 / NPC 卡「移动方式」暗色下类型标签被下拉箭头底纹盖住的问题。
   - 更新日志：[CHANGELOG.md](CHANGELOG.md)
 - **0.9.0（2026-10-26）**：「调查员档案」美术升级。三张卡换用深色漆面横幅 / 黄铜饰线 / 做旧纸张 / 墨色表头 / 牛血红强调；本地打包 Cinzel / EB Garamond / Roboto Condensed 三款 OFL 字体；重绘盾徽、资源图标、角饰与空状态；重出全部宣传截图与封面。功能与数据结构不变。

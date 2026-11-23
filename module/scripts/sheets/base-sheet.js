@@ -8,6 +8,7 @@ import {
   prepareIdentity,
   prepareResources,
 } from "../services/view-data.js";
+import { reloadWeapon, unloadWeapon } from "../compat.js";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -108,8 +109,8 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static RESIZE_DIRECTIONS = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     this.#installResizeHandles();
     this.#installSkillSearch();
     this.#installItemContextMenu();
@@ -122,8 +123,9 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   #installResizeHandles() {
     const win = this.element;
     if (!win || win.querySelector(".c7t-resize-handle")) return;
+    const doc = win.ownerDocument ?? document;
     for (const dir of Coc7TidyBaseSheet.RESIZE_DIRECTIONS) {
-      const handle = document.createElement("div");
+      const handle = doc.createElement("div");
       handle.className = `c7t-resize-handle c7t-resize-${dir}`;
       handle.dataset.dir = dir;
       handle.addEventListener("pointerdown", (event) => this.#onResizeStart(event, dir));
@@ -172,14 +174,15 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       });
     };
 
+    const view = this.element?.ownerDocument?.defaultView ?? window;
     const onUp = () => {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
+      view.removeEventListener("pointermove", onMove);
+      view.removeEventListener("pointerup", onUp);
       this.#saveWindowSize();
     };
 
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp, { once: true });
+    view.addEventListener("pointermove", onMove);
+    view.addEventListener("pointerup", onUp, { once: true });
   }
 
   #isCompact() {
@@ -296,9 +299,14 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const actor = this.document;
     const keys = ["criticalWounds", "unconscious", "dying", "dead", "prone", "tempoInsane", "indefInsane"];
     try {
-      if (typeof actor.conditionsUnset === "function") await actor.conditionsUnset(keys);
+      if (typeof actor.conditionsUnset === "function") {
+        await actor.conditionsUnset(keys);
+      } else {
+        // 7.24 只有单数 unsetCondition；它会在状态图标模式下同时移除 AE
+        for (const key of keys) await actor.unsetCondition?.(key);
+      }
     } catch (err) {
-      console.warn(`${MODULE_ID} | conditionsUnset 失败`, err);
+      console.warn(`${MODULE_ID} | 清除状态失败`, err);
     }
     const updates = Object.fromEntries(keys.map((key) => [`system.conditions.${key}.value`, false]));
     await actor.update(updates);
@@ -355,19 +363,10 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const itemId = target.closest("[data-item-id]")?.dataset.itemId;
     const item = itemId ? this.document.items.get(itemId) : null;
     if (!item || item.type !== "weapon") return;
-    const system = item.system ?? {};
-    const capacity = Number(system.bullets);
-    if (!Number.isFinite(capacity) || capacity <= 0) return;
-    const loaded = Number(system.ammo) || 0;
+    const capacity = parseInt(item.system?.bullets, 10) || 0;
+    if (capacity <= 0) return;
     try {
-      if (event.shiftKey) {
-        if (typeof system.addAmmunition === "function") await system.addAmmunition();
-        else await item.update({ "system.ammo": Math.min(loaded + 1, capacity) });
-      } else if (typeof system.reload === "function") {
-        await system.reload();
-      } else {
-        await item.update({ "system.ammo": capacity });
-      }
+      await reloadWeapon(item, event.shiftKey);
     } catch (err) {
       console.error(`${MODULE_ID} | 装填失败：${item.name}`, err);
       ui.notifications.error(game.i18n.localize("C7TIDY.Weapon.ReloadError"));
@@ -381,19 +380,10 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const itemId = target.closest("[data-item-id]")?.dataset.itemId;
     const item = itemId ? this.document.items.get(itemId) : null;
     if (!item || item.type !== "weapon") return;
-    const system = item.system ?? {};
-    const capacity = Number(system.bullets);
-    if (!Number.isFinite(capacity) || capacity <= 0) return;
-    const loaded = Number(system.ammo) || 0;
+    const capacity = parseInt(item.system?.bullets, 10) || 0;
+    if (capacity <= 0) return;
     try {
-      if (event.shiftKey) {
-        if (typeof system.shootAmmunition === "function") await system.shootAmmunition(1);
-        else await item.update({ "system.ammo": Math.max(0, loaded - 1) });
-      } else if (typeof system.setBullets === "function") {
-        await system.setBullets(0);
-      } else {
-        await item.update({ "system.ammo": 0 });
-      }
+      await unloadWeapon(item, event.shiftKey);
     } catch (err) {
       console.error(`${MODULE_ID} | 卸弹失败：${item.name}`, err);
       ui.notifications.error(game.i18n.localize("C7TIDY.Weapon.UnloadError"));
@@ -537,8 +527,10 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   #openItemMenu(event, item) {
-    document.querySelector(".c7t-context-menu")?.remove();
-    const menu = document.createElement("div");
+    const doc = this.element?.ownerDocument ?? document;
+    const view = doc.defaultView ?? window;
+    doc.querySelector(".c7t-context-menu")?.remove();
+    const menu = doc.createElement("div");
     menu.className = "c7t-context-menu";
 
     const entries = this._itemContextEntries(item) ?? [];
@@ -554,8 +546,8 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       menu.append(button);
     }
 
-    document.body.append(menu);
-    const { innerWidth, innerHeight } = window;
+    doc.body.append(menu);
+    const { innerWidth, innerHeight } = view;
     const width = menu.offsetWidth || 120;
     const height = menu.offsetHeight || 60;
     menu.style.left = `${Math.min(event.clientX, innerWidth - width - 8)}px`;
@@ -564,9 +556,9 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const close = (closeEvent) => {
       if (menu.contains(closeEvent.target)) return;
       menu.remove();
-      document.removeEventListener("pointerdown", close);
+      doc.removeEventListener("pointerdown", close);
     };
-    setTimeout(() => document.addEventListener("pointerdown", close), 0);
+    setTimeout(() => doc.addEventListener("pointerdown", close), 0);
   }
 
   /** 技能 / 物品拖拽排序（写入 item.sort） */

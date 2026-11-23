@@ -16,7 +16,7 @@
           <span class="col-name"><i class="c7t-row-ico"><i class="fa-solid fa-book"></i></i><span class="c7t-row-name">{{book.name}}</span></span>
           <span class="c7t-row-note">{{localize 'C7TIDY.Notes.ReadProgress'}}
             {{#if @root.isEditing}}
-              <input class="c7t-book-progress" type="number" min="0" step="1" value="{{book.progress}}" data-index="{{book.index}}">/{{book.necessary}}
+              <input class="c7t-book-progress" type="number" min="0" step="1" value="{{book.progress}}" data-index="{{book.index}}" data-item-id="{{book.itemId}}">/{{book.necessary}}
             {{else}}
               {{book.progress}}/{{book.necessary}}
             {{/if}}

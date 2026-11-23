@@ -153,3 +153,16 @@ open /tmp/c7t-art/audit/summary.txt
 - 控件污染是启发式规则，可能误报，报告里标为 P2 供人工复核。
 - 只读探针只读取 DOM / computed style，不修改页面数据；文字透明化仅用于截图采样，不改变布局。
 - 审计在 CDP 中按 manifest 顺序逐页执行，77 页约 25–60 秒。
+
+---
+
+## 7. Foundry 13 / 14 + CoC7 7.24 / 8.16 兼容性 E2E
+
+`tools/compat/` 是一套独立于视觉渲染管线的真实服务端兼容测试：Foundry 13.351 便携 Node 包 + CoC7 7.24，以及本机 Foundry 14.369 + CoC7 8.16，用 Playwright 跑技能保留、编辑、武器、NPC、容器、状态、成长等用例。
+
+```bash
+cd tools
+npm run compat:all
+```
+
+准备步骤、端口、数据目录与清理方式见 [compat/README.md](compat/README.md)。

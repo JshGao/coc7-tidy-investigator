@@ -2,16 +2,16 @@
 
 # CoC7 Tidy Sheets
 
-Tidy 5e Sheets-style character sheets for **Call of Cthulhu 7e** on **Foundry VTT 14**:
+Tidy 5e Sheets-style character sheets for **Call of Cthulhu 7e** on **Foundry VTT 13.351+ / 14.369**:
 **Investigator** + **NPC / Creature** + **Container** sheets.
 Opt-in registration — the system's default sheets are never replaced. Pure Handlebars + CSS, no build dependencies.
 
-**Current version: 0.9.1**
+**Current version: 0.9.2**
 
-- Foundry VTT: `>= 14` (verified on 14.368)
-- CoC7: `>= 8.16`
+- Foundry VTT: `>= 13.351` (verified on 13.351 and 14.369)
+- CoC7: `>= 7.24` (verified on 7.24 and 8.16)
 
-**What's new in 0.9.1**: weapon tables show bullets / magazine with reload (click to fill, Shift+click for one round) and unload (double-click to empty, Shift+double-click for one round) on the Investigator Summary and NPC / Creature Combat tabs; fixes NPC Movement type labels in dark mode.
+**What's new in 0.9.2**: Foundry 13.351 / CoC7 7.24 compatibility. Skill values, base values, weapon-linked skill values and credit rating now read from the version-appropriate place (`item.value` / `rawValue` on 7.24, `system.value` on 8.16); growth uses item ids on 7.24 and uuids on 8.16; books, money, mythos flags, ammo helpers and condition clearing have 7.24 fallbacks. A two-lane Playwright matrix (`tools/compat`) covers 13.351 + 7.24 and 14.369 + 8.16.
 
 **Visual language (v0.9 "Investigator Dossier")**: dark lacquered banner, brass hairlines,
 aged paper, ink table headers and oxblood accents; hand-drawn SVG shields / icons and
@@ -99,9 +99,9 @@ see `assets/fonts/licenses/`.
 
 # CoC7 Tidy 角色卡
 
-*Tidy-style investigator, NPC/creature and container sheets for Call of Cthulhu 7e on Foundry VTT 14.*
+*Tidy-style investigator, NPC/creature and container sheets for Call of Cthulhu 7e on Foundry VTT 13.351+ / 14.369.*
 
-**当前版本：0.9.1**
+**当前版本：0.9.2**
 
 仿 **Tidy 5e Sheets** 风格的 CoC7 角色卡：**调查员卡** + **生物 / NPC 卡** + **容器卡**，可选注册、不替换系统默认卡。
 纯 Handlebars + CSS，无构建依赖。
@@ -109,10 +109,10 @@ see `assets/fonts/licenses/`.
 **视觉语言（v0.9「调查员档案」）**：深色漆面横幅、黄铜饰线、做旧纸张、墨色表头、牛血红强调；
 盾徽 / 图标为自制 SVG；本地打包 Cinzel / EB Garamond / Roboto Condensed 三款 OFL 字体。
 
-- Foundry VTT：`>= 14`（14.368 验证）
-- CoC7：`>= 8.16`
+- Foundry VTT：`>= 13.351`（13.351 / 14.369 验证）
+- CoC7：`>= 7.24`（7.24 / 8.16 验证）
 
-**0.9.1 更新**：调查员简表与生物 / NPC 战斗页的武器表显示「子弹 / 弹容量」，并加入装填（单击装满 / Shift+单击装 1 发）与卸弹（双击卸空 / Shift+双击卸 1 发）；修复生物 / NPC 卡「移动方式」暗色下类型标签被底纹盖住的问题。
+**0.9.2 更新**：兼容 Foundry 13.351 + CoC7 7.24（同时保留 14.369 + 8.16）。技能当前值 / 基础值 / 武器关联技能 / 信用评级按版本读取正确字段；成长检定在 7.24 传 item id、8.16 传 uuid；书籍、金钱、秘法 flag、弹药方法与状态清除都有 7.24 回退。新增 `tools/compat` 双环境 Playwright 兼容测试（13.351 + 7.24 / 14.369 + 8.16）。
 
 ## 功能
 

@@ -67,7 +67,8 @@ function registerSettings() {
 
 /** 重新渲染已打开的本模组角色卡 */
 function refreshSheets() {
-  for (const app of foundry.applications.instances.values?.() ?? []) {
+  const apps = foundry.applications.instances;
+  for (const app of apps?.values?.() ?? []) {
     if (app instanceof Coc7TidyInvestigatorSheet || app instanceof Coc7TidyNpcSheet || app instanceof Coc7TidyContainerSheet) app.render({ force: false });
   }
 }
@@ -122,8 +123,8 @@ function registerSheets() {
 /** 预加载 partial，供主模板 include。 */
 async function preloadTemplates() {
   try {
-    const loadTemplates = foundry.applications.handlebars?.loadTemplates;
-    if (!loadTemplates) return;
+    const loadTemplates = foundry.applications.handlebars?.loadTemplates ?? globalThis.loadTemplates;
+    if (typeof loadTemplates !== "function") return;
     await loadTemplates([
       TEMPLATES.icons,
       TEMPLATES.bannerArt,

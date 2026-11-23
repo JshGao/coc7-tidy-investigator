@@ -2,6 +2,7 @@
  * 纯函数 view-model 层：把 CoC7 的 actor 数据整理成模板直接可用的结构。
  * 这里不持有文档对象，也不做任何写入。
  */
+import { skillBase, skillValue } from "../compat.js";
 
 const CHARACTERISTICS = [
   ["str", "STR", "CHARAC.STR"],
@@ -205,13 +206,13 @@ export function prepareSkills(actor) {
         num(adjustments.experiencePackage) +
         num(adjustments.experience) !==
       0;
-    const value = num(system.value);
+    const value = skillValue(item);
     return {
       id: item.id,
       name: item.name,
       img: item.img,
       value,
-      base: num(adjustments.base),
+      base: skillBase(item),
       half: half(value),
       fifth: fifth(value),
       invested,

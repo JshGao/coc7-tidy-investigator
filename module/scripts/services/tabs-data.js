@@ -1,4 +1,11 @@
 import { MODULE_ID, SKILL_CATEGORIES, BACKGROUND_SLOTS } from "../constants.js";
+import {
+  actorFlagValue,
+  skillBase,
+  skillValue,
+  skillValueUnmodified,
+  weaponSkill,
+} from "../compat.js";
 
 /** CoC-ID → 类别 id */
 const COCID_TO_CATEGORY = new Map();
@@ -28,8 +35,8 @@ export function buildSkillRow(item) {
   const system = item.system ?? {};
   const adjustments = system.adjustments ?? {};
   const cocid = item.flags?.CoC7?.cocidFlag?.id?.replace(/^i\.skill\./, "") ?? "";
-  const value = num(system.value);
-  const base = num(adjustments.base);
+  const value = skillValue(item);
+  const base = skillBase(item);
   const extra =
     num(adjustments.personal) +
     num(adjustments.occupation) +
@@ -45,7 +52,7 @@ export function buildSkillRow(item) {
     cocid,
     category: COCID_TO_CATEGORY.get(cocid) ?? "other",
     value,
-    unmodified: num(system.valueUnmodified ?? value),
+    unmodified: skillValueUnmodified(item),
     base,
     occupation: num(adjustments.occupation),
     personal: num(adjustments.personal),
@@ -116,19 +123,10 @@ export function prepareWeapons(actor) {
     .filter((item) => item.type === "weapon")
     .map((item) => {
       const system = item.system ?? {};
-      let main = null;
-      let alt = null;
-      try {
-        main = system.skillMain ?? null;
-        alt = system.skillAlternative ?? null;
-      } catch {
-        main = null;
-        alt = null;
-      }
-      if (!main) {
-        const skillName = String(system.skill?.main?.name ?? "");
-        main = skillName ? actor.getSkillByName?.(skillName) ?? null : null;
-      }
+      // 8.16 用 system.skillMain / skillAlternative getter；
+      // 7.24 只有 system.skill.main.{id,name}，由 compat 层按 id / 名字 / CoCID 解析。
+      const main = weaponSkill(actor, item, { alternative: false });
+      const alt = weaponSkill(actor, item, { alternative: true });
       const skillName = String(main?.name ?? system.skill?.main?.name ?? "");
       const ranges = ["normal", "long", "extreme"]
         .map((key) => ({
@@ -150,9 +148,9 @@ export function prepareWeapons(actor) {
         name: item.name,
         img: item.img,
         skillName,
-        skillValue: num(main?.system?.value),
+        skillValue: main ? skillValue(main) : 0,
         altSkillName: String(alt?.name ?? system.skill?.alternativ?.name ?? ""),
-        altSkillValue: num(alt?.system?.value),
+        altSkillValue: alt ? skillValue(alt) : 0,
         damage: text(normal.damage, "—"),
         range: text(normal.value, "—"),
         rate: text(system.usesPerRound?.normal, "—"),
@@ -182,13 +180,23 @@ export function preparePossessions(actor, { types = POSSESSION_TYPES, keepEmpty 
   const creditSkill =
     (typeof actor.getFirstItemByCoCID === "function" ? actor.getFirstItemByCoCID("i.skill.credit-rating") : null) ??
     (typeof actor.creditRatingSkill === "object" ? actor.creditRatingSkill : null);
-  const creditValue = creditSkill?.system?.value;
-  const formatMoney = (key) => {
+  const creditValue = creditSkill ? skillValue(creditSkill) : null;
+  // 8.16：system.formattedMonetaryValue("cash"|"assets"|"spending")
+  // 7.24：Actor getter cash / assets / spendingLevel
+  const formatMoney = (modernKey, legacyKey) => {
     try {
-      return actor.system?.formattedMonetaryValue?.(key) ?? text(money?.[key], "—");
+      const modern = actor.system?.formattedMonetaryValue?.(modernKey);
+      if (modern !== undefined && modern !== null) return modern;
     } catch {
-      return text(money?.[key], "—");
+      /* 回退到旧版 getter */
     }
+    try {
+      const legacy = actor[legacyKey];
+      if (legacy !== undefined && legacy !== null) return legacy;
+    } catch {
+      /* 回退到原始字段 */
+    }
+    return text(money?.[legacyKey], "—");
   };
   const groups = types.map((type) => {
     const items = actor.items
@@ -216,9 +224,9 @@ export function preparePossessions(actor, { types = POSSESSION_TYPES, keepEmpty 
   return {
     money: {
       credit: creditValue != null ? num(creditValue) : text(money?.credit, "—"),
-      cash: formatMoney("cash"),
-      assets: formatMoney("assets"),
-      spending: formatMoney("spendingLevel"),
+      cash: formatMoney("cash", "cash"),
+      assets: formatMoney("assets", "assets"),
+      spending: formatMoney("spending", "spendingLevel"),
     },
     groups,
   };
@@ -267,8 +275,10 @@ export function prepareBackground(actor) {
 export function prepareGrowth(actor) {
   const development = actor.system?.development ?? {};
   const spentOf = (key) => {
+    // 8.16 用 experiencePackagePointsSpent；7.24 只有首字母大写的 ExperiencePackagePointsSpent
+    const alias = key === "experiencePackage" ? "ExperiencePackage" : key;
     try {
-      return num(actor[`${key}PointsSpent`]);
+      return num(actor[`${key}PointsSpent`] ?? actor[`${alias}PointsSpent`]);
     } catch {
       return 0;
     }
@@ -350,21 +360,34 @@ export function prepareGrowth(actor) {
 /** 笔记页（GM） */
 export function prepareNotes(actor) {
   const system = actor.system ?? {};
+  // 8.16：system.books 数组；7.24：没有 books 字段，阅读进度在 book Item 的 system.study
+  const systemBooks = Array.isArray(system.books) ? system.books : [];
+  const books = systemBooks.length
+    ? systemBooks.map((book, index) => ({
+        index,
+        name: book.name,
+        progress: num(book.progress),
+        necessary: num(book.necessary),
+      }))
+    : actor.items
+        .filter((item) => item.type === "book")
+        .map((item) => ({
+          index: item.id,
+          itemId: item.id,
+          name: item.name,
+          progress: num(item.system?.study?.progress),
+          necessary: num(item.system?.study?.necessary),
+        }));
   return {
     keeper: String(system.description?.keeper ?? ""),
-    books: (Array.isArray(system.books) ? system.books : []).map((book, index) => ({
-      index,
-      name: book.name,
-      progress: num(book.progress),
-      necessary: num(book.necessary),
-    })),
+    books,
     sanEvents: (Array.isArray(system.sanityLossEvents) ? system.sanityLossEvents : []).map((event) => ({
       type: String(event.type ?? ""),
       totalLoss: num(event.totalLoss),
       immunity: Boolean(event.immunity),
     })),
-    mythosHardened: Boolean(system.flags?.mythosHardened),
-    mythosExperienced: Boolean(system.flags?.mythosInsanityExperienced),
+    mythosHardened: actorFlagValue(actor, "mythosHardened"),
+    mythosExperienced: actorFlagValue(actor, "mythosInsanityExperienced"),
   };
 }
 

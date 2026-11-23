@@ -9,3 +9,6 @@ dist/
 # 本地环境
 node_modules/
 .mnemon/
+
+# 本地兼容性测试缓存（Foundry 13 便携包 / 测试数据 / 系统）
+tools/.compat/

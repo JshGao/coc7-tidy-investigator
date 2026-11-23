@@ -5,9 +5,13 @@
   "description": "Dev-only visual harness for the CoC7 Tidy sheets (not shipped in the module).",
   "scripts": {
     "render": "node render.mjs --all",
-    "shots": "node shot.mjs --all"
+    "shots": "node shot.mjs --all",
+    "compat:v13": "node compat/run.mjs --lane=v13",
+    "compat:v14": "node compat/run.mjs --lane=v14",
+    "compat:all": "node compat/run.mjs --lane=all"
   },
   "dependencies": {
-    "handlebars": "^4.7.8"
+    "handlebars": "^4.7.8",
+    "playwright-core": "^1.65.1"
   }
 }
