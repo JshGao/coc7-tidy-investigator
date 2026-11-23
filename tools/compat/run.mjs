@@ -239,6 +239,13 @@ function collectErrors(page) {
 
 async function clearActors(page) {
   await page.evaluate(async () => {
+    // 先关掉角色卡：删除 Actor 时仍打开的 sheet 异步渲染会触发 Foundry 的
+    // "Actor id does not exist" pageerror，属于测试清理竞态。
+    const apps = [...(foundry.applications.instances?.values?.() ?? [])];
+    for (const app of apps) {
+      if (app?.document?.documentName === "Actor") await app.close?.();
+    }
+    await new Promise((resolve) => setTimeout(resolve, 200));
     await Actor.deleteDocuments(game.actors.map((actor) => actor.id));
   });
 }

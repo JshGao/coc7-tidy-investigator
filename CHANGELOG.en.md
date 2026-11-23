@@ -18,7 +18,7 @@ Compatibility with Foundry VTT **13.351 + CoC7 7.24**, while keeping 14.369 + 8.
 - Money: 8.16 `formattedMonetaryValue("spending")`, 7.24 `actor.cash / assets / spendingLevel`; `ExperiencePackagePointsSpent` casing compatibility
 - Mythos Hardened / Insanity Experienced: Actor flags on 7.24, `system.flags.*` on 8.16; both read and write paths handled
 - Reload / unload: methods live on the Item in 7.24 (`reload` / `addBullet` / `shootBullets` / `setBullets`) and on `system` in 8.16
-- Clear conditions: 7.24 only has singular `unsetCondition`; remove the status AE first and then write the fields
+- Clear conditions: remove the status AE directly, then call 7.24 singular `unsetCondition` and write the fields, so the AE cannot resurrect the condition
 - ApplicationV2: `_onRender` is now async/await; defensive fallbacks for `foundry.applications.instances` and `loadTemplates`; resize handles / context menu use `ownerDocument` for v14 pop-out windows
 - Added `tools/compat/run.mjs`: a two-lane Playwright E2E matrix for 13.351 + 7.24 and 14.369 + 8.16 covering skill retention, editing, weapons, NPC, container, conditions, money, books, growth, mythos flags, settings, attacks per round, SAN links and legacy migration
 

@@ -300,6 +300,20 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     event.preventDefault();
     const actor = this.document;
     const keys = ["criticalWounds", "unconscious", "dying", "dead", "prone", "tempoInsane", "indefInsane"];
+    // 先直接移除对应的状态 AE：7.24 的 unsetCondition 在某些状态上只删 AE、
+    // 不写 conditions 字段；如果系统 helper 抛错或被跳过，AE 会在下次 prepare 时把状态复活。
+    try {
+      const statusKeys = new Set(keys);
+      const effectIds = [...(actor.effects ?? [])]
+        .filter((effect) => {
+          const statuses = effect.statuses instanceof Set ? [...effect.statuses] : [...(effect.statuses ?? [])];
+          return statuses.some((status) => statusKeys.has(status));
+        })
+        .map((effect) => effect.id);
+      if (effectIds.length) await actor.deleteEmbeddedDocuments("ActiveEffect", effectIds);
+    } catch (err) {
+      console.warn(`${MODULE_ID} | 清除状态 AE 失败`, err);
+    }
     try {
       if (typeof actor.conditionsUnset === "function") {
         await actor.conditionsUnset(keys);

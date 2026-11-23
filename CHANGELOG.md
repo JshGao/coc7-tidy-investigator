@@ -18,7 +18,7 @@
 - 金钱：8.16 `formattedMonetaryValue("spending")`，7.24 回退 `actor.cash / assets / spendingLevel`；成长点 `ExperiencePackagePointsSpent` 大小写兼容
 - 秘法硬化 / 疯狂经历：7.24 是 Actor flag，8.16 是 `system.flags.*`，读写双向兼容
 - 装填 / 卸弹：7.24 方法在 Item 上（`reload` / `addBullet` / `shootBullets` / `setBullets`），8.16 在 `system` 上
-- 清除状态：7.24 只有单数 `unsetCondition`，保留 AE 清理后再写字段
+- 清除状态：先直接移除对应状态 AE，再调用 7.24 的单数 `unsetCondition` 并写回字段，避免状态被 AE 复活
 - ApplicationV2：`_onRender` 改为 async/await；`foundry.applications.instances` 与 `loadTemplates` 加防御性回退；缩放 / 右键菜单改用 `ownerDocument` 以适配 v14 弹出窗口
 - 新增 `tools/compat/run.mjs`：Foundry 13.351 + CoC7 7.24、14.369 + 8.16 双环境 Playwright E2E（技能保留 / 编辑 / 武器 / NPC / 容器 / 状态 / 金钱 / 书籍 / 成长 / 秘法 flag / 设置 / 每轮攻击 / SAN 链接 / 旧角色迁移）
 
