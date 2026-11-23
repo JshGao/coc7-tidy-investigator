@@ -6,12 +6,14 @@ Tidy 5e Sheets-style character sheets for **Call of Cthulhu 7e** on **Foundry VT
 **Investigator** + **NPC / Creature** + **Container** sheets.
 Opt-in registration — the system's default sheets are never replaced. Pure Handlebars + CSS, no build dependencies.
 
-**Current version: 0.9.2**
+**Current version: 0.9.3**
 
 - Foundry VTT: `>= 13.351` (verified on 13.351 and 14.369)
 - CoC7: `>= 7.24` (verified on 7.24 and 8.16)
 
-**What's new in 0.9.2**: Foundry 13.351 / CoC7 7.24 compatibility. Skill values, base values, weapon-linked skill values and credit rating now read from the version-appropriate place (`item.value` / `rawValue` on 7.24, `system.value` on 8.16); growth uses item ids on 7.24 and uuids on 8.16; books, money, mythos flags, ammo helpers and condition clearing have 7.24 fallbacks. A two-lane Playwright matrix (`tools/compat`) covers 13.351 + 7.24 and 14.369 + 8.16.
+**What's new in 0.9.3**: `.st` import now uses the SealDice CoC7 alias table, supports concatenated/full-width input, deduplicates aliases, rejects conflicting values, and creates missing skills from the CoC7 compendium.
+
+**0.9.2**: Foundry 13.351 / CoC7 7.24 compatibility. Skill values, base values, weapon-linked skill values and credit rating now read from the version-appropriate place (`item.value` / `rawValue` on 7.24, `system.value` on 8.16); growth uses item ids on 7.24 and uuids on 8.16; books, money, mythos flags, ammo helpers and condition clearing have 7.24 fallbacks. A two-lane Playwright matrix (`tools/compat`) covers 13.351 + 7.24 and 14.369 + 8.16.
 
 **Visual language (v0.9 "Investigator Dossier")**: dark lacquered banner, brass hairlines,
 aged paper, ink table headers and oxblood accents; hand-drawn SVG shields / icons and
@@ -24,7 +26,7 @@ locally bundled OFL typefaces (Cinzel, EB Garamond, Roboto Condensed).
 - Banner: portrait, identity, resource bars (drag to reorder once unlocked), eight shield-shaped characteristic badges, condition chips, Daily SAN
 - Seven tabs: Skills / Summary / Possessions / Background / Growth / Notes (GM) / Effects
 - Skills: search, three-way sorting, specialization groups, favorites, inline occupation / interest / development points in edit mode, drag reordering
-- Import: paste SealDice `.st` data (characteristics, HP/MP/SAN/Luck and skills; missing skills are created) from the banner import button
+- Import: paste SealDice `.st` data (characteristics, HP/MP/SAN/Luck and skills; aliases and specializations; duplicate aliases are deduplicated and conflicting values are rejected; missing skills are created from the CoC7 skills compendium) from the banner import button
 - Summary: weapon quick reference + attack / roll damage / reload / unload + six categories of invested skill chips
 - Possessions: collapsible sections, drag reordering, item quantity editing, context menu
 - Background: seven backstory cards + multi-select key connections + backstory + encounters
@@ -102,7 +104,7 @@ see `assets/fonts/licenses/`.
 
 *Tidy-style investigator, NPC/creature and container sheets for Call of Cthulhu 7e on Foundry VTT 13.351+ / 14.369.*
 
-**当前版本：0.9.2**
+**当前版本：0.9.3**
 
 仿 **Tidy 5e Sheets** 风格的 CoC7 角色卡：**调查员卡** + **生物 / NPC 卡** + **容器卡**，可选注册、不替换系统默认卡。
 纯 Handlebars + CSS，无构建依赖。
@@ -113,6 +115,8 @@ see `assets/fonts/licenses/`.
 - Foundry VTT：`>= 13.351`（13.351 / 14.369 验证）
 - CoC7：`>= 7.24`（7.24 / 8.16 验证）
 
+**0.9.3 更新**：`.st` 导入对齐海豹骰 CoC7 别名表，支持无空格连写 / 全角符号 / 别名去重，数值冲突会拒绝整次导入，缺失技能从 CoC7 技能包创建。
+
 **0.9.2 更新**：兼容 Foundry 13.351 + CoC7 7.24（同时保留 14.369 + 8.16）。技能当前值 / 基础值 / 武器关联技能 / 信用评级按版本读取正确字段；成长检定在 7.24 传 item id、8.16 传 uuid；书籍、金钱、秘法 flag、弹药方法与状态清除都有 7.24 回退。新增 `tools/compat` 双环境 Playwright 兼容测试（13.351 + 7.24 / 14.369 + 8.16）。
 
 ## 功能
@@ -122,7 +126,7 @@ see `assets/fonts/licenses/`.
 - 横幅：头像、身份、资源条（解锁后可拖拽排序）、八枚盾形特性徽章、状态芯片、今日 SAN
 - 七个标签页：技能 / 简表 / 物品 / 背景 / 成长 / 笔记（GM）/ 效果
 - 技能：搜索、三态排序、专长分组、收藏、编辑态职业/兴趣/成长点内联编辑、拖拽排序
-- 导入：横幅「导入 .st」按钮，粘贴海豹骰 `.st` 数据（特性、HP/MP/SAN/幸运、技能；缺失技能会自动创建）
+- 导入：横幅「导入 .st」按钮，粘贴海豹骰 `.st` 数据（特性、HP/MP/SAN/幸运、技能；支持别名/专长，重复别名自动去重，数值冲突会拒绝导入；缺失技能会自动从 CoC7 技能包创建）
 - 简表：武器速查 + 攻击/掷伤害/装填/卸弹 + 六类已投入技能芯片
 - 物品：分节折叠、拖拽排序、道具数量编辑、右键菜单
 - 背景：七要素卡片 + 关键链接多选 + 背景故事 + 遭遇记录

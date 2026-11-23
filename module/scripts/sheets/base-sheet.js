@@ -427,6 +427,10 @@ export class Coc7TidyBaseSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (!text?.trim()) return;
     try {
       const result = await importSealDiceSt(this.document, text);
+      if (result.conflicts?.length) {
+        ui.notifications.error(game.i18n.format("C7TIDY.Import.Conflict", { errors: result.conflicts.join("、") }));
+        return;
+      }
       if (result.warnings.length) {
         console.warn(`${MODULE_ID} | .st 跳过的条目：`, result.warnings);
       }

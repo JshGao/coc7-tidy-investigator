@@ -96,10 +96,9 @@ function ensureLane(lane) {
   const licenseSrc = process.env.FOUNDRY_LICENSE_PATH
     ?? path.join(os.homedir(), "Library/Application Support/FoundryVTT/Config/license.json");
   const licenseDest = path.join(config, "license.json");
-  if (!fs.existsSync(licenseDest)) {
-    assert(fs.existsSync(licenseSrc), `缺少 Foundry license：${licenseSrc}`);
-    fs.copyFileSync(licenseSrc, licenseDest);
-  }
+  assert(fs.existsSync(licenseSrc), `缺少 Foundry license：${licenseSrc}`);
+  // license 含 host 签名；网络/主机名变化后旧副本会导致 “license verification failed”，每次从当前安装复制
+  fs.copyFileSync(licenseSrc, licenseDest);
 
   copyDir(lane.systemSource, path.join(data, "systems/CoC7"));
   copyDir(path.join(ROOT, "module"), path.join(data, "modules", MODULE_ID));
@@ -827,6 +826,87 @@ async function testImportSt(page, lane, errors) {
   return { ...state, added };
 }
 
+async function submitStDialog(page, text, waitMs = 6000) {
+  await page.locator('[data-action="importSt"]').first().click();
+  await page.waitForSelector('textarea[name="st"]', { timeout: 10000 });
+  await page.fill('textarea[name="st"]', text);
+  const submitted = await page.evaluate(() => {
+    const button = [...document.querySelectorAll('button')].find((entry) =>
+      entry.dataset.action === "ok" || /^(导入|Import|OK|确定)$/i.test(entry.textContent.trim()),
+    );
+    button?.click();
+    return Boolean(button);
+  });
+  assert(submitted, "未找到导入对话框的确认按钮");
+  await page.waitForTimeout(waitMs);
+}
+
+async function testImportStFull(page, lane, errors) {
+  await clearActors(page);
+  const actorId = await createActor(page, { name: "E2E 海豹全量导入", type: "character" });
+  await openTidy(page, actorId);
+  const text = ".st 力量45str45敏捷50dex50意志75pow75体质65con65外貌45app45教育75edu75体型80siz80智力60灵感60int60san75san值75理智75理智值75幸运80运气80mp15魔法15hp14体力14会计5人类学1估价5考古学1取悦15魅惑15攀爬20计算机5计算机使用5电脑5信用35信誉35信用评级35克苏鲁0克苏鲁神话0cm0乔装5闪避25汽车20驾驶20汽车驾驶20电气维修10电子学1话术5斗殴80手枪20急救30历史60恐吓15跳跃20拉丁文36母语75法律5图书馆80图书馆使用80聆听20开锁1撬锁1锁匠1机械维修10医学1博物学10自然学10领航10导航10神秘学80重型操作1重型机械1操作重型机械1重型1说服10精神分析1心理学60骑术5妙手10侦查80潜行20生存10游泳20投掷20追踪10动物驯养5潜水1爆破1读唇1催眠1炮术1";
+  await submitStDialog(page, text, 15000);
+  const state = await page.evaluate((id) => {
+    const actor = game.actors.get(id);
+    const char = (key) => actor.system.characteristics?.[key]?.value;
+    const skills = {};
+    for (const item of actor.items.filter((entry) => entry.type === "skill")) {
+      skills[item.name] = item.value;
+    }
+    return {
+      chars: { str: char("str"), dex: char("dex"), pow: char("pow"), con: char("con"), app: char("app"), edu: char("edu"), siz: char("siz"), int: char("int") },
+      attribs: { san: actor.system.attribs?.san?.value, lck: actor.system.attribs?.lck?.value, mp: actor.system.attribs?.mp?.value, hp: actor.system.attribs?.hp?.value },
+      skills,
+      skillCount: Object.keys(skills).length,
+      notification: document.querySelector("#notifications")?.innerText ?? "",
+    };
+  }, actorId);
+  const expectedChars = { str: 45, dex: 50, pow: 75, con: 65, app: 45, edu: 75, siz: 80, int: 60 };
+  for (const [key, value] of Object.entries(expectedChars)) {
+    assert(state.chars[key] === value, `特性 ${key} 应为 ${value}，实际 ${state.chars[key]}`);
+  }
+  assert(state.attribs.san === 75 && state.attribs.lck === 80 && state.attribs.mp === 15 && state.attribs.hp === 14,
+    `SAN/幸运/MP/HP 导入错误：${JSON.stringify(state.attribs)}`);
+  const expectedSkills = {
+    会计: 5, 人类学: 1, 估价: 5, 考古学: 1, 取悦: 15, 魅惑: 15, 攀爬: 20,
+    计算机: 5, 计算机使用: 5, 电脑: 5, 信用: 35, 信誉: 35, 信用评级: 35,
+    克苏鲁: 0, 克苏鲁神话: 0, cm: 0, 乔装: 5, 闪避: 25, 汽车: 20, 驾驶: 20, 汽车驾驶: 20,
+    电气维修: 10, 电子学: 1, 话术: 5, 斗殴: 80, 手枪: 20, 急救: 30, 历史: 60,
+    恐吓: 15, 跳跃: 20, 拉丁文: 36, 母语: 75, 法律: 5, 图书馆: 80, 图书馆使用: 80,
+    聆听: 20, 开锁: 1, 撬锁: 1, 锁匠: 1, 机械维修: 10, 医学: 1, 博物学: 10, 自然学: 10,
+    领航: 10, 导航: 10, 神秘学: 80, 重型操作: 1, 重型机械: 1, 操作重型机械: 1, 重型: 1,
+    说服: 10, 精神分析: 1, 心理学: 60, 骑术: 5, 妙手: 10, 侦查: 80, 潜行: 20,
+    生存: 10, 游泳: 20, 投掷: 20, 追踪: 10, 动物驯养: 5, 潜水: 1, 爆破: 1,
+    读唇: 1, 催眠: 1, 炮术: 1,
+  };
+  // 只断言 alias 组里的第一个显示名；同组其他别名可能不存在
+  const canonicalFirstAlias = ["会计", "人类学", "估价", "考古学", "取悦", "攀爬", "计算机", "信用", "克苏鲁", "乔装", "闪避", "汽车", "电气维修", "电子学", "话术", "斗殴", "手枪", "急救", "历史", "恐吓", "跳跃", "拉丁文", "母语", "法律", "图书馆", "聆听", "开锁", "机械维修", "医学", "博物学", "领航", "神秘学", "重型操作", "说服", "精神分析", "心理学", "骑术", "妙手", "侦查", "潜行", "生存", "游泳", "投掷", "追踪", "动物驯养", "潜水", "爆破", "读唇", "催眠", "炮术"];
+  for (const name of canonicalFirstAlias) {
+    const actual = state.skills[name];
+    assert(actual === expectedSkills[name], `技能 ${name} 应为 ${expectedSkills[name]}，实际 ${actual}；通知：${state.notification}`);
+  }
+  assert(state.skillCount >= 48, `去重后技能数量过少：${state.skillCount}`);
+  return state;
+}
+
+async function testImportStConflict(page, lane, errors) {
+  await clearActors(page);
+  const actorId = await createActor(page, { name: "E2E 海豹冲突", type: "character" });
+  await openTidy(page, actorId);
+  await submitStDialog(page, ".st 侦查80 侦察99");
+  const state = await page.evaluate((id) => {
+    const actor = game.actors.get(id);
+    return {
+      skills: actor.items.filter((entry) => entry.type === "skill").map((entry) => ({ name: entry.name, value: entry.value })),
+      notification: document.querySelector("#notifications")?.innerText ?? "",
+    };
+  }, actorId);
+  assert(state.skills.length === 0, `冲突时不应写入任何技能：${JSON.stringify(state.skills)}`);
+  assert(errors.some((line) => /数值冲突/.test(line)), `未提示数值冲突：${errors.join(" | ")}`);
+  return state;
+}
+
 async function testLegacyMigrationPrefer(page, lane, errors) {
   if (lane.id !== "v13") return null;
   await page.evaluate(() => game.settings.set("coc7-tidy-investigator", "legacySkillMigration", true));
@@ -1079,6 +1159,8 @@ async function runLane(laneId) {
       ["npc-rolls", () => testNpcRolls(page, lane, errors)],
       ["san-link", () => testSanLink(page, lane, errors)],
       ["import-st", () => testImportSt(page, lane, errors)],
+      ["import-st-full", () => testImportStFull(page, lane, errors)],
+      ["import-st-conflict", () => testImportStConflict(page, lane, errors)],
     ];
 
     for (const [name, run] of scenarios) {

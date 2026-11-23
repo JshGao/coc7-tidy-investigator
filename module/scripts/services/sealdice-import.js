@@ -13,7 +13,10 @@
  */
 import { findSkillByName, skillValue } from "../compat.js";
 import {
+  SEALDICE_ATTRIBUTE_ALIASES,
+  SEALDICE_CHARACTERISTIC_ALIASES,
   SEALDICE_GROUP_ALIASES,
+  SEALDICE_IGNORED_ALIASES,
   SEALDICE_SKILL_ALIASES,
   SEALDICE_SPEC_ALIASES,
 } from "../data/sealdice-skill-aliases.js";
@@ -37,16 +40,7 @@ const ATTRIBUTES = {
 };
 
 const EXTRA_SKILL_ALIASES = {
-  "驾驶(汽车)": "Drive Auto",
-  "射击(手枪)": "Firearms (Handgun)",
-  "射击(步枪/霰弹枪)": "Firearms (Rifle/Shotgun)",
-  "射击(冲锋枪)": "Firearms (Submachine Gun)",
-  "射击(机枪)": "Firearms (Machine Gun)",
-  "射击(重武器)": "Firearms (Heavy Weapons)",
-  "射击(弓)": "Firearms (Bow)",
-  "射击(火炮)": "Firearms (Artillery)",
-  "射击(喷火器)": "Firearms (Flamethrower)",
-  "艺术与手艺(摄影)": "Art/Craft (Photography)",
+  拉丁文: "Language (Latin)",
 };
 
 const SKILL_GROUP_ALIASES = {
@@ -116,6 +110,9 @@ function parseToken(token) {
 }
 
 const CONCAT_NAMES = new Set([
+  ...Object.keys(SEALDICE_CHARACTERISTIC_ALIASES),
+  ...Object.keys(SEALDICE_ATTRIBUTE_ALIASES),
+  ...Object.keys(SEALDICE_IGNORED_ALIASES),
   ...Object.values(CHARACTERISTICS).flat(),
   ...Object.values(ATTRIBUTES).flat(),
   ...Object.keys(SEALDICE_SKILL_ALIASES),
@@ -140,10 +137,18 @@ function parseContinuous(line) {
     rest = rest.replace(/^[,，\s]+/, "");
     if (!rest) break;
     const lower = rest.toLowerCase();
-    const name = names.find((candidate) => lower.startsWith(String(candidate).toLowerCase()));
-    if (!name) return null;
-    rest = rest.slice(String(name).length);
-    const match = rest.match(/^[=:：]?\s*([+-]?\d+(?:\.\d+)?(?:\s*[+-]\s*\d+(?:\.\d+)?)*)/);
+    let name = names.find((candidate) => lower.startsWith(String(candidate).toLowerCase()));
+    let afterName;
+    if (name) {
+      afterName = rest.slice(String(name).length);
+    } else {
+      // 未知技能名（不在海豹别名表里）也尽量支持：取到第一个数字/运算符之前作为名字
+      const generic = rest.match(/^([^\d=:：+\-]+?)(?=[=:：]?[+-]?\d)/);
+      if (!generic) return null;
+      name = generic[1].trim();
+      afterName = rest.slice(generic[1].length);
+    }
+    const match = afterName.match(/^[=:：]?\s*([+-]?\d+(?:\.\d+)?(?:\s*[+-]\s*\d+(?:\.\d+)?)*)/);
     if (!match) return null;
     const expression = match[1].replace(/\s+/g, "");
     const mode = /^[+-]/.test(expression) ? "add" : "set";
@@ -152,7 +157,7 @@ function parseContinuous(line) {
       .reduce((sum, part) => sum + Number(part), 0);
     if (!Number.isFinite(value)) return null;
     entries.push({ name: String(name).trim(), value, mode });
-    rest = rest.slice(match[0].length);
+    rest = afterName.slice(match[0].length);
   }
   return entries.length ? entries : null;
 }
@@ -187,7 +192,14 @@ export function parseSealDiceSt(input) {
       warnings.push(line);
       continue;
     }
-    line = line.replace(/[,，]/g, " ");
+    line = line
+      .replace(/＋/g, "+")
+      .replace(/－/g, "-")
+      .replace(/＝/g, "=")
+      .replace(/：/g, ":")
+      .replace(/＆/g, "&")
+      .replace(/＊/g, "*")
+      .replace(/[,，]/g, " ");
     const continuous = parseContinuous(line);
     if (continuous) {
       entries.push(...continuous);
@@ -205,6 +217,7 @@ export function parseSealDiceSt(input) {
 
 function findCharacteristic(name) {
   const normalized = normalizeName(name);
+  if (SEALDICE_CHARACTERISTIC_ALIASES[normalized]) return SEALDICE_CHARACTERISTIC_ALIASES[normalized];
   for (const [key, aliases] of Object.entries(CHARACTERISTICS)) {
     if (aliases.some((alias) => normalizeName(alias) === normalized)) return key;
   }
@@ -213,6 +226,7 @@ function findCharacteristic(name) {
 
 function findAttribute(name) {
   const normalized = normalizeName(name);
+  if (SEALDICE_ATTRIBUTE_ALIASES[normalized]) return SEALDICE_ATTRIBUTE_ALIASES[normalized];
   for (const [key, aliases] of Object.entries(ATTRIBUTES)) {
     if (aliases.some((alias) => normalizeName(alias) === normalized)) return key;
   }
@@ -225,10 +239,36 @@ function splitSkillName(name) {
   return { specialization: match[1].trim(), skillName: match[2].trim() };
 }
 
-function findSkill(actor, name) {
-  const direct = findSkillByName(actor, name);
-  if (direct) return direct;
+function findIgnored(name) {
+  return SEALDICE_IGNORED_ALIASES[normalizeName(name)] ?? null;
+}
+
+function isAsciiName(value) {
+  return /^[\x20-\x7E]+$/.test(String(value ?? ""));
+}
+
+/**
+ * 技能的跨别名规范键。
+ * 同一技能的不同海豹骰别名（电脑/计算机/计算机使用）会得到同一个 en: 键，
+ * 用于导入去重与“同值忽略、异值报非法”。
+ */
+function canonicalSkillKey(name) {
   const normalized = normalizeName(name);
+  const aliased = SEALDICE_SKILL_ALIASES[normalized] ?? EXTRA_SKILL_ALIASES[normalized];
+  if (aliased) return isAsciiName(aliased) ? `en:${normalizeName(aliased)}` : `raw:${normalizeName(aliased)}`;
+
+  const parts = splitSkillName(name);
+  const group = SKILL_GROUP_ALIASES[normalizeName(parts.specialization || parts.skillName)];
+  const spec = SEALDICE_SPEC_ALIASES[normalizeName(parts.skillName)];
+  if (group && spec) return `en:${normalizeName(`${group} (${spec})`)}`;
+  if (group) return `en:${normalizeName(`${group} (Any)`)}`;
+  if (isAsciiName(name)) return `en:${normalized}`;
+  return `raw:${normalized}`;
+}
+
+function findSkill(actor, name) {
+  const normalized = normalizeName(name);
+  const target = canonicalSkillKey(name);
   for (const item of actor?.items ?? []) {
     if (item.type !== "skill") continue;
     const system = item.system ?? {};
@@ -239,27 +279,29 @@ function findSkill(actor, name) {
       `${system.specialization}(${system.skillName})`,
     ];
     if (candidates.some((candidate) => candidate && normalizeName(candidate) === normalized)) return item;
+    if (candidates.some((candidate) => candidate && canonicalSkillKey(candidate) === target)) return item;
   }
+  const direct = findSkillByName(actor, name);
+  if (direct) return direct;
   return null;
+}
+
+let compendiumIndexPromise = null;
+async function getCompendiumIndex(pack) {
+  if (!compendiumIndexPromise) {
+    compendiumIndexPromise = pack.getIndex({ fields: ["system.skillName", "system.specialization", "system.base"] });
+  }
+  return compendiumIndexPromise;
 }
 
 async function findCompendiumSkill(name) {
   const pack = globalThis.game?.packs?.get?.("CoC7.skills");
   if (!pack) return null;
   try {
-    const index = await pack.getIndex({ fields: ["system.skillName", "system.specialization", "system.base"] });
+    const index = await getCompendiumIndex(pack);
     const entries = [...index];
-    const normalized = normalizeName(name);
-    const alias = SEALDICE_SKILL_ALIASES[normalized] ?? EXTRA_SKILL_ALIASES[normalized];
-    const lookupNames = alias ? [alias, name] : [name];
-    const exact = entries.find((entry) => {
-      const system = entry.system ?? {};
-      return lookupNames.some((lookupName) => {
-        const wanted = normalizeName(lookupName);
-        return [entry.name, system.skillName, `${system.skillName}(${system.specialization})`, `${system.specialization}(${system.skillName})`]
-          .some((candidate) => candidate && normalizeName(candidate) === wanted);
-      });
-    });
+    const target = canonicalSkillKey(name);
+    const exact = entries.find((entry) => canonicalSkillKey(entry.name) === target);
     if (exact) return { document: await pack.getDocument(exact._id), generic: false };
 
     const parts = splitSkillName(name);
@@ -291,7 +333,7 @@ async function findCompendiumSkill(name) {
   }
 }
 
-async function createSkill(actor, name) {
+async function prepareSkillSource(name) {
   const parts = splitSkillName(name);
   const found = await findCompendiumSkill(name);
   if (found?.document) {
@@ -309,33 +351,62 @@ async function createSkill(actor, name) {
         requiresname: false,
         picknameonly: false,
       };
-      const [item] = await actor.createEmbeddedDocuments("Item", [source]);
-      if (item) return item;
+      return source;
     } catch (error) {
-      console.warn("coc7-tidy-investigator | 从技能包创建技能失败，改用空白技能", name, error);
+      console.warn("coc7-tidy-investigator | 从技能包准备技能失败，改用空白技能", name, error);
     }
   }
-  try {
-    const [item] = await actor.createEmbeddedDocuments("Item", [{
-      name: String(name).trim(),
-      type: "skill",
-      system: {
-        skillName: parts.skillName,
-        specialization: parts.specialization,
-        properties: { special: Boolean(parts.specialization) },
-        flags: {},
-      },
-    }]);
-    return item ?? null;
-  } catch (error) {
-    console.error("coc7-tidy-investigator | 创建技能失败", name, error);
-    return null;
+  return {
+    name: String(name).trim(),
+    type: "skill",
+    system: {
+      skillName: parts.skillName,
+      specialization: parts.specialization,
+      properties: { special: Boolean(parts.specialization) },
+      flags: {},
+    },
+  };
+}
+
+async function createSkills(actor, names) {
+  if (!names.length) return new Map();
+  const sources = await Promise.all(names.map((name) => prepareSkillSource(name)));
+  const valid = [];
+  for (let index = 0; index < names.length; index++) {
+    if (sources[index]) valid.push({ name: names[index], source: sources[index] });
   }
+  if (!valid.length) return new Map();
+
+  try {
+    const created = await actor.createEmbeddedDocuments("Item", valid.map((entry) => entry.source));
+    if (Array.isArray(created) && created.length) {
+      // CoC7 的 createEmbeddedDocuments 可能合并/重排，按规范化名称重新定位，不能按返回数组下标对应
+      const map = new Map();
+      for (const entry of valid) {
+        const item = findSkill(actor, entry.name);
+        if (item) map.set(entry.name, item);
+      }
+      if (map.size === valid.length) return map;
+    }
+  } catch (error) {
+    console.warn("coc7-tidy-investigator | 批量创建技能失败，逐个重试", error);
+  }
+
+  const result = new Map();
+  for (const entry of valid) {
+    try {
+      const [item] = await actor.createEmbeddedDocuments("Item", [entry.source]);
+      if (item) result.set(entry.name, item);
+    } catch (error) {
+      console.error("coc7-tidy-investigator | 创建技能失败", entry.name, error);
+    }
+  }
+  return result;
 }
 
 /**
  * 把 `.st` 文本导入 Actor。
- * @returns {Promise<{characteristics:number, attributes:number, skills:number, created:number, warnings:string[], errors:string[]}>}
+ * @returns {Promise<{characteristics:number, attributes:number, skills:number, created:number, warnings:string[], errors:string[], conflicts?:string[]}>}
  */
 export async function importSealDiceSt(actor, text) {
   const parsed = parseSealDiceSt(text);
@@ -349,47 +420,91 @@ export async function importSealDiceSt(actor, text) {
   };
   if (!actor || !parsed.entries.length) return result;
 
-  const actorUpdates = {};
-  const skillEntries = [];
+  const resolved = new Map();
+  const conflicts = [];
+  result.conflicts = conflicts;
 
   for (const entry of parsed.entries) {
+    const ignored = findIgnored(entry.name);
+    if (ignored) {
+      result.warnings.push(`${entry.name}（${ignored}，未导入）`);
+      continue;
+    }
+
     const characteristic = findCharacteristic(entry.name);
-    if (characteristic) {
-      const current = num(actor.system?.characteristics?.[characteristic]?.value);
-      const value = entry.mode === "add" ? current + entry.value : entry.value;
-      actorUpdates[`system.characteristics.${characteristic}.value`] = Math.max(0, Math.min(99, Math.round(value)));
+    const attribute = characteristic ? null : findAttribute(entry.name);
+    const kind = characteristic ? "characteristic" : attribute ? "attribute" : "skill";
+    const key = characteristic ?? attribute ?? `skill:${canonicalSkillKey(entry.name)}`;
+    const dedupeKey = `${kind}:${key}`;
+    const prior = resolved.get(dedupeKey);
+    if (prior) {
+      if (prior.mode !== entry.mode || prior.value !== entry.value) {
+        conflicts.push(`${prior.label}（${prior.value} / ${entry.value}）`);
+      }
+      continue;
+    }
+    resolved.set(dedupeKey, {
+      kind,
+      key,
+      name: entry.name,
+      label: entry.name,
+      value: entry.value,
+      mode: entry.mode,
+    });
+  }
+
+  if (conflicts.length) return result;
+
+  const actorUpdates = {};
+  const skillEntries = [];
+  for (const target of resolved.values()) {
+    if (target.kind === "characteristic") {
+      const current = num(actor.system?.characteristics?.[target.key]?.value);
+      const value = target.mode === "add" ? current + target.value : target.value;
+      actorUpdates[`system.characteristics.${target.key}.value`] = Math.max(0, Math.min(99, Math.round(value)));
       result.characteristics++;
       continue;
     }
 
-    const attribute = findAttribute(entry.name);
-    if (attribute) {
-      const current = num(actor.system?.attribs?.[attribute]?.value);
-      const max = num(actor.system?.attribs?.[attribute]?.max);
-      let value = entry.mode === "add" ? current + entry.value : entry.value;
+    if (target.kind === "attribute") {
+      const current = num(actor.system?.attribs?.[target.key]?.value);
+      const max = num(actor.system?.attribs?.[target.key]?.max);
+      let value = target.mode === "add" ? current + target.value : target.value;
       value = Math.max(0, Math.round(value));
       if (max > 0) value = Math.min(max, value);
-      actorUpdates[`system.attribs.${attribute}.value`] = value;
+      actorUpdates[`system.attribs.${target.key}.value`] = value;
       result.attributes++;
       continue;
     }
 
-    skillEntries.push(entry);
+    skillEntries.push(target);
   }
 
   if (Object.keys(actorUpdates).length) await actor.update(actorUpdates);
 
+  const plans = [];
+  const missing = [];
   for (const entry of skillEntries) {
-    let item = findSkill(actor, entry.name);
-    if (!item) {
-      item = await createSkill(actor, entry.name);
-      if (item) result.created++;
-    }
-    if (!item) {
-      result.errors.push(entry.name);
-      continue;
-    }
+    const item = findSkill(actor, entry.name);
+    if (item) plans.push({ item, entry });
+    else missing.push(entry);
+  }
 
+  if (missing.length) {
+    const created = await createSkills(actor, missing.map((entry) => entry.name));
+    for (const entry of missing) {
+      const item = created.get(entry.name);
+      if (item) {
+        plans.push({ item, entry });
+        result.created++;
+      } else {
+        result.errors.push(entry.name);
+      }
+    }
+  }
+
+  const itemUpdates = [];
+  for (const { item, entry } of plans) {
     const current = skillValue(item);
     const target = Math.max(0, Math.round(entry.mode === "add" ? current + entry.value : entry.value));
     const modern = item.system?.valueUnmodified !== undefined;
@@ -399,17 +514,17 @@ export async function importSealDiceSt(actor, text) {
       adjustments.experience = Math.max(0, num(adjustments.experience) + delta);
       const update = { _id: item.id, "system.adjustments": adjustments };
       if (!modern) update["system.value"] = null;
-      await actor.updateEmbeddedDocuments("Item", [update]);
+      itemUpdates.push(update);
       if (target < current && delta < 0 && num(adjustments.experience) === 0) {
         result.warnings.push(`${item.name}: ${current} → ${target}（低于基础值，已按基础值保留）`);
       }
-    } else if (typeof item.updateValue === "function") {
-      await item.updateValue(target);
     } else {
-      await item.update({ "system.value": target });
+      itemUpdates.push({ _id: item.id, "system.value": target });
     }
     result.skills++;
   }
+
+  if (itemUpdates.length) await actor.updateEmbeddedDocuments("Item", itemUpdates);
 
   return result;
 }

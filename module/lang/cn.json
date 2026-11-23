@@ -248,5 +248,6 @@
   "C7TIDY.Import.Import": "导入",
   "C7TIDY.Import.Done": "已导入：特性 {characteristics} 项、资源 {attributes} 项、技能 {skills} 项（新建 {created} 项）。",
   "C7TIDY.Import.Partial": "部分条目导入失败：{errors}",
-  "C7TIDY.Import.Error": "导入失败，请查看控制台。"
+  "C7TIDY.Import.Error": "导入失败，请查看控制台。",
+  "C7TIDY.Import.Conflict": "数值冲突，未导入：{errors}"
 }

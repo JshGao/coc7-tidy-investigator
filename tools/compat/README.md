@@ -64,6 +64,9 @@ node compat/run.mjs --lane=v13 --keep            # 跑完不关 Foundry，方便
 - **settings**：紧凑模式切换触发 `refreshSheets`（`foundry.applications.instances` 回退）
 - **npc-rolls**：每轮攻击公式 `@STR`；7.24 走 `parseCharacteristics` 回退
 - **san-link**：NPC 的 SAN 损失链接卡
+- **import-st**：基础 `.st` 导入（特性 / HP/MP/SAN/幸运 / 技能专长 / `+` 增量）
+- **import-st-full**：用户提供的整段海豹骰 `.st`（重复别名、无分隔符、英文简写）→ 去重后导入并逐项断言
+- **import-st-conflict**：同一技能出现不同数值 → 提示“数值冲突”，不写入任何数据
 - **legacy**：只有 v13 跑；模拟旧角色 `system.value = 55`，打开 Tidy 显示 55，编辑后 60，并验证迁移
 
 ## 说明

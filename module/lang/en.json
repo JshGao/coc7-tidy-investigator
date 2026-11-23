@@ -248,5 +248,6 @@
   "C7TIDY.Import.Import": "Import",
   "C7TIDY.Import.Done": "Imported {characteristics} characteristics, {attributes} resources, {skills} skills ({created} created).",
   "C7TIDY.Import.Partial": "Some entries failed: {errors}",
-  "C7TIDY.Import.Error": "Import failed; see the console."
+  "C7TIDY.Import.Error": "Import failed; see the console.",
+  "C7TIDY.Import.Conflict": "Conflicting values, nothing imported: {errors}"
 }

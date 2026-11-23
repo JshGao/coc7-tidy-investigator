@@ -5,9 +5,11 @@
 
 A custom character sheet for CoC7. Its look borrows heavily from **Tidy 5e Sheets** and it ships an **Investigator** sheet, an **NPC / Creature** sheet and a **Container** sheet. It only registers new optional sheet templates inside the system and replaces none of the existing actor-sheet templates; implemented in pure Handlebars + CSS with no build step, it is lightweight and ships with English and Chinese localization.
 
-**Current version: 0.9.2** (2026-11-23) · [Release notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
+**Current version: 0.9.3** (2026-11-23) · [Release notes](https://github.com/JshGao/coc7-tidy-investigator/releases/latest)
 
 The 0.9 release was a complete visual overhaul: all three sheets now share a **1920s vintage dossier** visual language — dark lacquered banners, brass hairlines, aged paper, ink-black table headers and oxblood accents, typeset with locally bundled Cinzel / EB Garamond / Roboto Condensed.
+
+0.9.3 aligns `.st` import with the SealDice CoC7 alias table: concatenated/full-width input, alias deduplication, conflicting values rejected, missing skills created from the CoC7 compendium.
 
 0.9.2 adds **Foundry VTT 13.351 + CoC7 7.24** support while keeping 14.369 + 8.16: fixes old investigators showing skill values as 0 / `-1`, growth checks, weapon-linked skills, Credit Rating, books, money, mythos flags, ammunition and condition clearing on 7.24, plus a two-lane Playwright compatibility suite.
 
@@ -150,6 +152,8 @@ Compatibility E2E (Foundry 13.351 + CoC7 7.24 / 14.369 + 8.16) lives in [tools/c
 
 ## Version history
 
+- **0.9.3 (2026-11-23)**: `.st` import uses the SealDice CoC7 alias table; concatenated/full-width input, alias deduplication, conflicts rejected, missing skills created from the CoC7 compendium.
+  - Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
 - **0.9.2 (2026-11-23)**: Foundry VTT 13.351 + CoC7 7.24 support (14.369 + 8.16 retained). Fixes 7.24 skill values showing 0 / `-1`, growth id/uuid, weapon-linked skills, Credit Rating, book progress, money formatting, mythos flags, reload/unload and condition clearing; adds the `tools/compat` two-lane E2E suite.
   - Changelog: [CHANGELOG.en.md](CHANGELOG.en.md)
 - **0.9.1 (2026-10-28)**: Ammo column fix. The Investigator Summary and the NPC / Creature Combat weapon tables now show "bullets / magazine", with a revolver-cylinder reload button (click to fill, Shift+click for one round) and unload controls (double-click to empty, Shift+double-click for one round); fixes the NPC Movement type labels that were covered by the select's chevron texture in dark mode.

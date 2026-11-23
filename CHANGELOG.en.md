@@ -2,6 +2,16 @@
 
 # Changelog
 
+## 0.9.3 — 2026-11-23
+
+`.st` import now mirrors the SealDice `sealdice-core` `coc7.yaml` parser and alias table.
+
+- Aliases: use the SealDice CoC7 template's `attrs.defaults` / `alias` directly (STR/力量, Computer/计算机/计算机使用, Drive Auto/汽车/驾驶, Handgun/手枪, Cthulhu Mythos/克苏鲁/cm, etc.), plus common community Chinese names
+- Parsing: concatenated entries (`.st STR45str45DEX50…`), full-width symbols, `:`/`=`, `+/-` deltas, unknown skill names, and English names with spaces
+- Deduplication: aliases of the same skill/attribute/characteristic are merged; identical values are ignored, different values raise a "conflicting values" error and reject the whole import (no partial writes)
+- Missing skills: cloned from the CoC7 skills compendium with base/properties/icon, or created blank when no entry exists
+- Tests: the user-provided full `.st` string plus conflict cases; v13 19/19, v14 17/17
+
 ## 0.9.2 — 2026-11-23
 
 Compatibility with Foundry VTT **13.351 + CoC7 7.24**, while keeping 14.369 + 8.16 support.
@@ -23,7 +33,7 @@ Compatibility with Foundry VTT **13.351 + CoC7 7.24**, while keeping 14.369 + 8.
 - Added `tools/compat/run.mjs`: a two-lane Playwright E2E matrix for 13.351 + 7.24 and 14.369 + 8.16 covering skill retention, editing, weapons, NPC, container, conditions, money, books, growth, mythos flags, settings, attacks per round, SAN links and legacy migration
 
 - New module setting "Legacy skill migration: prefer occupation/interest points": occupation skills draw from remaining occupation points, then interest points; non-occupation skills draw from interest points; leftovers go to experience. Unchecked keeps the system behaviour (all to experience)
-- New "Import .st" button on the Investigator / NPC banner: paste SealDice `.st` data for characteristics, HP/MP/SAN/Luck and skills (including specializations and `+`/`-` deltas); missing skills are created automatically
+- New "Import .st" button on the Investigator / NPC banner: paste SealDice `.st` data for characteristics, HP/MP/SAN/Luck and skills (including specializations and `+`/`-` deltas); missing skills are created from the CoC7 skills compendium
 
 ## 0.9.1 — 2026-10-28
 
